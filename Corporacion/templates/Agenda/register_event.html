@@ -1,0 +1,80 @@
+
+{% load  static %}
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-plus"></i></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            <form  method="POST" id="dataform"  action="{% url 'agenda_app:create-event' %}" >{% csrf_token %}
+                {{form.as_p}}
+                <div class="modal-footer">
+                <button type="submit" id="data" >Registrar evento</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+            </form>
+            
+        </div> 
+        
+    </div>
+</div>
+
+{% block js %}
+
+<script>
+
+
+$(document).ready(function() {
+    $('#data').on('click', function(e) {
+        e.preventDefault();
+        var start_time = Date.parse(document.getElementById("FechaInicio").value);
+        var end_time = Date.parse(document.getElementById("FechaFin").value);
+        var Titulo = document.getElementById("Titulo").value;
+        var Descripcion = document.getElementById("Descripcion").value;
+        var horaInicio = document.getElementById("hora_inicio").value;
+        var horafinal = document.getElementById("horafinal").value;
+
+        
+        if(start_time  == "" || end_time == "" ){
+            alert("Por favor verifique que las fechas no estén vacías");
+            
+        }
+        else if(horaInicio  == "" || horafinal == "" ){
+            alert("Por favor verifique que haya seleccionado hora de inicio y fin del evento");
+            
+        }
+        else if(Titulo == "" ){
+            alert("Por favor inserte un título");
+            
+        }
+        else if(Descripcion == "" ){
+            alert("Por favor inserte una Descripcion");
+            
+        }
+        else if(end_time < start_time ){
+            alert("La fecha final no puede ser menor a la inicial");
+            
+        }
+        else{
+
+            var serializedData = $("#dataform").serialize();
+
+            $.ajax({
+            type : 'POST',
+            url : "{% url 'agenda_app:create-event' %}",
+            data : serializedData,
+            success : function(response){
+                window.location = "{% url 'academico_app:dashboard' %}";
+            }
+            });
+        }
+    });
+});
+
+</script>
+
+
+{% endblock js %}

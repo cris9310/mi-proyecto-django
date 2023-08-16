@@ -1,0 +1,42 @@
+{% extends "Base2.html" %} {% load static %} {% block extracontent %}
+<form method="post">
+  {% csrf_token %} {{form.as_p}}
+  <button type="submit">Registrar</button>
+  <button><a href="{% url 'academico_app:list-student' %}"> Volver</a></button>
+</form>
+{% endblock extracontent %} {% block js %}
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#masivo").hide();
+    $('label[for="masivo"]').hide();
+    $("#carrera").on("change", getPensum);
+  });
+
+  function getPensum() {
+    var estadoId = $("#carrera").val();
+    if (estadoId) {
+      // Eliminamos las opciones anteriores del select
+      $("#id_pensum_asig").html("");
+      var request = $.ajax({
+        type: "GET",
+        url: "{% url 'academico_app:update-pensum' %}",
+        data: {
+          estado_id: estadoId,
+        },
+        success: function (response) {
+          $("#id_pensum_asig").html(response.malla);
+        },
+      });
+      request.done(function (response) {
+        // Agregamos los resultados al select
+        $("#id_pensum_asig").html(response.malla);
+      });
+    } else {
+      $("#id_pensum_asig").html(
+        "<option value='' selected='selected'>---------</option>"
+      );
+    }
+  }
+</script>
+
+{% endblock js %}

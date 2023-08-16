@@ -1,0 +1,26 @@
+{% extends "Base.html" %} {% load static %} 
+
+
+{% block content %}
+<div >
+    {% if user.is_authenticated %}
+    
+    <div>{% include "includes/header.html" %}</div>
+    <div class ="base">
+      {% block extracontent %}
+    
+      {% endblock extracontent %}
+    </div >
+
+</div>
+{% else %}
+  <a class="navbar-brand" href="{% url 'homepage_app:login'%}"
+    >iniciar sesión</a
+  >
+  {% endif %}
+</div>
+
+{% endblock content %}
+
+
+

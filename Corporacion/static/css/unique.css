@@ -1,0 +1,229 @@
+/* Css del menu  y el titulo*/
+
+.slider {
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    overflow: hidden;
+
+}
+
+#menufijo {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+
+}
+
+
+.nav-item {
+    margin-right: 8px;
+
+
+}
+
+.navbar-brand {
+    color: #405FC9 !important;
+    font-weight: bold !important;
+}
+
+.nav-item:hover {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.h1 {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+
+}
+
+.h5 {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: bold !important;
+
+}
+
+.divider {
+    top: 10%;
+    bottom: 10%;
+    margin-left: 15px;
+    margin-right: 15px;
+    border-left: 3px solid #000000;
+}
+
+
+#tit {
+    color: #000000;
+}
+
+
+/* Css de los filtros */
+
+#submenu {
+    background-color: #f4f4f4 !important;
+    margin: 5px;
+    border-radius: 20px !important;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+
+}
+
+.fa-layers-counter {
+    background: #405FC9;
+    color: white;
+    border-radius: 10px;
+}
+
+.linea {
+    border-top: 1px solid #e7e4e4;
+    width: 100%;
+    padding: 0;
+    margin: 20px auto 0 auto;
+
+}
+
+
+
+.inicial {
+    display: flex;
+
+}
+
+#conte {
+    margin: 30px !important;
+    border-radius: 10px;
+
+}
+
+#data-teacher {
+    height: 45px;
+    width: 180px;
+    border-radius: 25px;
+    background: #405FC9;
+    color: white;
+    border: none;
+}
+
+
+#button {
+    border: none;
+    height: 45px;
+    width: 180px;
+    border-radius: 25px;
+    color: white;
+
+}
+
+.tabla {
+    margin-top: 40px !important;
+    height: auto;
+}
+
+.paginate_button,
+.dataTables_info,
+.dataTables_length {
+    color: grey !important;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+    font-weight: bold;
+}
+
+.paginate_button.current,
+.dataTables_length>label>select {
+    color: black;
+    border-color: #e7e4e4 !important;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+    font-weight: bold;
+}
+
+div.dataTables_filter {
+    color: grey !important;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+    font-weight: bold;
+}
+
+div.dataTables_filter>label>input {
+    border-color: #e7e4e4 !important;
+    font-size: 18px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+    border-radius: 11px !important;
+}
+
+div.dataTables_filter>label>input:hover {
+    box-shadow: inset 0 0 5px #405FC9;
+}
+
+div.dataTables_filter>label>input:focus {
+    border-color: none;
+    outline: none;
+    box-shadow: inset 0 0 5px #405FC9;
+}
+
+thead {
+    background-color: #f4f4f4 !important;
+
+
+}
+
+
+
+th.sorting {
+    color: grey !important;
+    font-weight: bold;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    align-content: center !important;
+}
+
+
+tbody {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: black;
+}
+
+tbody a:link {
+    text-decoration: none !important;
+}
+
+#inactivo {
+    color: #f97b7b;
+}
+
+#activo {
+    color: #40c4a4;
+}
+
+#cursando {
+    color: #507bfc;
+}
+
+#iconos {
+    color: #507bfc;
+    background-color: #e4ecfc;
+    border-radius: 5px;
+    width: 30px;
+    height: 30px;
+    padding-top: 8px;
+    padding-left: 8px
+}
+
+#iconos2 {
+    color: #f97b7b;
+    background-color: #fce4e4;
+    border-radius: 5px;
+    width: 30px;
+    height: 30px;
+    padding-top: 8px;
+    padding-left: 8px
+}
+
+.modal-dialog {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.modal-dialog label {
+    font-weight: bold;
+}
+
+
+#spinner-div {
+    display: none;
+}

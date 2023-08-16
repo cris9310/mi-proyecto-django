@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load  static %}
+
+{% block content %}
+<div class="col-5">
+  
+  
+  {% for i in datos  %}
+  <div>
+    <label for="">Código de la factura a modificar: {{i.codigo}}</label>
+  </div>
+  <div>
+    <label for="">Valor original de la factura: {{i.monto}}</label>
+  </div>
+  <div>
+    <label for="">Valor pagado a la fecha: {{i.pagado.pagado__sum}}</label>
+  </div>
+  <div>
+    <label for="">Valor pendiente a la fecha: {{i.pendiente}}</label>
+  </div>
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message}}</li>
+      {% endfor %}
+  </ul>     
+{% endif %}
+  <form  method="POST" id="dataform"  action="{% url 'finance_app:finance-list-invoice-sub' %}" >{% csrf_token %}
+
+    {{form.as_p}}
+    <button type="submit" id="data" >Registrar</button>
+</div>
+</form>
+  {% endfor %}
+  
+</div>
+{% endblock content %}
+
+{% block js %}
+
+<script>
+
+
+$(document).ready(function() {
+  {% for i in datos %}
+  $("#facturas").val({{i.codigo}});
+  var pendiente = parseFloat({{i.pendiente}});
+   
+    $('#data').on('click', function(e) {
+        e.preventDefault();
+        var pagado = parseFloat(document.getElementById("pagado").value);
+        var consecutivo = parseFloat(document.getElementById("consecutivo").value);
+        var observaciones = document.getElementById("observacion").value;
+
+        
+        if(pagado  <= 0){
+            alert("El valor a pagar no puede ser negativo ni 0(cero)");
+            
+        }
+        else if(pagado  > pendiente ){
+            alert("El monto debe ser menor o igual al valor pendiente");
+            
+        }
+        else if(pagado  == "" || consecutivo == "" || observaciones== ""  ){
+          alert("No pueden haber valores en blanco");
+          
+        }
+        else if(consecutivo <= 0 ){
+          alert("El valor del consecutivo no puede ser negativo ni 0(cero)");
+        }
+        
+        else{
+
+            var serializedData = $("#dataform").serialize();
+
+            $.ajax({
+            type : 'POST',
+            url : "{% url 'finance_app:finance-list-invoice-sub' %}",
+            data : serializedData,
+            success : function(response){
+                window.location = "{% url 'finance_app:finance-list-invoice' %}";
+            }
+            });
+        }
+    });
+  {% endfor %} 
+});
+
+</script>
+
+
+{% endblock js %}
+
+
+
+
+

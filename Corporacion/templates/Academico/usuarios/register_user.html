@@ -1,0 +1,17 @@
+
+
+
+
+{% load  static %}
+
+{% block content %}
+<div class='col-10'>
+    <form  method="post">{% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">Registrar usuario</button>
+        <button><a href="{% url 'academico_app:create-user' %}"> Volver</a></button>
+    </form>
+
+</div>
+
+{% endblock content %}

@@ -1,0 +1,80 @@
+{% load static %}
+
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"><i id="iconos" style="padding-left: 3px" class="fa-solid fa-upload"></i> Cargue de notas</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+      <div class="d-flex justify-content-center">
+      <div id="spinner-div" class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      </div>
+      <form
+      action="{% url 'academico_app:upload-notes' %}"
+      method="post"
+      enctype="multipart/form-data"
+      id="data"
+      >
+      {% csrf_token %}
+      <div id="errores" ></div>
+      {{form.as_p}}
+      
+      <div class="modal-footer">
+        <button type="button" id="button" onclick="sendnotes()" style="background: #405FC9" ><i class="fa-solid fa-upload"></i> &nbsp;Cargar notas</button>
+        </div>
+    </form>
+    </div> 
+  </div>
+</div>
+
+{% block js %}
+<script type="text/javascript">
+
+  function sendnotes() {
+    var formData = new FormData();
+    
+    if (formData) {
+      
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+      formData.append('corteFull', $('#corteFull').val());
+      formData.append('asignatura', $('#asignatura').val());
+      formData.append('archivo',  $('#archivo')[0].files[0])
+      var request = $.ajax({
+        type: "POST",
+        url: "{% url 'academico_app:upload-notes' %}",
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        enctype: 'multipart/form-data',
+        success: function (response) {
+          $('#spinner-div').show()
+          $("#edicion").modal("hide");
+          window.location.reload();
+          Swal.fire({
+            "title": "Excelente!",
+            "text": "El registro ha sido exitoso",
+            "icon": "success"
+          })
+  
+        },
+        error: function (error) {
+          mostrarErroresCreacion2(error);
+          Swal.fire({
+            "title": "Aun falta algo",
+            "text": "Verifica las indicaciones en la parte superior del formulario.",
+            "icon": "error"
+          })
+        }
+      });
+    }
+  }
+
+</script>
+
+{% endblock js %}

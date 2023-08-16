@@ -1,0 +1,47 @@
+{% extends "Base2.html" %} {% load static %} {% block extracontent %}
+<div class="col-5">
+  <form
+    method="POST"
+    action="{% url 'academico_app:update-student' object.pk %}"
+  >
+    {% csrf_token %} {{form.as_p}}
+    <div>
+      <button type="submit" class="alert button">Actualizar</button>
+      <a
+        href="{% url 'academico_app:list-student' %}"
+        class="btn btn-success btn-sm"
+        >Volver</a
+      >
+    </div>
+  </form>
+</div>
+{% endblock extracontent %} {% block js %}
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#cedula").prop("readonly", true);
+    $("#carrera").hide();
+    $("#masivo").hide();
+    $('label[for="carrera"]').hide();
+    $('label[for="masivo"]').hide();
+    var estadoId = $("#carrera").val();
+    if ($("#masivo").prop("checked")) {
+      $("#id_pensum_asig").html("");
+      var request = $.ajax({
+        type: "GET",
+        url: "{% url 'academico_app:update-pensum' %}",
+        data: {
+          estado_id: estadoId,
+        },
+        success: function (response) {
+          $("#id_pensum_asig").html(response.malla);
+        },
+      });
+      request.done(function (response) {
+        // Agregamos los resultados al select id_periodo_matriculado
+        $("#id_pensum_asig").html(response.malla);
+      });
+    }
+  });
+</script>
+{% endblock js %}

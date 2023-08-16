@@ -1,0 +1,116 @@
+
+{% extends "Base.html" %}
+{% load  static %}
+
+{% block content %}
+{% for j in datos %}
+  <div><h5>Nombre: {{j.apellidos}} {{j.nombre}} </h5></div>
+  <div><h5>Código: {{j.codigo}}</h5></div>
+  <div><h5>Programa: {{j.carrera.programa_name}}</h5></div>
+  
+{% endfor %}
+<table class="table table-striped" id="table_id">
+  <thead>
+    <th>Acción </th>
+    <th>Código </th>
+    <th>Descripción</th>
+    <th>Estado</th>
+    <th>Monto</th>
+    <th>Pagado</th>
+    <th>Modificar</th>
+  </thead>
+  <tbody>
+    {% for i in invoice  %}
+      <tr>
+        {% if i.pagado > 0 %}
+        <td class='dt-control' defaultContent="" orderable='false' data= "null" ><input type="hidden" name="funt" id="funt" class="funt" value="{{i.pk}}"></td>
+        {% else %}
+        <td >N/d</td>
+        {% endif %}
+        <td ><a href="">{{i.codigo}}</a></td>
+        <td ><a href="">{{i.descripcion}}</a></td>
+        <td ><a href="">{{i.estado.estado}}</a></td>
+        <td ><a href="">{{i.monto}}</a></td>
+        <td ><a href="">{{i.pagado}}</a></td>
+        {% if i.pagado == i.monto %}
+        <td> <button class="btn btn-primary" ><i class="fa-solid fa-check" style="color:#CBF7E9 "></i></button></td>
+        {% else %}
+        <td ><a href="{% url 'finance_app:finance-list-invoice-detail-up' i.pk %}">editar</a></td>
+        {% endif %}
+    </tr>
+    
+    {% endfor %}
+  </tbody>
+</table>
+    
+   <button><a href="{% url 'finance_app:finance-list-invoice' %}"> Principal</a></button> 
+
+{% endblock content %}
+
+
+{% block js %}
+
+<script>
+$(document).ready(function () {
+  
+
+  var tabla= $('#table_id').DataTable();
+ 
+  $('#table_id tbody').on('click', 'td.dt-control', function () {
+    var tr = $(this).closest('tr');
+    var row = tabla.row(tr);
+    var valor = tr.find('input[name=funt]').val();
+    if (row.child.isShown()) {
+        // This row is already open - close it
+        row.child.hide();
+        tr.removeClass('shown');
+    } else {
+        // Open this row
+      var request = $.ajax({
+        type: "GET",
+        url: "{% url 'finance_app:finance-invoice-detail-more' %}",
+        data: {
+            "info": valor,
+        },
+        
+      });
+      request.done(function(response) {
+        const infor = response.data.map(function(d) {
+          return d;
+        
+      });
+      row.child(format(infor)).show();
+      tr.addClass('shown');
+      });
+      
+    }
+  });
+
+  function format(d) {
+    // `d` is the original data object for the row
+    const f= d.map(function(dat){
+      return (
+        
+        '<tr>' +
+        '<td>' + dat.consecutivo+'</td>' + '<td>'+ dat.payed +'</td>' +'<td>' + dat.fecha+'</td>' +'<td>'+ dat.observacion+'</td>' +
+        '</tr>'   
+      );
+    });
+    return (
+        '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+        '<th>Consecutivo</th>'+ '<th>Valor pagado</th>'+ '<th>Fecha de pago</th>'+'<th>Observación</th>'+
+        f
+        +'</table>'
+        
+         
+    );
+}
+
+
+});
+
+</script>
+
+
+
+{% endblock js %}

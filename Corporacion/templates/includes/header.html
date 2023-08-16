@@ -1,0 +1,487 @@
+{% load static %}
+
+
+{% if request.user.tipe.rol == "Administrador"%}
+<nav id="menufijo" class="navbar  navbar-expand-lg navbar-light " > 
+  <a class="navbar-brand  mb-0 h1"  href="#">CNE</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+    
+  >
+    <span class="navbar-toggler-icon" ></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item" id="das1">
+        <a
+          id="das"
+          class="nav-link"
+          
+          href="{% url 'academico_app:dashboard' %}"
+          >Inicio <span class="sr-only">(current)</span></a
+        >
+      </li>
+      <li class="nav-item" id="doc1">
+        <a
+          id="doc"
+          class="nav-link"
+          
+          href="{% url 'academico_app:list-teacher' %}"
+          >Docentes</a
+        >
+      </li>
+      <li class="nav-item" id="est1">
+        <a
+          id="est"
+          class="nav-link"
+          
+          href="{% url 'academico_app:list-student' %}"
+          >Estudiantes</a
+        >
+      </li>
+      <li class="nav-item" id="fin1">
+        <a
+          id="fin"
+          class="nav-link"
+          
+          href="{% url 'finance_app:finance-list-invoice' %}"
+          >Financiero</a
+        >
+      </li>
+      <li class="nav-item" id="usu1">
+        <a
+          id="usu"
+          class="nav-link"
+          
+          href="#"
+          >Usuarios</a
+        >
+      </li>
+      <li class="nav-item" id="conf1">
+        <a
+          id="conf"
+          class="nav-link"
+          
+          href="{% url 'academico_app:config' %}"
+          >Configuraciones</a
+        >
+      </li>
+    </ul>
+  </div>
+  <div>
+    <ul class="navbar-nav mr-auto" style="align-items: end">
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          
+        >
+          <span id="prof" class="mr-2 d-none d-lg-inline" 
+            ><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400" ></i><h7 style="text-transform: capitalize;">{{request.user.nombres}}</h7></span
+          >
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a  class="dropdown-item" href="{% url 'academico_app:profile'%}">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            Perfil
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'homepage_app:logout' %}">
+            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+            Salir
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+{% elif request.user.tipe.rol == "Gestor" %}
+
+<nav id="nav" class="navbar navbar-expand-lg navbar-light " >
+  <a class="navbar-brand  mb-0 h1"  href="#">CNE</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+    
+  >
+    <span class="navbar-toggler-icon" ></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item" id="das1">
+        <a
+          id="das"
+          class="nav-link"
+          
+          href="{% url 'academico_app:dashboard' %}"
+          >Inicio <span class="sr-only">(current)</span></a
+        >
+      </li>
+      <li class="nav-item" id="doc1">
+        <a
+          id="doc"
+          class="nav-link"
+          
+          href="{% url 'academico_app:list-teacher' %}"
+          >Docentes</a
+        >
+      </li>
+      <li class="nav-item"id="est1">
+        <a
+          id="est"
+          class="nav-link"
+          
+          href="{% url 'academico_app:list-student' %}"
+          >Estudiantes</a
+        >
+      </li>
+      <li class="nav-item" id="fin1">
+        <a
+          id="fin"
+          class="nav-link"
+          
+          href="{% url 'finance_app:finance-list-invoice' %}"
+          >Financiero</a
+        >
+      </li>
+      <li class="nav-item" id="conf1">
+        <a
+          id="conf"
+          class="nav-link"
+          
+          href="{% url 'academico_app:config' %}"
+          >Configuraciones</a
+        >
+      </li>
+    </ul>
+  </div>
+  <div>
+    <ul class="navbar-nav mr-auto" style="align-items: end">
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          
+        >
+          <span id="prof" class="mr-2 d-none d-lg-inline" 
+            ><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400" ></i><h7 style="text-transform: capitalize;">{{request.user.nombres}}</h7></span
+          >
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a  class="dropdown-item" href="{% url 'academico_app:profile'%}">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            Perfil
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'homepage_app:logout' %}">
+            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+            Salir
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+{% elif request.user.tipe.rol == "Estudiante" %}
+
+<nav id="nav" class="navbar navbar-expand-lg navbar-light " >
+  <a class="navbar-brand  mb-0 h1"  href="#">CNE</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+    
+  >
+    <span class="navbar-toggler-icon" ></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item" id="das1">
+        <a
+          id="das"
+          class="nav-link"
+          
+          href="#"
+          >Inicio <span class="sr-only">(current)</span></a
+        >
+      </li>
+      <li class="nav-item" id="doc1">
+        <a
+          id="doc"
+          class="nav-link"
+          
+          href="#"
+          >Mis programas</a
+        >
+      </li>
+      <li class="nav-item"id="est1">
+        <a
+          id="est"
+          class="nav-link"
+          
+          href="#"
+          >Mis pagos</a
+        >
+      </li>
+      <li class="nav-item" id="fin1">
+        <a
+          id="fin"
+          class="nav-link"
+          
+          href="#"
+          >Gestiones académicas</a
+        >
+      </li>
+      
+    </ul>
+  </div>
+  <div>
+    <ul class="navbar-nav mr-auto" style="align-items: end">
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          
+        >
+          <span id="prof" class="mr-2 d-none d-lg-inline" 
+            ><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400" ></i><h7 style="text-transform: capitalize;">{{request.user.nombres}}</h7></span
+          >
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a  class="dropdown-item" href="{% url 'academico_app:profile'%}">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            Perfil
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'homepage_app:logout' %}">
+            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+            Salir
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+{% elif request.user.tipe.rol == "Docente" %}
+
+<nav id="nav" class="navbar navbar-expand-lg navbar-light " >
+  <a class="navbar-brand  mb-0 h1"  href="#">CNE</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+    
+  >
+    <span class="navbar-toggler-icon" ></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item" id="das1">
+        <a
+          id="das"
+          class="nav-link"
+          
+          href="#"
+          >Inicio <span class="sr-only">(current)</span></a
+        >
+      </li>
+      <li class="nav-item" id="doc1">
+        <a
+          id="doc"
+          class="nav-link"
+          
+          href="#"
+          >Mis asignaturas</a
+        >
+      </li>
+      
+    </ul>
+  </div>
+  <div>
+    <ul class="navbar-nav mr-auto" style="align-items: end">
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          
+        >
+          <span id="prof" class="mr-2 d-none d-lg-inline" 
+            ><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400" ></i><h7 style="text-transform: capitalize;">{{request.user.nombres}}</h7></span
+          >
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a  class="dropdown-item" href="{% url 'academico_app:profile'%}">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            Perfil
+          </a>
+          <div class="dropdown-divider"></div>
+          <a  class="dropdown-item" href="#">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            Nómina
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'homepage_app:logout' %}">
+            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+            Salir
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+{% else %}
+
+<nav id="nav" class="navbar navbar-expand-lg navbar-light " >
+  <a class="navbar-brand  mb-0 h1"  href="#">CNE</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+    
+  >
+    <span class="navbar-toggler-icon" ></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item" id="das1">
+        <a
+          id="das"
+          class="nav-link"
+          
+          href="{% url 'academico_app:dashboard' %}"
+          >Inicio <span class="sr-only">(current)</span></a
+        >
+      </li>
+      <li class="nav-item" id="doc1">
+        <a
+          id="doc"
+          class="nav-link"
+          
+          href="{% url 'academico_app:list-teacher' %}"
+          >Docentes</a
+        >
+      </li>
+      <li class="nav-item"id="est1">
+        <a
+          id="est"
+          class="nav-link"
+          
+          href="{% url 'academico_app:list-student' %}"
+          >Estudiantes</a
+        >
+      </li>
+      <li class="nav-item" id="fin1">
+        <a
+          id="fin"
+          class="nav-link"
+          
+          href="#"
+          >Pagos</a
+        >
+      </li>
+      
+      <li class="nav-item" id="conf1">
+        <a
+          id="conf"
+          class="nav-link"
+          
+          href="#"
+          >Habilitaciones</a
+        >
+      </li>
+    </ul>
+  </div>
+  <div>
+    <ul class="navbar-nav mr-auto" style="align-items: end">
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          
+        >
+          <span id="prof" class="mr-2 d-none d-lg-inline" 
+            ><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400" ></i><h7 style="text-transform: capitalize;">{{request.user.nombres}}</h7></span
+          >
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a  class="dropdown-item" href="{% url 'academico_app:profile'%}">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            Perfil
+          </a>
+          <div class="dropdown-divider"></div>
+          <a  class="dropdown-item" href="#">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            Nómina
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'homepage_app:logout' %}">
+            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+            Salir
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+{% endif %}
+
+
+
+

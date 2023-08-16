@@ -1,0 +1,134 @@
+{% extends "Base2.html" %} {% load static %}
+
+{% block extracontent %}
+
+
+
+{% for i in consulta %}
+{% if request.user.tipe.rol == "Estudiante"%}
+<table class="table table-striped">
+    <tbody>
+      <tr>
+          <th scope="row">Código:</th>
+          <td>{{ i.codigo }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Teléfono:</th>
+          <td>{{ i.telefono }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Dirección:</th>
+          <td>{{ i.direccion }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Fecha de Nacimiento:</th>
+          <td>{{ i.nacimiento}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Correo:</th>
+          <td>{{ i.email}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Sexo:</th>
+          
+          {% if i.sexo == 'Masculino' %}
+             <td>Masculino</td>
+          {% elif i.sexo == "Otros" %}
+            <td>Otros</td>
+          {% else %}
+            <td>Femenino</td> 
+          {% endif %}
+        </tr>
+        <tr>
+          <th scope="row">Usuario:</th>
+          <td>{{ i.username }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Nombre acudiente:</th>
+          <td style="text-transform: capitalize;">{{ i.nombre_acudiente }} {{ i.apellidos_acudiente }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Teléfono acudiente:</th>
+          <td>{{ i.telefono_acudiente }}</td>
+        </tr>
+        
+    </tbody>
+</table>
+    
+
+{% elif request.user.tipe.rol == "Docente" %}
+<table class="table table-striped">
+  <tbody>
+    <tr>
+        <th scope="row">Código:</th>
+        <td>{{ i.codigo }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Teléfono:</th>
+        <td>{{ i.telefono }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Dirección:</th>
+        <td>{{ i.direccion }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Fecha de Nacimiento:</th>
+        <td>{{ i.nacimiento}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Correo:</th>
+        <td>{{ i.email}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Sexo:</th>
+        
+        {% if i.sexo == 'Masculino' %}
+           <td>Masculino</td>
+        {% elif i.sexo == "Otros" %}
+          <td>Otros</td>
+        {% else %}
+          <td>Femenino</td> 
+        {% endif %}
+      </tr>
+      <tr>
+        <th scope="row">Usuario:</th>
+        <td>{{ i.username }}</td>
+      </tr>
+      
+  </tbody>
+</table>
+{% else %}
+<table class="table table-striped">
+  <tbody>
+    <tr>
+        <th scope="row">Código:</th>
+        <td>{{ i.codigo }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Tipo de permiso:</th>
+        <td>{{ i.tipe }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Fecha de creación:</th>
+        <td>{{ i.created_at }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Nombre:</th>
+        <td style="text-transform: capitalize;">{{ i.nombres}} {{ i.apellidos}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Correo:</th>
+        <td>{{ i.email}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Usuario:</th>
+        <td>{{ i.username }}</td>
+      </tr>
+      
+  </tbody>
+</table>
+{% endif %}
+{% endfor %}
+
+
+{% endblock extracontent %}

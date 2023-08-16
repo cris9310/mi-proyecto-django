@@ -1,0 +1,34 @@
+{% extends "Base2.html" %}
+{% load  static %}
+
+{% block extracontent %}
+
+<table class="table table-striped" >
+  <thead>
+    <th>Código </th>
+    <th>Nombre del estudiante</th>
+    <th>Pagadas</th>
+    <th>Pendientes</th>
+    <th>Abonadas</th>
+
+
+  </thead>
+  <tbody>
+    {% for i in student  %}
+      <tr>
+        <td ><a href="{% url 'finance_app:finance-list-invoice-detail' i.Codigo %}">{{i.Codigo}}</a></td>
+        <td ><a href="">{{i.Usuario}}</a></td>
+        <td ><a href="">{{i.Pagadas}}</a></td>
+        <td ><a href="">{{i.Pendientes}}</a></td>
+        <td ><a href="">{{i.Abonadas}}</a></td>
+
+    </tr>
+      
+    {% endfor %}
+  </tbody>
+</table>
+
+      
+   <button><a href="javascript: history.go(-1)"> Atrás</a></button> 
+{% endblock extracontent %}
+

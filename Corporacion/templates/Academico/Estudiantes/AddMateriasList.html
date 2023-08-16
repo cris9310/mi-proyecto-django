@@ -1,0 +1,186 @@
+{% extends "Base2.html" %} {% load static %} {% block content %} {% if messages
+%}
+<ul class="messages">
+  {% for message in messages %}
+  <li>
+    {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message}}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %} {% if agregando %}
+<div>
+  {% for i in student %}
+  <h5>{{i.carrera}}</h5>
+  <h5>{{i.nombre}} {{i.apellidos}}</h5>
+
+  <div>
+    <label for=""
+      >El estudiante se encuentra matriculado en el periodo:
+      {{i.periodo_matriculado}}</label
+    >
+  </div>
+  {% endfor %}
+  <div>
+    <label for="">Materias creadas para este periodo</label>
+  </div>
+
+  <div class="col-10" style="margin-top: 2em">
+    <div>
+      <a href="">Materias matriculadas</a>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <th>Código</th>
+        <th>Materia</th>
+        <th>Docente</th>
+      </thead>
+      <tbody>
+        {% for i in materias %}
+        <tr>
+          <td>
+            <a href="{% url 'academico_app:topic-list-notes' i.materia_id  %} "
+              >{{i.materia.codigo}}</a
+            >
+          </td>
+          <td>{{i.materia.materia.nombre_materia}}</td>
+          <td>{{i.materia.docente}}</td>
+        </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-10" style="margin-top: 2em">
+    <div>
+      <a href="">Materias habilitadas</a>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <th>Seleccione</th>
+        <th>Materia</th>
+        <th>Docente</th>
+        <th>Total Alumnos</th>
+      </thead>
+      <tbody>
+        {% for i in agregando %} {% if i.banner_set.count == 45 %}
+        <tr>
+          <td>
+            <input
+              type="checkbox"
+              id="materia"
+              name="materia"
+              value="{{i.id}}"
+              disabled
+            />
+            Sin cupos
+          </td>
+          <td>{{i.materia.nombre_materia}}</td>
+          <td>{{i.docente}}</td>
+          <td>{{i.banner_set.count}}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td>
+            <input
+              type="checkbox"
+              id="materia"
+              name="materia"
+              value="{{i.id}}"
+            />
+          </td>
+          <td>{{i.materia.nombre_materia}}</td>
+          <td>{{i.docente}}</td>
+          <td>
+            <div class="row">
+              <div class="col-1">{{i.banner_set.count}}</div>
+              <div class="col-2">
+                <progress id="file" max="45" value="{{i.banner_set.count}}">
+                  {{i.banner_set.count}}
+                </progress>
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% endif %} {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <form action="{% url 'academico_app:asignacion' %}" method="post">
+    {% csrf_token %} {% for i in student %}
+    <input
+      type="hidden"
+      name="estudiante"
+      id="estudiante"
+      class="estudiante"
+      value="{{i.id}}"
+    />
+    <input
+      type="hidden"
+      name="carrera"
+      id="carrera"
+      class="carrera"
+      value="{{i.carrera_id}}"
+    />
+    {% endfor %}
+    <input type="hidden" name="concat" id="concat" class="concat" />
+    <button type="submit">Registrar Materia</button>
+  </form>
+  <button><a href="{% url 'academico_app:list-student' %}"> Volver</a></button>
+</div>
+
+{% else %}
+
+<div class="col-10" style="margin-top: 2em">
+  <div>
+    <a href="">Materias matriculadas</a>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <th>Código</th>
+      <th>Materia</th>
+      <th>Docente</th>
+    </thead>
+    <tbody>
+      {% for i in materias %}
+      <tr>
+        <td>
+          <a href="{% url 'academico_app:topic-list-notes' i.materia_id %} "
+            >{{i.materia.codigo}}</a
+          >
+        </td>
+        <td>{{i.materia.materia.nombre_materia}}</td>
+        <td>{{i.materia.docente}}</td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="col-10" style="margin-top: 2em">
+  <div>
+    <a href="">No hay más materias por asignar</a>
+  </div>
+</div>
+
+{% endif %} {% endblock content %} {% block js %}
+<script type="text/javascript">
+  $(document).ready(function () {
+    var selected = "";
+    $("input[type=checkbox]").on("change", function () {
+      var arr = $('[name="materia"]:checked')
+        .map(function () {
+          return this.value;
+        })
+        .get();
+      var str = arr.join(",");
+      $("#concat").val(arr);
+    });
+  });
+  $(document).ready(function () {
+    $("#exampleModalCenter").modal({ backdrop: "static", keyboard: false });
+  });
+</script>
+{% endblock js %}

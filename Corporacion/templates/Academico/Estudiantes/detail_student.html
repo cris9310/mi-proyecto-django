@@ -1,0 +1,89 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-plus">{{tittle}}{{object.nombre}}&nbsp;{{object.apellidos}} </i></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body">
+          {% csrf_token %}
+          <table class="table table-striped">
+              <tbody>
+                <tr>
+                    <th scope="row">Código:</th>
+                    <td>{{ object.codigo }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Teléfono:</th>
+                    <td>{{ object.cedula }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Teléfono:</th>
+                    <td>{{ object.telefono }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Nacionalidad:</th>
+                    <td>{{ object.nacionalidad}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Dirección:</th>
+                    <td>{{ object.direccion }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Fecha de Nacimiento:</th>
+                    <td>{{ object.nacimiento}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Carrera:</th>
+                    <td>{{ object.carrera}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Correo:</th>
+                    <td>{{ object.email}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Sexo:</th>
+                    <td>{{ object.sexo }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Fecha de Matrícula:</th>
+                    <td>{{ object.fecha_reg }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Usuario:</th>
+                    <td>{{ object.username }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Acudiente:</th>
+                    <td>{{ object.nombre_acudiente }} {{ object.apellidos_acudiente }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Teléfono Acudiente:</th>
+                    <td>{{ object.telefono_acudiente }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Identificación Acudiente:</th>
+                    <td>{{ object.cedula_acudiente }}</td>
+                  </tr>
+              </tbody>
+          </table>
+        </div> 
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+

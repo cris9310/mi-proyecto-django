@@ -1,0 +1,183 @@
+{% extends "Base2.html" %}
+{% load  static %}
+
+{% block title %}Docentes | Portal CNE{% endblock title %}
+
+{% block extracontent %}
+<div class="container-fluid">
+  <div class="row" style=" padding-left: 15px" >
+    <h1 class="h3" id="tit"><i class="fa-solid fa-person-chalkboard"></i> Docentes</h1>
+  </div>
+  <div id="submenu" style=" height:55px; width:100%;">
+    <ul class="nav" style="padding-top: 12px; ">
+      <li class="nav-item" id="tod1">
+        <a
+          id="tod"
+          class="nav-link"
+          
+          href="?order=todos"
+          >Todos <span class="sr-only">(current)</span></a
+        >
+        
+      </li>
+      <li class="nav-item" id="act1">
+        <a
+          id="act"
+          class="nav-link"
+          
+          href="?order=activos"
+          >Activos</a
+        >
+      </li>
+      <li class="nav-item" id="ina1">
+        <a
+          id="ina"
+          class="nav-link"
+          
+          href="?order=inactivos"
+          >Inactivos</a
+        >
+      </li>
+    </ul>
+
+    
+  </div>
+</div>
+<div class="container-fluid" style="">
+  <div  class="row" >
+    <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
+      <div class="row">
+        <div class="col" id="anadir">
+          <button  type="button" id="button" class="btn btn-sm" style="background-color: #405FC9" onclick="abrir_modal_general('{% url 'academico_app:create-teacher' %}')">
+            <a style="color: #FFFFFF; font-weight: bold" >
+              <i class="fa-solid fa-user-plus" style="color: #ffffff;"></i> &nbsp; Añadir docente</a>
+          </button>
+          <div class="linea"></div>
+        </div>
+      </div>
+      <div class ="tabla" style=" " >
+        {% if teacher %}
+          <table id="table_id2"  class="hover" style="width:100%; ">
+            <thead >
+              <th>Salones </th>
+              <th>Nro. Documento</th>
+              <th>Nombre del Docente</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </thead>
+            <tbody>
+              {% for teach in teacher %}
+              <tr>
+                {% if teach.estado  %}
+                <td ><a href="{% url 'academico_app:topic-list' teach.pk %}" title="Consultar" ><i id="iconos" style="padding-left: 0px" class="fa-solid fa-magnifying-glass" ></i></a></td>
+                {% else %}
+                <td ><a href="#" title="Consultar" ><i id="iconos2" style="padding-left: 0px" class="fa-solid fa-magnifying-glass" ></i></a></td>
+                {% endif %}
+                <td><a">{{teach.codigo}}</a></td>
+                <td>{{teach.apellidos}} {{teach.nombres}}</td>
+                {% if teach.is_active %}
+                <td><span id="activo" style="width:100%"><i class="fa-regular fa-circle-check"></i> &nbsp; Activo</span></td>
+                {% else %}
+                <td><span id="inactivo"><i class="fa-solid fa-circle-xmark"></i> &nbsp; Inactivo</span></td>
+                {% endif %}
+                <td>
+                  <a  onclick="abrir_modal_general('{% url 'academico_app:detail-teacher' teach.pk %}')" title="Ver docente"><i id="iconos" class="fa-regular fa-eye"></i></a>
+                  <a onclick="abrir_modal_general('{% url 'academico_app:update-teacher' teach.pk %}')" title="Editar"><i id="iconos" class="fa-regular fa-pen-to-square"></i></a>
+
+                  {% if teach.estado == True and teach.is_active == True %}
+                    <a  onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'inhabilitar')" title="Inhabilitar"><i  id="iconos" class="fa-solid fa-user-xmark"></i></a>
+                  {% elif teach.estado == True and teach.is_active == False %}
+                    <a onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'habilitar')" title="Habilitar"><i  id="iconos" class="fa-solid fa-user-check"></i></a>
+                  
+                  {% elif teach.estado == False and teach.is_active == True %}
+                    <a onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'inhabilitar')" title="Inhabilitar"><i  id="iconos" class="fa-solid fa-user-xmark"></i></a>
+                    <a onclick="actulizar_eliminar('{% url 'academico_app:delete-teacher' teach.pk %}', 'eliminar')" title="Eliminar"><i  id="iconos" class="fa-regular fa-trash-can"></i></a>
+                  {% else %}
+                    <a onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'habilitar')" title="Habilitar"><i  id="iconos" class="fa-solid fa-user-check"></i></a>
+                    <a onclick="actulizar_eliminar('{% url 'academico_app:delete-teacher' teach.pk %}', 'eliminar')" title="Eliminar"><i  id="iconos" class="fa-regular fa-trash-can"></i></a>
+                  {% endif %}
+                </td>
+              </tr>
+        {% endfor %}
+              
+            </tbody>
+          </table> 
+        {% else %}
+        <table id="table_id2"  class="hover" style="width:100%; ">
+          <thead >
+            <th>Salones </th>
+            <th>Nro. Documento</th>
+            <th>Nombre del Docente</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td > - </td >
+              <td > - </td >
+              <td > - </td >
+              <td > - </td >
+              <td > - </td >
+            </tr>
+          </tbody>
+        </table>   
+        {% endif %}
+      </div>
+    </div>
+  </div>
+    
+  </div>
+</div>
+
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+    
+{% endblock extracontent %}
+
+
+{% block js %}
+<script type="text/javascript">
+  function actulizar_eliminar(url, accion) {
+
+    if (accion == "habilitar") {
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+        document.getElementById("tittle").innerHTML  = "Desea habilitar a:";
+        $('#accion').val(accion);
+    
+      });
+    } else if (accion == "eliminar"){
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+      });
+    }else {
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+        document.getElementById("tittle").innerHTML  = "Desea inhabilitar a:";
+        $('#accion').val(accion);
+
+    
+      });
+        
+  
+    }
+  }
+
+</script>
+
+{% endblock js %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

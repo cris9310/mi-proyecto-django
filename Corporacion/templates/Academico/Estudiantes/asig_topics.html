@@ -1,0 +1,28 @@
+{% extends "Base2.html" %} {% load static %} {% block extracontent %}
+<div>
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+    <li>
+      {% if message.tags %} class="{{ message.tags }}"{% endif %}{{ message}}
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %} {% for error in field.errors %} {{ error }} {% endfor %}
+</div>
+
+<form
+  method="post"
+  enctype="multipart/form-data"
+  action="{% url 'academico_app:list-top-asignar' %}"
+>
+  {% csrf_token %} {{form.as_p}}
+  <button type="submit">Cargar</button>
+  <button><a href="{% url 'academico_app:list-student' %}"> Volver</a></button>
+  <button>
+    <a href="{% url 'academico_app:export-plant-student' %}">
+      Exportar plantilla</a
+    >
+  </button>
+</form>
+{% endblock extracontent %}

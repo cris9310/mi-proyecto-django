@@ -1,0 +1,178 @@
+{% extends "Base2.html" %} {% load static %} {% block extracontent %} {% if
+finaly %}
+<div class="col-10" style="margin-top: 2em">
+  <table class="table table-striped">
+    <thead>
+      <th>Seleccionar</th>
+      <th>Código</th>
+      <th>Estudiante</th>
+      <th>Programa</th>
+      <th>indicador</th>
+      <th>total</th>
+    </thead>
+    <tbody>
+      {% for i in finaly %} {% if i.indicador == 100 %}
+      <tr>
+        <td>
+          <input type="checkbox" id="materia" name="materia" value="{{i.pk}}" />
+        </td>
+        <td><a href="{% url 'academico_app:notes' i.pk %}">{{i.codigo}}</a></td>
+        <td>{{i.estudiante}}</td>
+        <td>{{i.programa}}</td>
+        <td>{{i.indicador}} %</td>
+        <td>{{i.total}}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td>No apto</td>
+        <td><a href="{% url 'academico_app:notes' i.pk %}">{{i.codigo}}</a></td>
+        <td>{{i.estudiante}}</td>
+        <td>{{i.programa}}</td>
+        <td>{{i.indicador}} %</td>
+        <td>{{i.total}}</td>
+      </tr>
+      {% endif %} {% endfor %}
+    </tbody>
+  </table>
+  <div
+    class="modal fade"
+    id="edicion"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Parámetros</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form
+            action="{% url 'academico_app:list-top-a-graduar' %}"
+            method="post"
+          >
+            {% csrf_token %}
+            <h5>Ingrese el número del libro:</h5>
+            <input
+              type="number"
+              name="libro"
+              id="libro"
+              class="libro"
+              required
+            />
+            <h5>Ingrese el número del Folio</h5>
+            <input
+              type="number"
+              name="folio"
+              id="folio"
+              class="folio"
+              required
+            />
+            <input type="hidden" name="concat" id="concat" class="concat" />
+
+            <div class="modal-footer">
+              <button type="submit">Graduar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="edicion-no"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Parámetros</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">Selecciona al menos 1 estudiante</div>
+      </div>
+    </div>
+  </div>
+
+  <button><a href="javascript: history.go(-1)"> Volver</a></button>
+  <button id="modal">abrir</button>
+</div>
+{% else %}
+<div
+  class="modal fade"
+  id="edicion-no-m"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Parámetros</h5>
+        <button>
+          <a href="{% url 'academico_app:list-student' %}">
+            <span aria-hidden="true">&times;</span></a
+          >
+        </button>
+      </div>
+      <div class="modal-body">No tenemos estudiantes con progreso</div>
+    </div>
+  </div>
+</div>
+{% endif %} {% endblock extracontent %} {% block js %}
+<script type="text/javascript">
+  $(document).ready(function () {
+    var selected = "";
+    $("input[type=checkbox]").on("change", function () {
+      var arr = $('[name="materia"]:checked')
+        .map(function () {
+          return this.value;
+        })
+        .get();
+      var str = arr.join(",");
+      $("#concat").val(arr);
+    });
+  });
+  $("#modal").on("click", function () {
+    var concat = $("#concat").val();
+    if (concat == "") {
+      $("#edicion-no").modal("show");
+    } else {
+      $("#edicion").modal("show");
+    }
+  });
+
+  $(document).ready(function () {
+    if ($("#materia").length) {
+      $("#modal").prop("disabled", false);
+    } else {
+      $("#modal").prop("disabled", true);
+    }
+  });
+
+  $(document).ready(function () {
+    $("#edicion-no-m").modal({ backdrop: "static", keyboard: false });
+  });
+</script>
+{% endblock js %}

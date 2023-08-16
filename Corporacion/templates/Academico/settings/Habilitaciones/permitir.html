@@ -1,0 +1,253 @@
+{% extends "Base2.html" %} {% load static %} {% block content %}
+
+<div class="row">
+  <div>
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li>
+        {% if message.tags %} class="{{ message.tags }}"{% endif %}{{ message}}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% for error in field.errors %} {{ error }} {% endfor %}
+  </div>
+
+  <div class="col-lg-6">
+    <!-- Default Card Example -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Habilitaciones</h6>
+      </div>
+      <div class="card-body">
+        Seleccione el corte que desea habilitar o inhabilitar
+      </div>
+      <div class="card-header">
+        {% for i in habilitados %} {% if i.C1 == True and i.B1 == False %}
+
+        <button
+          type="submit"
+          class="btn btn-success btn-sm"
+          id="abre"
+          value="C1"
+        >
+          Corte 1
+        </button>
+        {% elif i.C1 == False and i.B1 == True %}
+        <button
+          type="submit"
+          class="btn btn-danger btn-sm"
+          id="abre"
+          value="C1"
+        >
+          Corte 1 inhabilitar
+        </button>
+        {% else %}
+        <button type="button" href="#" disabled class="btn btn-danger btn-sm">
+          Corte 1 Cerrado
+        </button>
+        {% endif %} {% if i.C2 == True and i.B2 == False %}
+        <button
+          type="submit"
+          class="btn btn-success btn-sm"
+          id="abre"
+          value="C2"
+        >
+          Corte 2
+        </button>
+        {% elif i.C2 == False and i.B2 == True %}
+        <button
+          type="submit"
+          class="btn btn-danger btn-sm"
+          id="abre"
+          value="C2"
+        >
+          Corte inhabilitar2
+        </button>
+        {% else %}
+        <button type="button" href="#" disabled class="btn btn-danger btn-sm">
+          Corte 2 Cerrado
+        </button>
+        {% endif %} {% if i.C3 == True and i.B3 == False %}
+
+        <button
+          type="submit"
+          class="btn btn-success btn-sm"
+          id="abre"
+          value="C3"
+        >
+          Corte 3
+        </button>
+        {% elif i.C3 == False and i.B3 == True %}
+        <button
+          type="submit"
+          class="btn btn-danger btn-sm"
+          id="abre"
+          value="C3"
+        >
+          Corte 3 inhabilitar
+        </button>
+        {% else %}
+        <button type="button" href="#" disabled class="btn btn-danger btn-sm">
+          Corte 3 Cerrado
+        </button>
+        {% endif %} {% if i.B1 == True and i.B2 == True and i.B3 == True and
+        i.C3 == True and i.Cerrado == False %}
+
+        <button
+          type="submit"
+          class="btn btn-success btn-sm"
+          id="abre"
+          value="CF"
+        >
+          Cerrar
+        </button>
+        {% elif i.B1 == True and i.B2 == True and i.B3 == True and i.C3 == True
+        and i.C1 == True and i.C2 == True %}
+
+        <button
+          type="submit"
+          class="btn btn-success btn-sm"
+          id="abre"
+          value="generar"
+        >
+          Generar
+        </button>
+        {% else %}
+        <button type="button" href="#" disabled class="btn btn-danger btn-sm">
+          En progreso
+        </button>
+
+        {% endif %} {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {% if data %}
+  <table class="table table-striped">
+    <thead>
+      <th>Usuario</th>
+      <th>Nombre del usuario</th>
+      <th>Acción</th>
+      <th>Fecha de la acción</th>
+    </thead>
+    <tbody>
+      {% for teach in data %}
+      <tr>
+        <td>{{teach.usuario}}</td>
+        <td>{{teach.nombre}}</td>
+        <td>{{teach.accion}}</td>
+        <td>{{teach.fecha_reg}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% else %}
+  <p>No hay acciones para mostrar</p>
+
+  {% endif %}
+  <div class="cell">
+    {% if is_paginated %}
+    <nav aria-label="Pagination">
+      <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="pagination-previous">
+          <a href="?page={{page_obj.previous_page_number}}">Atrás</a>
+        </li>
+        {% endif %} {% for pagina in paginator.page_range %} {% if pagina ==
+        page_obj.number %}
+        <li class="current">
+          <span class="show-for-sr">Página</span>{{ pagina }}
+        </li>
+        {% else %}
+        <li><a href="?page={{pagina}}">{{ pagina }}</a></li>
+        {% endif %} {% endfor %} {% if page_obj.has_next %}
+        <li class="pagination-next">
+          <a href="?page={{page_obj.next_page_number}}">siguiente</a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+
+    {% endif %}
+  </div>
+</div>
+<div
+  class="modal fade"
+  id="edicion"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          <i class="fas fa-plus"></i>
+          <p class="price-cash">defecto</p>
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'academico_app:generar-cortes' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="data" id="data" class="data" value="" />
+          <button type="submit" class="btn btn-success btn-sm">Enviar</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+  {% endblock content %} {% block js %}
+  <script>
+    var $ = jQuery.noConflict();
+
+    $("#abre").click(function () {
+      var button = $(this).val();
+      var data1 = button.toString();
+      var p = $(".price-cash");
+      var c = p.children();
+      if (data1 == "C1") {
+        $("#edicion").modal("show");
+        $("#data").val(button);
+        p.text("¿Está seguro que va a realizar la acción para el corte 1?");
+        p.append(c);
+      } else if (data1 == "C2") {
+        $("#edicion").modal("show");
+        $("#data").val(button);
+        p.text("¿Está seguro que va a realizar la acción para el corte 2?");
+        p.append(c);
+      } else if (data1 == "C3") {
+        $("#edicion").modal("show");
+        $("#data").val(button);
+        p.text("¿Está seguro que va a realizar la acción para el corte 3?");
+        p.append(c);
+      } else if (data1 == "CF") {
+        $("#edicion").modal("show");
+        $("#data").val(button);
+        p.text("¿Está seguro que desea cerrar el semestre?");
+        p.append(c);
+      } else {
+        $("#edicion").modal("show");
+        $("#data").val(button);
+        p.text("¿Está seguro que desea habilitar los cortes?");
+        p.append(c);
+      }
+    });
+  </script>
+
+  {% endblock js %}
+</div>
