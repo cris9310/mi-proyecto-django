@@ -37,8 +37,9 @@
 
   function sendnotes() {
     var formData = new FormData();
+    var serializedData = document.getElementById('archivo');
     
-    if (formData) {
+    if (serializedData.files.length != 0) {
       
       formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
       formData.append('corteFull', $('#corteFull').val());
@@ -56,22 +57,16 @@
           $('#spinner-div').show()
           $("#edicion").modal("hide");
           window.location.reload();
-          Swal.fire({
-            "title": "Excelente!",
-            "text": "El registro ha sido exitoso",
-            "icon": "success"
-          })
+          mostrarOk()
   
         },
         error: function (error) {
           mostrarErroresCreacion2(error);
-          Swal.fire({
-            "title": "Aun falta algo",
-            "text": "Verifica las indicaciones en la parte superior del formulario.",
-            "icon": "error"
-          })
+          mostrarError()
         }
       });
+    }else {
+      mostrarErrorvacio()
     }
   }
 

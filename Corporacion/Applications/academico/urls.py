@@ -148,7 +148,7 @@ urlpatterns = [
     ),
 
     path(
-        'notes/<pk>/',
+        'list-student/notes/<pk>/',
         views.Vernotas.as_view(), 
         name='notes'
     ),
@@ -196,7 +196,7 @@ urlpatterns = [
         name='create-student'
     ),
     path(
-        'list-top-graduado',
+        'list-student/list-top-graduado/',
         views.ListFinalily.as_view(), 
         name='list-top-graduado'
     ),

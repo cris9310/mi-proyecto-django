@@ -4,7 +4,7 @@
 {% load  static %}
 
 {% block title %}Cursos | Portal CNE{% endblock title %}
-
+ 
 
 {% block extracontent %}
 
@@ -19,7 +19,7 @@
     <div >
       <div style="display: flex" ><h1 class="h5" id="tit">Nombre del docente:</h1><h5>&nbsp;{{i.docente}}</h5></div>
       <div style="display: flex" ><h1 class="h5" id="tit">Código:</h1><h5>&nbsp;{{i.codigo}}</h5></div>
-      <div style="display: flex" ><h1 class="h5" id="tit">Programa:</h1><h5>&nbsp;{{i.programa}}</h5></div>
+      <div style="display: flex" ><h1 class="h5" id="tit">Programa:</h1><h5>&nbsp;{{i.programa}}</h5></div> 
     </div>
     <div class="divider">
     </div>
@@ -33,6 +33,7 @@
 </div>
 
 {% for u in topics %}
+{% if u.is_active %}
 <div class="container-fluid" style="">
   <div  class="row" >
     <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
@@ -60,7 +61,7 @@
                 <div class="divider"></div >
 
                   
-                <div ><button onclick="abrir_modal_deluxe('{% url 'academico_app:upload-notes' %}', '_1', '{{u.codigo}}')" id="button" style="background: #405FC9" ><i class="fa-solid fa-upload"></i> &nbsp;Cargar notas</button>
+                <div ><button onclick="abrir_modal_deluxe('{% url 'academico_app:upload-notes' %}', '1', '{{u.codigo}}')" id="button" style="background: #405FC9" ><i class="fa-solid fa-upload"></i> &nbsp;Cargar notas</button>
                 </div >
               </div >
               {% elif i.C2 == False and i.B2 == True %}
@@ -105,11 +106,11 @@
                 <div class="divider"></div >
 
                   
-                <div ><button onclick="abrir_modal_deluxe('{% url 'academico_app:upload-notes' %}', '_3', '{{u.codigo}}'  )" id="button" style="background: #405FC9"  ><i class="fa-solid fa-upload"></i> &nbsp;Cargar notas</button>
+                <div ><button onclick="abrir_modal_deluxe('{% url 'academico_app:upload-notes' %}', '3', '{{u.codigo}}'  )" id="button" style="background: #405FC9"  ><i class="fa-solid fa-upload"></i> &nbsp;Cargar notas</button>
                 </div >
               </div >
               {% else %}
-              <a href="">No hay cortes autorizados</a>
+              <h5 id="activo" style="width:100%"><i class="fa-regular fa-circle-check"></i> &nbsp;  No hay cortes autorizados</h5>
               {% endif %} 
               {% endfor %}
             </>
@@ -121,6 +122,23 @@
   </div>   
   </div>
 </div>
+{% else %}
+<div class="container-fluid" style="">
+  <div  class="row" >
+    <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
+      <div class="row">
+        <div class="col" id="anadir">
+          <div class="grid-x grid-margin-x">
+            <h5 id="activo" style="width:100%"><i class="fa-regular fa-circle-check"></i> &nbsp;  Esta asignatura se encuentra cerrada</h5>
+          </div>
+          <div class="linea"></div>
+        </div>
+      </div>
+    </div>
+  </div>   
+  </div>
+</div>
+{% endif %}
 {% endfor %}
 
 <div class="container-fluid" style="">

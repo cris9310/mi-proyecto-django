@@ -259,7 +259,13 @@ class TeacherForm(forms.ModelForm):
 
         return nombre.title()
     
-
+    def clean_username(self):
+        if User.objects.filter(username=self.cleaned_data.get('username')):
+           
+           self.add_error('username', 'Este usuario ya se encuentra creado')
+        else:
+           return self.cleaned_data.get('username')
+    
 #Formulario destinado al cargue de notas de los estudiantes.
 class UploadForm(forms.Form):
 
@@ -428,74 +434,27 @@ class StudentRegisterForm(forms.ModelForm):
 
     
     class Meta:
-        """Meta definition for MODELNAMEform."""
         
         model = Estudiante
         fields = ('__all__')
-        exclude =['is_estudiante','is_active', 'fecha_reg', 'is_matriculado','codigo', 'is_graduado', 'costo_cierre']
+        exclude =['is_estudiante','is_active', 'fecha_reg', 'is_matriculado','codigo', 'is_graduado', 'costo_cierre', "masivo", "updated_at"]
         
         widgets={
 
-            'cedula': TextInput(
+            'cedula': NumberInput(
                 attrs={
                     'autocomplete': 'off',
-                    'class':'form-control ',
-                    'id':'cedula'
+                    'class':'form-control',
+                    'id':'cedula',
+                    'placeholder':"Ingrese número de documento",
+                    "onkeydown":"noPuntoComa( event )"
                 }
             ),
-            'sexo': Select(
+            'tDocument': Select(
                 attrs={
                     'autocomplete': 'off',
-                    'class':'form-select '
-                }
-            ),
-            'periodo_matriculado': Select(
-                attrs={
-                    'autocomplete': 'off',
-                    'class':'form-select '
-                }
-            ),
-            
-            'nacionalidad': Select(
-                attrs={
-                    'autocomplete': 'off',
-                    'class':'form-select '
-                }
-            ),
-            'carrera': Select(
-                attrs={
-                    'autocomplete': 'off',
-                    'class':'form-select ',
-                    'id':'carrera'
-                }
-            ),
-            'malla': Select(
-                attrs={
-                    'autocomplete': 'off',
-                    'class':'form-select ',
-                    'id':'malla'
-                }
-            ),
-            'sede': Select(
-                    attrs={
-                        'autocomplete': 'off',
-                        'class':'form-select ',
-                        'id': 'sede'
-
-                    }
-                ),
-            'sexo': Select(
-                attrs={
-                    'autocomplete': 'off',
-                    'class':'form-select '
-                }
-            ),
-
-            'nacimiento': DateInput(
-                format=('%Y-%m-%d'),
-                attrs={
-                    'type':'date',
-                    'class':'form-control'
+                    'class':'form-control',
+                    "id": "tDocument"
                 }
             ),
             'nombre': TextInput(
@@ -510,72 +469,142 @@ class StudentRegisterForm(forms.ModelForm):
                 attrs={
                     'placeholder':"Ingrese apellidos",
                     'autocomplete': 'off',
-                    'class':'form-control '
+                    'class':'form-control ',
+                    'id': 'apellidos'
                 }
             ),
-            'username': TextInput(
-                attrs={
-                    'placeholder':"nombre de usuario",
-                    'autocomplete': 'off',
-                    'class':'form-control '
-                }
-            ),
-
             'direccion': TextInput(
                 attrs={
-                    'placeholder':"nombre dirección",
+                    'placeholder':"Ingrese dirección",
                     'autocomplete': 'off',
-                    'class':'form-control '
+                    'class':'form-control ',
+                    'id': 'direccion'
                 }
             ),
 
-            'telefono': TextInput(
+            'telefono': NumberInput(
                 attrs={
                     'placeholder':"Ingrese teléfono",
                     'autocomplete': 'off',
-                    'class':'form-control '
+                    'class':'form-control ',
+                    'id': 'telefono',
+                    "onkeydown":"noPuntoComa( event )"
                 }
             ),
 
+            'sexo': Select(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id': 'sexo'
+                }
+            ),
+            'nacionalidad': Select(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control ',
+                    'id': 'nacionalidad'
+                }
+            ),
+            'nacimiento': DateInput(
+                format=('%Y-%m-%d'),
+                attrs={
+                    'type':'date',
+                    'class':'form-control',
+                    'id': 'nacimiento'
+                }
+            ),
             'email': EmailInput(
                 attrs={
                     'placeholder':"Ingrese correo electrónico",
                     'autocomplete': 'off',
-                    'class':'form-control '
+                    'class':'form-control ',
+                    'id': 'email'
                 }
             ),
+            'username': TextInput(
+                attrs={
+                    'placeholder':"Ingrese un nombre de usuario",
+                    'autocomplete': 'off',
+                    'class':'form-control ',
+                    'id': 'username'
+                }
+            ),
+
             'nombre_acudiente': TextInput(
                 attrs={
                     'autocomplete': 'off',
-                    'class':'form-control '
+                    'class':'form-control ',
+                    'placeholder':"Ingrese nombre del acudiente",
+                    'id': 'nombre_acudiente'
                 }
             ),
             'apellidos_acudiente': TextInput(
                 attrs={
                     'autocomplete': 'off',
-                    'class':'form-control '
+                    'placeholder':"Ingrese apellidos del acudiente",
+                    'class':'form-control ',
+                    'id': 'apellidos_acudiente'
+
                 }
             ),
-            'telefono_acudiente': TextInput(
+            'telefono_acudiente': NumberInput(
                 attrs={
                     
                     'autocomplete': 'off',
-                    'class':'form-control '
+                    'class':'form-control ',
+                    'placeholder':"Ingrese teléfono de contacto",
+                    'id': 'telefono_acudiente',
+                    "onkeydown":"noPuntoComa( event )"
+
+
                 }
             ),
 
-            'cedula_acudiente': TextInput(
+            'cedula_acudiente': NumberInput(
                 attrs={
                     'autocomplete': 'off',
-                    'class':'form-control '
-                }
-            ),
-            'masivo': CheckboxInput(
-                attrs={
-                    'id': 'masivo'
+                    'class':'form-control ',
+                    'placeholder':"Ingrese documento del acudiente",
+                    'id': 'cedula_acudiente',
+                    "onkeydown":"noPuntoComa( event )"
+
+
                 }
             ),
 
+
+            'periodo_matriculado': Select(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id': 'periodo_matriculado'
+
+                }
+            ),
+            
+            'carrera': Select(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control ',
+                    'id':'carrera'
+                }
+            ),
+            'pensum_asig': Select(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id':'pensum_asig'
+                }
+            ),
+            'sede': Select(
+                    attrs={
+                        'autocomplete': 'off',
+                        'class':'form-control ',
+                        'id': 'sede'
+
+                    }
+                ),
 
         }
     
@@ -601,51 +630,13 @@ class StudentRegisterForm(forms.ModelForm):
         nombre = str(self.cleaned_data.get('apellidos_acudiente'))
 
         return nombre.title()
-
     
-    def clean_cedula(self):
-        b = str(self.cleaned_data.get('cedula'))
-        if b[0] == "0":
-            self.add_error('cedula', 'La cédula no puede iniciar por cero')
+    def clean_username(self):
+        if User.objects.filter(username=self.cleaned_data.get('username')):
+           
+           self.add_error('username', 'Este usuario ya se encuentra creado')
         else:
-            return b
-
-    def clean_cedula_acudiente(self):
-        b = str(self.cleaned_data.get('cedula_acudiente'))
-        if b[0] == "0":
-            self.add_error('cedula_acudiente', 'La cédula no puede iniciar por cero')
-        else:
-            return b
- 
-    def clean_telefono(self):
-        tamaño = len(self.cleaned_data.get('telefono'))
-        tamaño_valor = self.cleaned_data.get('telefono')
-        if tamaño == 7 or tamaño == 10 :
-           return tamaño_valor
-            
-        else:
-            self.add_error('telefono', 'El teléfono debe de tener 7 o 10 números')
-    
-    def clean_telefono_acudiente(self):
-        tamaño = len(self.cleaned_data.get('telefono_acudiente'))
-        tamaño_valor = self.cleaned_data.get('telefono_acudiente')
-        if tamaño == 7 or tamaño == 10 :
-           return tamaño_valor
-            
-        else:
-            self.add_error('telefono', 'El teléfono debe de tener 7 o 10 números')
-
-    
-    def clean_nacimiento(self):
-        fecha_inicial = self.cleaned_data.get('nacimiento')
-        fecha_actual = date.today()
-        fecha_final = ((fecha_actual - fecha_inicial).days)/365
-        
-        if fecha_final <= 13 :
-           self.add_error('nacimiento', 'El Estudiante no puede tener menos de 13 años')
-        else:
-            return fecha_inicial
-
+           return self.cleaned_data.get('username')
 
 class StudentAsigMate(forms.Form):
 
@@ -653,7 +644,10 @@ class StudentAsigMate(forms.Form):
         required=True,
         widget=forms.FileInput(
             attrs={
-                'class':'form-control '
+                'class':'form-control ',
+                'name':'carga',
+                'id':'carga'
+
             }
         )
     )
@@ -667,3 +661,45 @@ class StudentAsigMate(forms.Form):
 
         else:
             return carga_file_exp
+        
+class GraduateRegisterForm(forms.ModelForm):
+
+    concat = forms.CharField(
+        widget=forms.HiddenInput(
+            attrs={
+                'class':'form-control',
+                'id':'concat',
+                'name':'concat',
+            }
+        )
+
+    )
+
+    
+    class Meta:
+        
+        model = Graduated
+        fields = ('__all__')
+        exclude =['student','carrera', 'periodo_grado', 'fecha_reg']
+
+        widgets={
+
+            'libro': NumberInput(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id':'libro',
+                    'name':'libro',
+                    'placeholder':"Ingrese número de libro",
+                }
+            ),
+            'folio': NumberInput(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id':'folio',
+                    'name':'folio',
+                    'placeholder':"Ingrese número de folio",
+                }
+            ),
+        }

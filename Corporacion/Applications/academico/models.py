@@ -52,7 +52,7 @@ class User(AbstractBaseUser):
     apellidos = models.CharField(max_length=50, blank=True, null=True)
     username=models.CharField(max_length=50, unique=True, blank=False, null=False, verbose_name='Usuario')
     email=models.EmailField( verbose_name='Em@il', blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(auto_now=True)
     tipe = models.ForeignKey(CatalogsTypesRol, on_delete=models.CASCADE)
     is_superuser=models.BooleanField(default=False)
@@ -174,26 +174,28 @@ class Materias(models.Model):
 
 class Estudiante(models.Model):
     codigo = models.CharField(unique=True, max_length=6, verbose_name='código')
-    cedula = models.CharField(unique=False, max_length=20, verbose_name='Identificación del Estudiante')
+    tDocument = models.ForeignKey(CatalogsTypesDocuement, on_delete=models.CASCADE, verbose_name='Tipo de documento')
+    cedula = models.CharField(unique=False, max_length=20, verbose_name='Identificación del Estudiante', validators=[validate_cero])
     nombre = models.CharField(max_length=100, blank=False, null=False, verbose_name='Nombres')
     apellidos=models.CharField( verbose_name='Apellidos', max_length=100, blank=False, null=False)
-    nacionalidad=models.CharField( verbose_name='Nacionalidad',max_length=100, choices=COUNTRIES )
-    telefono=models.CharField( verbose_name='Teléfono', max_length=10, blank=False, null=False)
-    direccion=models.CharField( verbose_name='Dirección de Residencia', max_length=50, blank=False, null=False)
-    nacimiento=models.DateField( verbose_name='Fecha de Nacimiento' )
+    nacionalidad=models.CharField( verbose_name='Nacionalidad',max_length=100, choices=COUNTRIES, default="Colombia" )
+    telefono=models.CharField( verbose_name='Teléfono', max_length=10, blank=False, null=False, validators=[validate_telefono])
+    direccion=models.CharField( verbose_name='Direccion', max_length=50, blank=False, null=False)
+    nacimiento=models.DateField( verbose_name='Fecha de Nacimiento', validators=[clean_nacimiento2])
     carrera=models.ForeignKey(Programas, verbose_name='Programa', on_delete=models.CASCADE)
     costo_cierre = models.DecimalField(max_digits= 25, decimal_places=0, default=0)
-    pensum_asig = models.ForeignKey(Pensum, verbose_name='Malla', on_delete=models.CASCADE)
+    pensum_asig = models.ForeignKey(Pensum, verbose_name='pensum_asig', on_delete=models.CASCADE)
     email=models.EmailField( verbose_name='Em@il', blank=False, unique=False)
-    sexo=models.CharField( verbose_name='Genero',max_length=50, choices=GENEROS, default="Femenino")
+    sexo=models.CharField( verbose_name='sexo',max_length=50, choices=GENEROS, default="Femenino")
     sede=models.ForeignKey(CatalogsSede, verbose_name='Sede', on_delete=models.CASCADE)
     periodo_matriculado=models.ForeignKey(Periodos, verbose_name='Periodo', on_delete=models.CASCADE)
     fecha_reg=models.DateField(default=datetime.now(), verbose_name='Fecha')
+    updated_at = models.DateTimeField(auto_now=True)
     username=models.CharField(max_length=50, blank=False, null=False, verbose_name='Usuario', unique=True)
     nombre_acudiente = models.CharField(max_length=100, blank=False, null=False, verbose_name='Nombres del acudiente')
     apellidos_acudiente =models.CharField( verbose_name='Apellidos del acudiente', max_length=100, blank=False, null=False)
-    telefono_acudiente =models.CharField( verbose_name='Teléfono del acudiente', max_length=10, blank=False, null=False)
-    cedula_acudiente =models.CharField(unique=False, max_length=20, verbose_name='Cédula del acudiente')
+    telefono_acudiente =models.CharField( verbose_name='Teléfono del acudiente', max_length=10, blank=False, null=False, validators=[validate_telefono])
+    cedula_acudiente =models.CharField(unique=False, max_length=20, verbose_name='Cédula del acudiente', validators=[validate_cero])
     is_active=models.BooleanField(default=True)
     is_estudiante=models.BooleanField(default=True)
     is_matriculado=models.BooleanField(default=False)
@@ -205,6 +207,12 @@ class Estudiante(models.Model):
     def __str__(self): 
         
         return "{0}, {1}".format(self.apellidos, self.nombre)
+    
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.fecha_reg = datetime.now()
+        self.updated_at = datetime.now()
+        return super(Estudiante, self).save(*args, **kwargs)
 
 class Banner(models.Model):
     cod_student = models.ForeignKey(Estudiante, verbose_name='Estudiante', on_delete=models.CASCADE)
@@ -214,12 +222,6 @@ class Banner(models.Model):
     corte2 = models.DecimalField(max_digits = 5, decimal_places = 2, verbose_name='corte 2', validators=[validate_decimal])
     corte3 = models.DecimalField(max_digits = 5, decimal_places = 2, verbose_name='corte 3', validators=[validate_decimal])
     promedio = models.DecimalField(max_digits = 5, decimal_places = 2, verbose_name='promedio')
-    A1=models.BooleanField(default=False)
-    A2=models.BooleanField(default=False)
-    A3=models.BooleanField(default=False)
-    B1=models.BooleanField(default=False)
-    B2=models.BooleanField(default=False)
-    B3=models.BooleanField(default=False)
     objects = BuscadorManager()
     
    
@@ -233,6 +235,8 @@ class Graduated(models.Model):
     libro = models.PositiveIntegerField(null=False, blank=False, verbose_name='Libro')
     folio = models.PositiveIntegerField(null=False, blank=False, verbose_name='Folio')
     fecha_reg=models.DateField(default=datetime.now(), verbose_name='Fecha')
+
+    objects = BuscadorManager()
 
    
 class Habilitaciones(models.Model):

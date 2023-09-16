@@ -9,7 +9,7 @@ urlpatterns = [
         name='finance-list-invoice'
     ),
     path(
-        'finance-list-invoice-detail/<pk>/',
+        'finance-list-invoice/finance-list-invoice-detail/<pk>/',
         views.InvoiceListviewUser.as_view(), 
         name='finance-list-invoice-detail'
     ),
@@ -24,10 +24,22 @@ urlpatterns = [
         name='finance-list-invoice-sub'
     ),
     path(
-        'finance-invoice-detail-more/',
+        'finance-list-invoice/finance-invoice-detail-more/',
         views.ListInvoiceDetailView.as_view(), 
         name='finance-invoice-detail-more'
     ),
+    path(
+        'finance-list-invoice/detail-sub/<pk>/',
+        views.FacturasSubDetailView.as_view(), 
+        name='detail-sub'
+    ),
+    path(
+        'finance-list-invoice/delete-sub/<pk>/',
+        views.FacturasSubDeleteView.as_view(), 
+        name='delete-sub'
+    ),
+
+    
 
     
 

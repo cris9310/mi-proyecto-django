@@ -1,4 +1,6 @@
-{% extends "Base2.html" %} {% load static %} {% block content %}
+{% extends "Base2.html" %} 
+{% load static %} 
+{% block extracontent %}
 
 <div class="row">
   <div>
@@ -23,7 +25,8 @@
         Seleccione el corte que desea habilitar o inhabilitar
       </div>
       <div class="card-header">
-        {% for i in habilitados %} {% if i.C1 == True and i.B1 == False %}
+        {% for i in habilitados %} 
+        {% if i.C1 == True and i.B1 == False %}
 
         <button
           type="submit"
@@ -46,7 +49,8 @@
         <button type="button" href="#" disabled class="btn btn-danger btn-sm">
           Corte 1 Cerrado
         </button>
-        {% endif %} {% if i.C2 == True and i.B2 == False %}
+        {% endif %} 
+        {% if i.C2 == True and i.B2 == False %}
         <button
           type="submit"
           class="btn btn-success btn-sm"
@@ -68,7 +72,8 @@
         <button type="button" href="#" disabled class="btn btn-danger btn-sm">
           Corte 2 Cerrado
         </button>
-        {% endif %} {% if i.C3 == True and i.B3 == False %}
+        {% endif %} 
+        {% if i.C3 == True and i.B3 == False %}
 
         <button
           type="submit"
@@ -91,8 +96,8 @@
         <button type="button" href="#" disabled class="btn btn-danger btn-sm">
           Corte 3 Cerrado
         </button>
-        {% endif %} {% if i.B1 == True and i.B2 == True and i.B3 == True and
-        i.C3 == True and i.Cerrado == False %}
+        {% endif %} 
+        {% if i.B1 == True and i.B2 == True and i.B3 == True and i.C3 == True and i.Cerrado == False %}
 
         <button
           type="submit"
@@ -102,8 +107,7 @@
         >
           Cerrar
         </button>
-        {% elif i.B1 == True and i.B2 == True and i.B3 == True and i.C3 == True
-        and i.C1 == True and i.C2 == True %}
+        {% elif i.B1 == True and i.B2 == True and i.B3 == True and i.C3 == True and i.C1 == True and i.C2 == True %}
 
         <button
           type="submit"
@@ -118,7 +122,8 @@
           En progreso
         </button>
 
-        {% endif %} {% endfor %}
+        {% endif %} 
+        {% endfor %}
       </div>
     </div>
   </div>
@@ -155,14 +160,17 @@
         <li class="pagination-previous">
           <a href="?page={{page_obj.previous_page_number}}">Atrás</a>
         </li>
-        {% endif %} {% for pagina in paginator.page_range %} {% if pagina ==
-        page_obj.number %}
+        {% endif %} 
+        {% for pagina in paginator.page_range %} 
+        {% if pagina == page_obj.number %}
         <li class="current">
           <span class="show-for-sr">Página</span>{{ pagina }}
         </li>
         {% else %}
         <li><a href="?page={{pagina}}">{{ pagina }}</a></li>
-        {% endif %} {% endfor %} {% if page_obj.has_next %}
+        {% endif %} 
+        {% endfor %} 
+        {% if page_obj.has_next %}
         <li class="pagination-next">
           <a href="?page={{page_obj.next_page_number}}">siguiente</a>
         </li>
@@ -211,7 +219,8 @@
       </div>
     </div>
   </div>
-  {% endblock content %} {% block js %}
+  {% endblock extracontent %} 
+  {% block js %}
   <script>
     var $ = jQuery.noConflict();
 

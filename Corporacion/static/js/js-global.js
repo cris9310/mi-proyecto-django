@@ -84,6 +84,15 @@ function abrir_modal_deluxe(url, corte, asignatura) {
 
 }
 
+function mostrarOkpayments() {
+  Swal.fire({
+    "title": "Excelente!",
+    "text": "Pago registrado exitosamente",
+    "icon": "success",
+    "timer": 10000,
+  })
+}
+
 function mostrarOk() {
   Swal.fire({
     "title": "Excelente!",
@@ -95,11 +104,28 @@ function mostrarOk() {
 
 function mostrarError() {
   Swal.fire({
-    "title": "Aun falta algo",
+    "title": "Aún falta algo",
     "text": "Verifica las indicaciones en la parte superior del formulario.",
     "icon": "error"
   })
 }
+
+function mostrarErrorblanco() {
+  Swal.fire({
+    "title": "Aún falta algo",
+    "text": "No pueden haber valores en blanco ni ceros",
+    "icon": "error"
+  })
+}
+
+function mostrarErrorvacio() {
+  Swal.fire({
+    "title": "Aún falta algo",
+    "text": "Por favor cargue algo, el formulario no puede estar vacío.",
+    "icon": "error"
+  })
+}
+
 
 function noPuntoComa(event) {
 
@@ -123,14 +149,58 @@ function mostrarErroresCreacion(errores) {
   $("#errores").append(error);
 }
 
+function getPensum() {
+  var estadoId = $("#carrera").val();
+  if (estadoId) {
+    // Eliminamos las opciones anteriores del select
+    $("#pensum_asig").html("");
+    var request = $.ajax({
+      type: "GET",
+      url: "{% url 'academico_app:update-pensum' %}",
+      data: {
+        estado_id: estadoId,
+      },
+      success: function (response) {
+        $("#pensum_asig").html(response.malla);
+      },
+    });
+    request.done(function (response) {
+      // Agregamos los resultados al select
+      $("#pensum_asig").html(response.malla);
+    });
+  } else {
+    $("#pensum_asig").html(
+      "<option value='' selected='selected'>---------</option>"
+    );
+  }
+}
+
+function mostrarErroresDetalle(error) {
+  const array1 = ['tDocument', 'cedula', 'nombre', 'apellidos', 'nacionalidad', 'telefono', 'sexo',
+    'direccion', 'nacimiento', 'carrera', 'pensum_asig', 'email', 'sede', 'periodo_matriculado',
+    'username', 'nombre_acudiente', 'apellidos_acudiente', 'telefono_acudiente', 'cedula_acudiente'];
+
+  for (const i in array1) {
+    const lista = array1[i]
+    $('div[class="' + lista + '"]').html("");
+  }
+
+  for (const i in error.responseJSON.error) {
+    const lista = i
+    let errores = "";
+    errores += '<div class ="alert alert-danger" <strong>' + error.responseJSON.error[i] + '</strong></div>'
+    $('div[class="' + lista + '"]').append(errores);
+  }
+}
+
 
 function mostrarErroresCreacion2(errores) {
   $("#errores").html("");
   let error = "";
+  for (let item in errores.responseJSON) {
+    error += '<div class ="alert alert-danger" <strong>' + errores.responseJSON[item].error + '</strong></div>'
 
-
-  error = '<div class ="alert alert-danger" <strong>' + errores.responseJSON.error + '</strong></div>'
-
+  }
   $("#errores").append(error);
 }
 
@@ -342,6 +412,10 @@ $(document).ready(function () {
     ],
 
   });
+
+
+
+
 })
 
 $(document).ready(function () {
@@ -375,13 +449,15 @@ $(document).ready(function () {
       null,
       null,
       null,
-      null,
-      null,
+      { "width": "2%", "className": 'dt-body-center' },
+      { "width": "2%", "className": 'dt-body-center' },
     ],
 
 
   });
 })
+
+
 
 
 $(document).ready(function () {
@@ -419,5 +495,9 @@ $(document).ready(function () {
     document.getElementById("tod").style.fontWeight = "bold";
   }
 })
+
+
+
+
 
 

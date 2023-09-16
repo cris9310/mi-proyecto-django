@@ -1,28 +1,73 @@
-{% extends "Base2.html" %} {% load static %} {% block extracontent %}
-<div>
-  {% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-    <li>
-      {% if message.tags %} class="{{ message.tags }}"{% endif %}{{ message}}
-    </li>
-    {% endfor %}
-  </ul>
-  {% endif %} {% for error in field.errors %} {{ error }} {% endfor %}
+
+
+
+{% load static %}
+
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"><i id="iconos" style="padding-left: 3px" class="fa-solid fa-upload"></i> Cargue de estudiantes</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+      <div class="d-flex justify-content-center">
+      <div id="spinner-div" class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      </div>
+      <form action="{% url 'academico_app:list-top-asignar' %}" method="post" enctype="multipart/form-data" id="data" >
+        
+      {% csrf_token %}
+      <div id="errores" ></div>
+      
+      {{form.as_p}}
+      <div class="modal-footer">
+        <button type="button" id="button" class="exito" style="background-color:#40c4a4;"><a href="{% url 'academico_app:export-plant-student' %}"><i class="fa-solid fa-cloud-arrow-down"></i>&nbsp; Exportar plantilla</a></button>
+        <button type="button" id="button" class="azules" onclick="sendStudents()"  ><i class="fa-solid fa-upload"></i> &nbsp;Cargar estudiantes</button>
+      </div>
+    </form>
+    </div> 
+  </div>
 </div>
 
-<form
-  method="post"
-  enctype="multipart/form-data"
-  action="{% url 'academico_app:list-top-asignar' %}"
->
-  {% csrf_token %} {{form.as_p}}
-  <button type="submit">Cargar</button>
-  <button><a href="{% url 'academico_app:list-student' %}"> Volver</a></button>
-  <button>
-    <a href="{% url 'academico_app:export-plant-student' %}">
-      Exportar plantilla</a
-    >
-  </button>
-</form>
-{% endblock extracontent %}
+{% block js %}
+<script type="text/javascript">
+
+  function sendStudents() {
+    var formData = new FormData();
+    var serializedData = document.getElementById('carga');
+    
+    if (serializedData.files.length != 0) {
+      
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+      formData.append('carga',  $('input[type=file]')[0].files[0])
+      var request = $.ajax({
+        type: "POST",
+        url: "{% url 'academico_app:list-top-asignar' %}",
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        enctype: 'multipart/form-data',
+        success: function (response) {
+          $('#spinner-div').show()
+          $("#edicion").modal("hide");
+          window.location.reload();
+          mostrarOk()
+  
+        },
+        error: function (error) {
+          mostrarErroresCreacion2(error)
+          mostrarError()
+        }
+      });
+    }else {
+      mostrarErrorvacio()
+    }
+  }
+
+</script>
+
+{% endblock js %}

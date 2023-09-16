@@ -1,11 +1,171 @@
-{% extends "Base2.html" %} {% load static %} {% block extracontent %}
-<form method="post">
-  {% csrf_token %} {{form.as_p}}
-  <button type="submit">Registrar</button>
-  <button><a href="{% url 'academico_app:list-student' %}"> Volver</a></button>
-</form>
-{% endblock extracontent %} {% block js %}
+{% load static %} 
+<div class="modal-dialog modal-xl" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"><i id="iconos" style="padding-left: 3px" class="fa-solid fa-graduation-cap"></i> Nuevo estudiante</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+      <form  method="POST" id="dataGeneralForm" action="{% url 'academico_app:create-student' %}" >{% csrf_token %}
+        <div id="errores" ></div>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="{{ form.tDocument.id_for_label }}" ></div>
+              <label for="{{ form.tDocument.id_for_label }}">Tipo de documento:</label>
+              {{ form.tDocument }}
+            </div>
+            <div class="col-md-6 ms-auto"">
+              <div class="{{ form.cedula.id_for_label }}" ></div>
+              <label for="{{ form.cedula.id_for_label }}">Número de documento:</label>
+              {{ form.cedula }}
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid" style="margin-top: 15px">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="{{ form.nombre.id_for_label }}" ></div>
+              <label for="{{ form.nombre.id_for_label }}">Nombre(s):</label>
+              {{ form.nombre }}
+            </div>
+            <div class="col-md-6 ms-auto"">
+              <div class="{{ form.apellidos.id_for_label }}" ></div>
+              <label for="{{ form.apellidos.id_for_label }}">Apellidos:</label>
+              {{ form.apellidos }}
+            </div>
+          </div>
+        </div>
+
+        <div class="container-fluid" style="margin-top: 15px">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="{{ form.direccion.id_for_label }}" ></div>
+              <label for="{{ form.direccion.id_for_label }}">Direccion:</label>
+              {{ form.direccion }}
+            </div>
+            <div class="col-md-6 ms-auto"">
+              <div class="{{ form.telefono.id_for_label }}" ></div>
+              <label for="{{ form.telefono.id_for_label }}">Teléfono:</label>
+              {{ form.telefono }}
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid" style="margin-top: 15px">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="{{ form.sexo.id_for_label }}" ></div>
+              <label for="{{ form.sexo.id_for_label }}">Género:</label>
+              {{ form.sexo }}
+            </div>
+            <div class="col-md-6 ms-auto"">
+              <div class="{{ form.nacionalidad.id_for_label }}" ></div>
+              <label for="{{ form.nacionalidad.id_for_label }}">Nacionalidad:</label>
+              {{ form.nacionalidad }}
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid" style="margin-top: 15px">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="{{ form.nacimiento.id_for_label }}" ></div>
+              <label for="{{ form.nacimiento.id_for_label }}">Fecha de nacimiento:</label>
+              {{ form.nacimiento }}
+            </div>
+            <div class="col-md-6 ms-auto">
+              <div class="{{ form.email.id_for_label }}" ></div>
+              <label for="{{ form.email.id_for_label }}">Correo electrónico:</label>
+              {{ form.email }}
+            </div>
+          </div>
+        </div>
+
+        <div class="container-fluid" style="margin-top: 15px;">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="{{ form.username.id_for_label }}" ></div>
+              <label for="{{ form.username.id_for_label }}">Username:</label>
+              {{ form.username }}
+            </div>
+          </div>
+        </div>
+
+        <div class="linea"></div>
+
+        <div class="container-fluid" style="margin-top: 15px;">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="{{ form.nombre_acudiente.id_for_label }}" ></div>
+              <label for="{{ form.nombre_acudiente.id_for_label }}">Nombre del acudiente:</label>
+              {{ form.nombre_acudiente }}
+            </div>
+            <div class="col-md-6 ms-auto">
+              <div class="{{ form.apellidos_acudiente.id_for_label }}" ></div>
+              <label for="{{ form.apellidos_acudiente.id_for_label }}">Apellidos del acudiente:</label>
+              {{ form.apellidos_acudiente }}
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid" style="margin-top: 15px;">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="{{ form.telefono_acudiente.id_for_label }}" ></div>
+              <label for="{{ form.telefono_acudiente.id_for_label }}">Teléfono de contacto:</label>
+              {{ form.telefono_acudiente }}
+            </div>
+            <div class="col-md-6 ms-auto">
+              <div class="{{ form.cedula_acudiente.id_for_label }}" ></div>
+              <label for="{{ form.cedula_acudiente.id_for_label }}">Nro. de identificación acudiente:</label>
+              {{ form.cedula_acudiente }}
+            </div>
+          </div>
+        </div>
+
+        <div class="linea"></div>
+
+        <div class="container-fluid" style="margin-top: 15px;">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="{{ form.carrera.id_for_label }}" ></div>
+              <label for="{{ form.carrera.id_for_label }}">Programa académico:</label>
+              {{ form.carrera }}
+            </div>
+            <div class="col-md-6 ms-auto">
+              <div class="{{ form.pensum_asig.id_for_label }}" ></div>
+              <label for="{{ form.pensum_asig.id_for_label }}">Seleccione malla académica</label>
+              {{ form.pensum_asig }}
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid" style="margin-top: 15px;">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="{{ form.periodo_matriculado.id_for_label }}" ></div>
+              <label for="{{ form.periodo_matriculado.id_for_label }}">Periodo de ingreso:</label>
+              {{ form.periodo_matriculado }}
+            </div>
+            <div class="col-md-6 ms-auto">
+              <div class="{{ form.sede.id_for_label }}" ></div>
+              <label for="{{ form.sede.id_for_label }}">Seleccione sede de estudio</label>
+              {{ form.sede }}
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer" style="margin-top: 15px;">
+        <button type="button" id="button" style="background-color: #405FC9; color: white; border: none" onclick="sendUser()" >Registrar estudiante</button>
+        <button type="button" class="btn btn-danger"  id="button" data-dismiss="modal">Cerrar</button>
+        </div>
+      </form>
+    </div> 
+  </div>
+</div>
+
+{% block js %}
 <script type="text/javascript">
+
   $(document).ready(function () {
     $("#masivo").hide();
     $('label[for="masivo"]').hide();
@@ -16,7 +176,7 @@
     var estadoId = $("#carrera").val();
     if (estadoId) {
       // Eliminamos las opciones anteriores del select
-      $("#id_pensum_asig").html("");
+      $("#pensum_asig").html("");
       var request = $.ajax({
         type: "GET",
         url: "{% url 'academico_app:update-pensum' %}",
@@ -24,19 +184,45 @@
           estado_id: estadoId,
         },
         success: function (response) {
-          $("#id_pensum_asig").html(response.malla);
+          $("#pensum_asig").html(response.malla);
         },
       });
       request.done(function (response) {
         // Agregamos los resultados al select
-        $("#id_pensum_asig").html(response.malla);
+        $("#pensum_asig").html(response.malla);
       });
     } else {
-      $("#id_pensum_asig").html(
+      $("#pensum_asig").html(
         "<option value='' selected='selected'>---------</option>"
       );
     }
   }
+
+  function sendUser() {
+    var serializedData = $("#dataGeneralForm").serialize();
+    if (serializedData) {
+
+      var request = $.ajax({
+        type: "POST",
+        url: "{% url 'academico_app:create-student' %}",
+        data: serializedData,
+        success: function (response) {
+          $("#edicion").modal("hide");
+          window.location = "{% url 'academico_app:list-student' %}";
+          mostrarOk();  
+        },
+        error: function (error) {
+          mostrarErroresDetalle(error);
+          mostrarError();
+        }
+      });
+    } 
+  }
+
 </script>
 
 {% endblock js %}
+
+
+
+

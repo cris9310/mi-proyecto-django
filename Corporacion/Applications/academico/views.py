@@ -12,6 +12,7 @@ from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.db.models.functions import Coalesce
+from django.db.models import F 
 
 from .funciones import  generador
 # Create your views here.
@@ -29,7 +30,7 @@ from django.urls import reverse_lazy, reverse
 from django.db.models import Q, Count
 from .choices import EST_STUDENT
 import pandas as pd
-import sweetify
+import re
 
 
 #Esta vista se tiene que modificar, teniendo en cuenta el perfil de quien se está logueando
@@ -408,10 +409,11 @@ class TeacherNotesListview(ListView):
 
     def get_context_data(self, **kwargs):
         cod = self.kwargs['pk']
+        data = Habilitaciones.objects.latest("id").id
         context = super(TeacherNotesListview, self).get_context_data(**kwargs)
         context['topics'] = Materias.objects.filter(pk=cod)
         context['total'] = Banner.objects.filter(materia=cod).count()
-        context['corte'] = Habilitaciones.objects.latest("id")
+        context['corte'] = Habilitaciones.objects.filter(id=data)
         return context
     
     def get_queryset(self):
@@ -515,6 +517,8 @@ class MateriaUpdateView(UpdateView):
     form_class = MateriasForm
     success_url = reverse_lazy('academico_app:list-topic')
 
+
+#Mustra el detalle de las materias en un modal se encuentra ok
 class MateriaDetailView(DetailView):
     template_name = 'Academico/settings/Materias/detail_materia.html'
     model = Materias
@@ -591,34 +595,7 @@ class InventarioCreateView(FormView):
         )
         return HttpResponseRedirect(self.success_url)
 
-class TeacherNotesListview(ListView):
-    model = Docente
-    second_model = Materias
-    template_name = 'Academico/Docentes/list_notas_teacher.html'
-    context_object_name = 'teacherTp'
-    paginate_by = 15
 
-    def get_context_data(self, **kwargs):
-        
-        context = super(TeacherNotesListview, self).get_context_data(**kwargs)
-        cod = self.kwargs['pk']
-        data = Habilitaciones.objects.latest("id").id
-        context['topics'] = Materias.objects.filter(pk=cod)
-        context['total'] = Banner.objects.filter(materia=cod).count()
-        context['corte'] = Habilitaciones.objects.filter(id=data)
-        return context
-    
-
-    def get_queryset(self):
-
-        cod = self.kwargs['pk']
-        kword = self.request.GET.get('kword', '')
-        if kword:
-           queryset = Banner.objects.filtrar_buscador_Teacher_notes(kword, cod) 
-        else:
-            teacher = Banner.objects.filter(materia=cod)
-            queryset= teacher
-        return queryset.order_by('cod_student')
 
 class MateriaDetailView(DetailView):
     template_name = 'Academico/settings/Materias/detail_materia.html'
@@ -648,94 +625,109 @@ class ProfileDetailView(ListView):
 
 ### CRUD de estudiantes
 
-class StudentCreateView(FormView):
+
+#Vista que sirve para la creación de estudiantes de manera individual, se encuentra ok
+class StudentCreateView(CreateView):
+    model = Estudiante
     form_class = StudentRegisterForm
     template_name = 'Academico/Estudiantes/register_student.html'
     success_url =  reverse_lazy('academico_app:list-student')
 
-    def form_valid(self, form):
+    def post(self, request, *args, **kwargs):
   
-
         form = StudentRegisterForm(self.request.POST)
         if form.is_valid():
             inv_list=[]
+            #Generador de código para facturas
             codigo_invoice= Facturas.objects.code_invoice()
+            #Generador de código para un nuevo estudiante
             codigo = Estudiante.objects.code_generatorr()
+            #Creando estudiantes en la bd de estudiante
             create_student= Estudiante.objects.create(
                 codigo=codigo,
-                apellidos=form.cleaned_data['apellidos'],
-                username= form.cleaned_data['username'],
-                direccion=form.cleaned_data['direccion'],
-                nacimiento=form.cleaned_data['nacimiento'],
-                sexo=form.cleaned_data['sexo'],
-                telefono=form.cleaned_data['telefono'],
-                email=form.cleaned_data['email'],
-                cedula=form.cleaned_data['cedula'],
-                nombre=form.cleaned_data['nombre'],
-                nacionalidad=form.cleaned_data['nacionalidad'],
-                carrera=form.cleaned_data['carrera'],
-                sede = form.cleaned_data['sede'],
-                costo_cierre=Programas.objects.get(programa_name=form.cleaned_data['carrera']).costo,
-                nombre_acudiente=form.cleaned_data['nombre_acudiente'],
-                apellidos_acudiente=form.cleaned_data['apellidos_acudiente'],
-                telefono_acudiente=form.cleaned_data['telefono_acudiente'],
-                cedula_acudiente=form.cleaned_data['cedula_acudiente'],
-                periodo_matriculado = form.cleaned_data['periodo_matriculado'],
-                pensum_asig = form.cleaned_data['pensum_asig'],
+                tDocument=CatalogsTypesDocuement.objects.get(nombre=form.cleaned_data.get("tDocument")),
+                apellidos=form.cleaned_data.get('apellidos'),
+                username= form.cleaned_data.get('username'),
+                direccion=form.cleaned_data.get('direccion'),
+                nacimiento=form.cleaned_data.get('nacimiento'),
+                sexo=form.cleaned_data.get('sexo'),
+                telefono=form.cleaned_data.get('telefono'),
+                email=form.cleaned_data.get('email'),
+                cedula=form.cleaned_data.get('cedula'),
+                nombre=form.cleaned_data.get('nombre'),
+                nacionalidad=form.cleaned_data.get('nacionalidad'),
+                carrera=Programas.objects.get(programa_name=form.cleaned_data.get('carrera')),
+                sede =CatalogsSede.objects.get(sede=form.cleaned_data.get('sede')),
+                costo_cierre=Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).costo,
+                nombre_acudiente=form.cleaned_data.get('nombre_acudiente'),
+                apellidos_acudiente=form.cleaned_data.get('apellidos_acudiente'),
+                telefono_acudiente=form.cleaned_data.get('telefono_acudiente'),
+                cedula_acudiente=form.cleaned_data.get('cedula_acudiente'),
+                periodo_matriculado = Periodos.objects.get(periodo=form.cleaned_data.get('periodo_matriculado')),
+                pensum_asig =Pensum.objects.get(id=form['pensum_asig'].value()),
             )
+            #Creamos usuario en la BD
             crea_user=User.objects.create_user(
                 tipe = CatalogsTypesRol.objects.get(rol="Estudiante"),
                 codigo = codigo,
-                username= form.cleaned_data['username'],
-                email= form.cleaned_data['email'],
-                password='cambio123*',
-                nombres= form.cleaned_data['nombre'],
-                apellidos= form.cleaned_data['apellidos'],
+                username= form.cleaned_data.get('username'),
+                email= form.cleaned_data.get('email'),
+                password= Estudiante.objects.get_secret("RANDOM"),
+                nombres= form.cleaned_data.get('nombre'),
+                apellidos= form.cleaned_data.get('apellidos'),
                 is_superuser=False,
                 is_active=True,
                 is_staff= False,
             )
-            matricula= Facturas.objects.create(
-                    user=User.objects.get(username=form.cleaned_data['username']),
-                    codigo=codigo_invoice,
-                    email=form.cleaned_data['email'],
-                    monto =Programas.objects.get(programa_name=form.cleaned_data['carrera']).matricula,
-                    descripcion="Matrícula",
-                    estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
-
-            )
-            for i in range(int(Programas.objects.get(programa_name=form.cleaned_data['carrera']).cuotas)):
+            #Generamos las facturas relacionadas con el estudiante, hace referencia a matrícula y a las facturas de las pensiones mensuales
+            l= ["Matricula", "Derechos de grado"]
+            for i in l:
+                matricula= Facturas.objects.create(
+                        user=User.objects.get(username=form.cleaned_data.get('username')),
+                        codigo=codigo_invoice,
+                        email=form.cleaned_data.get('email'),
+                        monto =Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).matricula,
+                        descripcion=i,
+                        estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
+                )
+            for i in range(int(Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuotas)):
                 inv_list.append(Facturas(
-                    user=User.objects.get(username=form.cleaned_data['username']),
+                    user=User.objects.get(username=form.cleaned_data.get('username')),
                     codigo=int(Facturas.objects.code_invoice()) + i,
-                    email=form.cleaned_data['email'],
-                    monto =Programas.objects.get(programa_name=form.cleaned_data['carrera']).cuota_valor,
+                    email=form.cleaned_data.get('email'),
+                    monto =Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuota_valor,
                     descripcion="Mensualidad número "+ str(i+1),
                     estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
 
                 ))
             Facturas.objects.bulk_create(inv_list)
 
-            
-        
-        return HttpResponseRedirect(self.success_url)
+            mensaje = f'{self.model.__name__} registrado correctamente'
+            error = "No hay error!"
+            response = JsonResponse({"mensaje": mensaje, "error": error})
+            response.status_code = 201
+            return response
+        else:
+            mensaje = f'{self.model.__name__} no se ha podido registrar'
+            error = form.errors
+            response = JsonResponse({"mensaje": mensaje, "error": error})
+            response.status_code = 400
+            return response
 
 class Vernotas(ListView):
     model = Banner
     second_model = Estudiante
     template_name = 'Academico/Estudiantes/list_notas.html' 
     context_object_name = 'notas'
-    paginate_by = 10
 
     
     def get_context_data(self, **kwargs):
         cod = self.kwargs['pk']
         context = super(Vernotas, self).get_context_data(**kwargs)
         context['student'] = Estudiante.objects.filter(pk=cod)
-        context['progreso'] = Banner.objects.filter(cod_student=cod, B1=True, B2=True, B3=True).count()
-        context['minimo']= Programas.objects.get(
+        context['progreso'] = int(int(Banner.objects.filter(cod_student=cod, promedio__gt=2.99).count())/int(Programas.objects.get(
             id = Estudiante.objects.get(pk=cod).carrera_id
-        ).aceptado
+        ).aceptado)*100)
         return context
     
 
@@ -769,11 +761,12 @@ class AsignamateriaPreviewView(ListView):
         
         return queryset1
 
+
+#Esta vista lista a todos los estudiantes que se han creado, se enceuntra ok.
 class Studentlistview(ListView):
     model = Estudiante
     template_name = 'Academico/Estudiantes/list_student.html'
     context_object_name = 'student'
-    paginate_by = 15
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -839,157 +832,248 @@ class StudentUpdateView(UpdateView):
             act = Estudiante.objects.filter(pk=self.kwargs['pk']).update(masivo = False)
         return HttpResponseRedirect(self.success_url)
 
-#Vista para cargar estudiantes de forma masiva
-class StudentAsigView(FormView):
-    form_class= StudentAsigMate
-    template_name = 'Academico/Estudiantes/asig_topics.html'
-    success_url =  reverse_lazy('academico_app:list-top-asignar')
+#Vista para cargar estudiantes de forma masiva se encuentra ok
+class StudentAsigView(View):
+
+    def get(self, request, *args, **kwargs):
+        form = StudentAsigMate()
+        context = {"form" : form} 
+        return render(request, r"Academico\Estudiantes\asig_topics.html", context)
 
     def post(self, request, *args, **kwargs):
+
         # Declarando variables
-        data_list = []
         conteo = 0
-        conteo2 = 0
-        conteo3 = 0
-        conteo4 = 0
-        conteo5 = 0
-        user_repeat = []
-        carre_do_no_exist = []
-        val_acudiente = []
-        val_student = []
-        val_fecha = []
         fecha_actual = date.today()
+        
+        # Declarando listas
+        mensaje1 = []
+        data_list = []
+        data_fac_matricula= []
+        l= ["Matricula", "Derechos de grado"]
+
         #Leyendo el archivo que recibimos desde el form
-        new_student = (self.request.FILES['carga'])
-        warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
-        new_student = pd.read_excel(new_student, sheet_name="Plantilla", engine='openpyxl' )
-        new_student['NACIMIENTO'] = pd.to_datetime(new_student['NACIMIENTO'])
-        miss_values_count = new_student.isnull().sum()
-        miss_values_count = miss_values_count[miss_values_count != 0]
-
-        #Generamos código para el estudiante
-        def code_generatorr():
-            try:
-                filtro = Estudiante.objects.latest('id').codigo
-                cod_asign = int(filtro) + 1
-            except:
-                cod_asign = 1000
-
-            return str(cod_asign)
+        new_studentData = self.request.FILES['carga']
         
-        codigo = code_generatorr()
-
-        #comparando los encabezados para ver si está correcta la estructura
-        for i, a in zip(list(new_student), EST_STUDENT):
-                if i != a:
-                   break
          # zona de verificación de datos en el archivo
-        if miss_values_count.shape[0] or i != a :
-            if  miss_values_count.shape[0]:
-                if miss_values_count.shape[0] == 1:
-                   messages.warning(self.request, 'El archivo tiene '+ str(miss_values_count.shape[0]) + ' columna sin datos, por favor, revise')
-    
-                else:
-                    messages.warning(self.request,'El archivo tiene '+ str(miss_values_count.shape[0]) + ' columnas sin datos, por favor, revise')
 
-            else:
-                messages.warning(self.request, 'La columna con encabezado '+ i + ' en su archivo, no es válido, verifique el archivo y vuelva a cargarlo') 
-            return HttpResponseRedirect(self.success_url)
+        if new_studentData.name == 'cargue_estudiantes.xlsx' :
+            warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
+            new_student = pd.read_excel(new_studentData, sheet_name="Plantilla", engine='openpyxl' )
+            new_student['NACIMIENTO'] = pd.to_datetime(new_student['NACIMIENTO'])
+            new_student['DUPLICADO'] = new_student.duplicated()
+
+            #Validamos que no existan valores nulos y en blancos en el archivo.
+            miss_values_count = new_student.isnull().sum()
+            miss_values_count = miss_values_count[miss_values_count != 0]
+
+            #Generamos código para el estudiante   
+            codigo = Estudiante.objects.code_generatorr()
+
+            #comparando los encabezados para ver si está correcta la estructura
+            for i, a in zip(list(new_student), EST_STUDENT):
+                if i != a:
+                    break
         
-        else:
-            #Validamos los campos
-            for i in range(len(new_student)):
-                if Estudiante.objects.filter(username=  new_student['USERNAME'][i]):
-                    conteo = 1 + conteo
-                    user_repeat.append(new_student['USERNAME'][i])
+            if miss_values_count.shape[0] or i != a :
+                if  miss_values_count.shape[0]:
+                    if miss_values_count.shape[0] == 1:
+                        mensaje1.append({"error":'El archivo tiene '+ str(miss_values_count.shape[0]) + ' columna sin datos, por favor, revise'})
+                        response = JsonResponse(mensaje1, safe= False)
+                        response.status_code = 400
+                        return response 
+                    else:
+                        mensaje1.append({"error":'El archivo tiene '+ str(miss_values_count.shape[0]) + ' columnas sin datos, por favor, revise'})
+                        response = JsonResponse(mensaje1, safe= False)
+                        response.status_code = 400
+                        return response 
+
                 else:
-                    conteo = 0 + conteo
-            for i in range(len(new_student)):
-                if Programas.objects.filter(programa_name= new_student['CARRERA_ID'][i]):
-                    conteo2 = 0 + conteo2
-                else:
-                    conteo2 = 1 + conteo2
-                    carre_do_no_exist.append(new_student['CARRERA_ID'][i])
+                    mensaje1.append({"error":'La columna con encabezado '+ i + ' en su archivo, no es válido, verifique el archivo y vuelva a cargarlo'})
+                    response = JsonResponse(mensaje1, safe= False)
+                    response.status_code = 400
+                    return response 
             
-            for i in range(len(new_student)):
-                if len(str(new_student['TELEFONO'][i])) == 7 or len(str(new_student['TELEFONO'][i])) == 10:
-                    conteo3 = 0 + conteo3
-                    
+            elif len(new_student) > 35 or len(new_student) == 0:
+                if len(new_student) > 35:
+                    mensaje1.append({"error":'Recuerde que no puede cargar más de 35 estudiantes a la vez, en este archivo encontramos: ' + str(len(new_student))})
+                    response = JsonResponse(mensaje1, safe= False)
+                    response.status_code = 400
+                    return response 
                 else:
-                    conteo3 = 1 + conteo3
-                    val_student.append(new_student['TELEFONO'][i])
-
-            for i in range(len(new_student)):
-                if len(str(new_student['TELEFONO_ACUDIENTE'][i])) == 7 or len(str(new_student['TELEFONO_ACUDIENTE'][i])) == 10:
-                    conteo4 = 0 + conteo4
-                else:
-                    conteo4 = 1 + conteo4
-                    val_acudiente.append(new_student['TELEFONO_ACUDIENTE'][i])
+                    mensaje1.append({"error":'No encontramos estudiantes para cargar'})
+                    response = JsonResponse(mensaje1, safe= False)
+                    response.status_code = 400
+                    return response
             
-            for i in range(len(new_student)):
-                if (fecha_actual.year - new_student['NACIMIENTO'][i].year) <= 13:
-                    conteo5 = 1 + conteo5
-                    val_fecha.append(new_student['NACIMIENTO'][i])
-                else:
-                    conteo5 = 0 + conteo5
-
-            if conteo > 0:
-                for i in user_repeat:
-                    messages.error(self.request, "El nombre de usuario " + i + " ya existe, por favor cambie este username y vuelva a intentarlo.", extra_tags='safe' )
-                return HttpResponseRedirect(self.success_url) 
-            
-            elif conteo2 > 0:
-                for i in carre_do_no_exist:
-                    messages.error(self.request, i )
-                return HttpResponseRedirect(self.success_url)
-
-            elif conteo3 > 0:
-                for i in val_student:
-                    messages.warning(self.request, "Recuerde que el número " + str(i) + " debe tener 7(fijo) o 10(celular) números" )
-                return HttpResponseRedirect(self.success_url)
-
-            elif conteo4 > 0:
-                for i in val_acudiente:
-                    messages.warning(self.request, "Recuerde que el número " + str(i) + " debe tener 7(fijo) o 10(celular) números" )
-                return HttpResponseRedirect(self.success_url)
-            
-            elif conteo5 > 0:
-                for i in val_fecha:
-                    messages.warning(self.request, "El Estudiante con fecha " + str(i) + " no se puede matricular, debe de tener más de 13 años" )
-                return HttpResponseRedirect(self.success_url)
-
-            # si no se cumple ninguna de las validaciones comienza a procesar
             else:
+                #Validamos los campos
+                
                 for i in range(len(new_student)):
-                    carrera = Programas.objects.get(programa_name=new_student['CARRERA_ID'][i]).id
-                    data_list.append(Estudiante( codigo = int(codigo) + i, cedula= new_student['CEDULA'][i],
-                                nombre =new_student['NOMBRE'][i], apellidos= new_student['APELLIDOS'][i], 
-                                nacionalidad = new_student['NACIONALIDAD'][i],
-                                telefono =new_student['TELEFONO'][i], direccion= new_student['DIRECCION'][i],
-                                nacimiento = new_student['NACIMIENTO'][i],email=new_student['EMAIL'][i], 
-                                sexo = new_student['SEXO'][i], username= new_student['USERNAME'][i],
-                                nombre_acudiente =new_student['NOMBRE_ACUDIENTE'][i], apellidos_acudiente= new_student['APELLIDOS_ACUDIENTE'][i],
-                                telefono_acudiente = new_student['TELEFONO_ACUDIENTE'][i],cedula_acudiente=new_student['CEDULA_ACUDIENTE'][i], 
-                                carrera_id = carrera, masivo= True, pensum_asig_id = 1, periodo_matriculado_id= 1
-                    ))
-                    User.objects.create_user(codigo = int(codigo) + i, nombres =new_student['NOMBRE'][i], apellidos= new_student['APELLIDOS'][i],
-                        email=new_student['EMAIL'][i],username= new_student['USERNAME'][i], is_estudiante = True, password='cambio123*',
-                        is_docente =False, is_gestor=False, is_admin=False, is_coordinador=False, is_superuser=False, is_active = True, is_staff=False
+                    if  new_student['DUPLICADO'][i] == True:
+                        conteo = 1 + conteo
+                        mensaje1.append({"error": "Encontramos filas duplicadas para el usuario: " + new_student['USERNAME'][i] + " verifique la información"})
+                    else:
+                        conteo = 0 + conteo
+
+                for i in range(len(new_student)):
+                    if User.objects.filter(username=  new_student['USERNAME'][i]):
+                        conteo = 1 + conteo
+                        mensaje1.append({"error": "El nombre de usuario " + new_student['USERNAME'][i] + " ya existe, por favor cambie este username y vuelva a intentarlo."})
+                    else:
+                        conteo = 0 + conteo
+
+                for i in range(len(new_student)):
+
+                    res = " " in new_student['USERNAME'][i]
+                    if res:
+                        conteo = 1 + conteo
+                        mensaje1.append({"error": "El usuario " + new_student['USERNAME'][i] + " contiene espacios en blanco, por favor verifique."})
+                    else:
+                        conteo = 0 + conteo
+
+                for i in range(len(new_student)):
+                    if Programas.objects.filter(programa_name= new_student['CARRERA_ID'][i]):
+                        conteo = 0 + conteo
+                    else:
+                        conteo = 1 + conteo
+                        mensaje1.append({"error": "La carrera ingresada para el usuario: "+ new_student['USERNAME'][i] +" no existe"})
+                
+                for i in range(len(new_student)):
+                    if len(str(new_student['TELEFONO'][i])) == 7 or len(str(new_student['TELEFONO'][i])) == 10:
+                        conteo = 0 + conteo
                         
-                        )
+                    else:
+                        conteo = 1 + conteo
+                        mensaje1.append({"error": "El usuario "+ new_student['USERNAME'][i] +" debe tener 7(fijo) o 10(celular) números, usted ingresó: "+ str(new_student['TELEFONO'][i])})
+                
+                for i in range(len(new_student)):
+                    ced= str(new_student['CEDULA'][i])
+                    if ced[0] == 0 :
+                        conteo = 1 + conteo
+                        mensaje1.append({"error": "El usuario "+ new_student['USERNAME'][i] +" tiene un numero de documento que inicia por cero, por favor valide."})
+                    
+                    else:
+                        conteo = 0 + conteo
+                
+                for i in range(len(new_student)):
+                    ced= str(new_student['CEDULA_ACUDIENTE'][i])
+                    if ced[0] == 0 :
+                        conteo = 1 + conteo
+                        mensaje1.append({"error": "El acudiente del usuario "+ new_student['USERNAME'][i] +" tiene un numero de documento que inicia por cero, por favor valide."})
+                    
+                    else:
+                        conteo = 0 + conteo
 
-                Estudiante.objects.bulk_create(data_list)
+                for i in range(len(new_student)):
+                    if len(str(new_student['TELEFONO_ACUDIENTE'][i])) == 7 or len(str(new_student['TELEFONO_ACUDIENTE'][i])) == 10:
+                        conteo = 0 + conteo
+                    else:
+                        conteo = 1 + conteo
+                        mensaje1.append({"error": "El teléfono del acudiente del usuario "+ new_student['USERNAME'][i] +" debe tener 7(fijo) o 10(celular) números, usted ingresó: "+ str(new_student['TELEFONO_ACUDIENTE'][i])})
+                
+                for i in range(len(new_student)):
+                    if (fecha_actual.year - new_student['NACIMIENTO'][i].year) <= 13:
+                        conteo = 1 + conteo
+                        mensaje1.append({"error": "El usuario "+ new_student['USERNAME'][i] +" no se puede matricular, debe de tener más de 13 años"})
 
+                    else:
+                        conteo = 0 + conteo
 
-                return HttpResponseRedirect(
-                            reverse(
-                            'academico_app:list-student'
+                for i in range(len(new_student)):
+                    if not CatalogsTypesDocuement.objects.filter(nombre=new_student['T_DOCUMENTO'][i]):
+                        conteo = 1 + conteo
+                        mensaje1.append({"error": "El usuario "+ new_student['USERNAME'][i] +" tiene un tipo de documento incorrecto: " + new_student['T_DOCUMENTO'][i] + ", seleccione uno de la lista desplegable."})
+                    else:
+                        conteo = 0 + conteo
+                
+                for i in range(len(new_student)):
+                    if not CatalogsSede.objects.filter(sede=new_student['SEDE'][i]):
+                        conteo = 1 + conteo
+                        mensaje1.append({"error": "El usuario "+ new_student['USERNAME'][i] +" tipo de sede incorrecta" + new_student['SEDE'][i]+ ", seleccione uno de la lista desplegable."})
+
+                    else:
+                        conteo = 0 + conteo
+
+                for i in range(len(new_student)):
+                    if not re.search(r"^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$", new_student['EMAIL'][i]):
+                        conteo = 1 + conteo
+                        mensaje1.append({"error": "El usuario "+ new_student['USERNAME'][i] + " tiene datos que no son emails " + new_student['EMAIL'][i]})
+
+                    else:
+                        conteo = 0 + conteo
+                
+                if len(mensaje1) > 0:
+                    response = JsonResponse(mensaje1, safe= False)
+                    response.status_code = 400
+                    return response
+
+                # si pasa las validaciones, se comienza a procesar
+                else:
+                    for i in range(len(new_student)):
+                        carrera = Programas.objects.get(programa_name=new_student['CARRERA_ID'][i]).id
+                        costo_cierre = Programas.objects.get(programa_name=new_student['CARRERA_ID'][i]).costo
+                        document = CatalogsTypesDocuement.objects.get(nombre=new_student['T_DOCUMENTO'][i]).id
+                        sede = CatalogsSede.objects.get(sede=new_student['SEDE'][i]).id
+                        data_list.append(Estudiante( codigo = int(codigo) + i, cedula= new_student['CEDULA'][i],
+                                    nombre =new_student['NOMBRE'][i], apellidos= new_student['APELLIDOS'][i], 
+                                    nacionalidad = new_student['NACIONALIDAD'][i],
+                                    telefono =new_student['TELEFONO'][i], direccion= new_student['DIRECCION'][i],
+                                    nacimiento = new_student['NACIMIENTO'][i],email=new_student['EMAIL'][i], 
+                                    sexo = new_student['SEXO'][i], username= new_student['USERNAME'][i],
+                                    nombre_acudiente =new_student['NOMBRE_ACUDIENTE'][i], apellidos_acudiente= new_student['APELLIDOS_ACUDIENTE'][i],
+                                    telefono_acudiente = new_student['TELEFONO_ACUDIENTE'][i],cedula_acudiente=new_student['CEDULA_ACUDIENTE'][i], 
+                                    carrera_id = carrera, masivo= True, pensum_asig_id = 1, periodo_matriculado_id= 1, tDocument_id = document,
+                                    sede_id=sede, costo_cierre=costo_cierre,
+                        ))
+                        User.objects.create_user(codigo = int(codigo) + i, nombres =new_student['NOMBRE'][i], apellidos= new_student['APELLIDOS'][i],
+                            email=new_student['EMAIL'][i],username= new_student['USERNAME'][i], tipe = CatalogsTypesRol.objects.get(rol="Estudiante"), 
+                            password= Estudiante.objects.get_secret("RANDOM"), is_superuser=False, is_active = True, is_staff=False
+                            
                             )
+
+                    Estudiante.objects.bulk_create(data_list)
+
+                    
+                    #Generamos las facturas relacionadas con el estudiante, hace referencia a matrícula y a las facturas de las pensiones mensuales
+                    
+                    
+                    for i in range(len(new_student)):
+                        codigo_invoice= Facturas.objects.code_invoice()
+                        for e in l:
+                            data_fac_matricula.append(Facturas(
+                                    user=User.objects.get(username=new_student['USERNAME'][i]),
+                                    codigo=int(codigo_invoice) + i,
+                                    email=new_student['EMAIL'][i],
+                                    monto =Programas.objects.get(programa_name=new_student['CARRERA_ID'][i]).matricula,
+                                    descripcion= e,
+                                    estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
+
+                            ))
+                        for e in range(int(Programas.objects.get(programa_name=new_student['CARRERA_ID'][i]).cuotas)):
+                            data_fac_matricula.append(Facturas(
+                                user=User.objects.get(username=new_student['USERNAME'][i]),
+                                codigo=int(codigo_invoice) + i + e + 1,
+                                email=new_student['EMAIL'][i],
+                                monto =Programas.objects.get(programa_name=new_student['CARRERA_ID'][i]).cuota_valor,
+                                descripcion="Mensualidad número "+ str(e+1),
+                                estado=CatalogsTypesInvoices.objects.get(estado="Pendiente"),
+
+                            ))
+                        Facturas.objects.bulk_create(data_fac_matricula)
+
+                    return HttpResponseRedirect(
+                        reverse(
+                        'academico_app:list-student'
                         )
+                    )
+        else:
+            mensaje = 'Archivo inválido, recuerde que el archivo tiene por nombre "cargue_estudiantes.xlsx" , por favor verifique y cárguelo nuevamente'
+            response = JsonResponse({"error": mensaje})
+            response.status_code = 400
+            return response
     
                 
-
-
 #Vista para generar plantilla que luego sirve para el cargue de las notas. Se encuentra ok
 class Export_plant_est_csv(View):
 
@@ -1024,15 +1108,21 @@ class Export_plant_est_csv(View):
         response['Content-Type'] = 'application/x-xlsx'
         return response
 
-#Vista para generar plantilla de estudiantes, está ok
+#Vista para generar plantilla de estudiantes, se encuentra ok
 def export_users_csv(request):
 
-    
+    #Variables utilizadas para traerse la información creada en modelos y catálogos
     program = Programas.objects.all()
+    documents = CatalogsTypesDocuement.objects.all()
+    sede = CatalogsSede.objects.all()
     wb = Workbook()
+
+    #Nombramos las pestaas que va a llevar el archivo
     ws1 = wb.create_sheet(index=0, title="Plantilla")
     ws = wb.create_sheet(index=1, title="Campos")
-    for number in range(0,len(program)): #generamos los datos que van a las celdas, tener en cuenta que estos son los programas
+
+    #Generamos los datos que van a las celdas, y que sirven de listas desplegables
+    for number in range(0,len(program)): 
         ws['A{}'.format(number+1)].value= "{}".format(program[number])
     
     for number in range(0,len(COUNTRIES)): 
@@ -1041,22 +1131,37 @@ def export_users_csv(request):
     for number in range(0,len(GENEROS)): 
         ws['C{}'.format(number+1)].value= "{}".format(GENEROS[number][1])
 
+    for number in range(0,len(documents)): 
+        ws['D{}'.format(number+1)].value= "{}".format(documents[number])
 
+    for number in range(0,len(sede)): 
+        ws['E{}'.format(number+1)].value= "{}".format(sede[number])
+
+    #Asignamos los nombres de los encabezados a las columnas del archivo de excel
     for number in range(0, len(EST_STUDENT)):
         c1 = ws1.cell(row=1, column= number + 1)
         c1.value = EST_STUDENT[number]
-
-    data_val1 = DataValidation(type="list",formula1='=Campos!$A$1:$A$' + str(len(program))) #lista de validación para el excel
+    
+    #Asignamos las listas de validación para el excel
+    data_val1 = DataValidation(type="list",formula1='=Campos!$A$1:$A$' + str(len(program))) 
     data_val2 = DataValidation(type="list",formula1='=Campos!$B$1:$B$' + str(len(COUNTRIES)))
     data_val3 = DataValidation(type="list",formula1='=Campos!$C$1:$C$' + str(len(GENEROS)))
-    
+    data_val4 = DataValidation(type="list",formula1='=Campos!$D$1:$D$' + str(len(documents)))
+    data_val5 = DataValidation(type="list",formula1='=Campos!$E$1:$E$' + str(len(sede)))
+
+    #Asignamos las listas desplegables al la hoja principal
     ws1.add_data_validation(data_val1)
     ws1.add_data_validation(data_val2)
     ws1.add_data_validation(data_val3)
-    data_val1.add(ws1["O2"])
-    data_val2.add(ws1["D2"])
-    data_val3.add(ws1["I2"])
+    ws1.add_data_validation(data_val4)
+    ws1.add_data_validation(data_val5)
 
+    data_val1.add(ws1["P2"])
+    data_val2.add(ws1["E2"])
+    data_val3.add(ws1["J2"])
+    data_val4.add(ws1["A2"])
+    data_val5.add(ws1["Q2"])
+    
 
     content = save_virtual_workbook(wb)
     response = HttpResponse(content)
@@ -1065,22 +1170,23 @@ def export_users_csv(request):
     return response
 
 
-#Con esta vista mostramos los estudiantes aptos para graduarse
+#Con esta vista mostramos los estudiantes aptos para graduarse, se encuentra ok
 class ListFinalily(ListView):
     model=Banner
     second_model = Programas
     template_name = 'Academico/Estudiantes/list_aptos.html'
     context_object_name = 'finaly'
-    paginate_by = 15
 
     def get_queryset(self):
         estudiante_list = []
-        aceptado = Banner.objects.filter(B1=True, B2=True, B3=True ).values('cod_student').annotate(total=Count('cod_student')).order_by('total')
+        aceptado = Banner.objects.filter( promedio__gt= 2.99).values('cod_student').annotate(total=Count('cod_student')).order_by('total')
+        
         for i in list(aceptado):
             st=Estudiante.objects.get(id=i['cod_student'])
             if Graduated.objects.filter(student_id = st.pk).count() == 0:
                carrera = Programas.objects.get(id=st.carrera_id)
-               rr={'pk':st.pk, 'codigo': st.codigo,'estudiante':st.apellidos +' '+ st.nombre , 'programa': carrera.programa_name , 'indicador': round((int(i['total'])/int(carrera.aceptado)*100),2),'total': i['total']}
+               pagadas = Facturas.objects.filter(user_id=st.codigo, estado_id=2).count()
+               rr={'pk':st.pk, 'codigo': st.codigo,'estudiante':st.apellidos +' '+ st.nombre , 'programa': carrera.programa_name , 'indicador': int((int(i['total'])/int(carrera.aceptado))*100),'financiero': int((int(pagadas)/(2 + int(carrera.cuotas)))*100) }
             
                estudiante_list.append(rr)
         def get_age(indica):
@@ -1088,6 +1194,37 @@ class ListFinalily(ListView):
         
         estudiante_list.sort(key=get_age, reverse=True)
         return estudiante_list
+
+class GraduateView(CreateView):
+    model = Graduated
+    form_class = GraduateRegisterForm
+    template_name = 'Academico/Estudiantes/list_aptos.html'
+    success_url =  reverse_lazy('academico_app:list-top-graduado')
+
+    def get(self, request, *args, **kwargs):
+        form =GraduateRegisterForm()
+        context = {"form" : form} 
+        return render(request, r"Academico\Estudiantes\studentGraduated.html", context)
+    
+    def post(self, request, *args, **kwargs):
+        todos = []
+        date = datetime.now()
+        studen_graduate = str(self.request.POST.get('concat'))
+        studen_folio = str(self.request.POST.get('folio'))
+        studen_libro = str(self.request.POST.get('libro'))
+        studen_graduate = studen_graduate.split(sep=",")
+
+        for i in studen_graduate:
+            consulta = Estudiante.objects.get(pk=i)
+            individual= Graduated(student_id =int(i), carrera_id= int(consulta.carrera_id), periodo_grado=str(date.year) + "-" + Graduated.objects.mes(date), libro=studen_libro, folio=studen_folio)
+            todos.append(individual)
+            Estudiante.objects.filter(id=int(i)).update(is_active = False)
+        Graduated.objects.bulk_create(todos)
+        messages.success(self.request, 'Perfecto, graduaste estudiantes de manera exitosa')
+        return HttpResponseRedirect(
+                self.request.META.get("HTTP_REFERER")
+                
+        )
 
 class StudentDeleteView(DeleteView):
     template_name = 'Academico/Estudiantes/delete_student.html'
@@ -1190,35 +1327,7 @@ class AddMateriasList(ListView):
             materias_final = "No hay más materias por asignar"
         return  materias_final
 
-class GraduateView(View):
-    
-    def post(self, request, *args, **kwargs):
-        todos = []
-        date = datetime.now()
-        studen_graduate = str(self.request.POST.get('concat'))
-        studen_folio = str(self.request.POST.get('folio'))
-        studen_libro = str(self.request.POST.get('libro'))
 
-        
-        
-        def mes(var):
-            if var.month <=7:
-                return "1"
-            else:
-                return "2"
-
-        studen_graduate = studen_graduate.split(sep=",")
-
-        for i in studen_graduate:
-            consulta = Estudiante.objects.get(pk=i)
-            individual= Graduated(student_id =int(i), carrera_id= int(consulta.carrera_id), periodo_grado=str(date.year) + "-" + mes(date), libro=studen_libro, folio=studen_folio)
-            todos.append(individual)
-            Estudiante.objects.filter(id=int(i)).update(is_active = False)
-        Graduated.objects.bulk_create(todos)
-        return HttpResponseRedirect(
-                    self.request.META.get("HTTP_REFERER")
-                    
-            )
 
 class GraduatedListView(ListView):
     model= Graduated
@@ -1230,7 +1339,6 @@ class HabiliteTemplateView(ListView):
     template_name = "Academico/settings/Habilitaciones/permitir.html"
     model= Habilitaciones
     context_object_name = 'data'
-    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super(HabiliteTemplateView, self).get_context_data(**kwargs)
@@ -1244,7 +1352,7 @@ class HabiliteTemplateView(ListView):
         consulta = Acciones.objects.all().order_by("-id")
         return consulta
     
-
+# Vista que genera y habilita los cortes, se encuentra ok
 class GenerateCorteView(View):
     
     def post(self, request, *args, **kwargs):
@@ -1308,10 +1416,10 @@ class GenerateCorteView(View):
                 Habilitaciones.objects.filter(id=data_cierre.id).update(C2=True, C3=True, B2= True )
                 Acciones.objects.create(usuario = str(informacion.username), nombre= str(informacion.nombres) +" "+ str(informacion.apellidos), accion = "Ha cerrado el corte 2")
                 return HttpResponseRedirect(
-                        reverse(
-                        'academico_app:habilitado'
-                        )
+                    reverse(
+                    'academico_app:habilitado'
                     )
+                )
         
         elif data == "C3":
 
@@ -1320,28 +1428,30 @@ class GenerateCorteView(View):
                 Acciones.objects.create(usuario = str(informacion.username), nombre= str(informacion.nombres) +" "+ str(informacion.apellidos), accion = "Ha habilitado el corte 3")
 
                 return HttpResponseRedirect(
-                        reverse(
-                        'academico_app:habilitado'
-                        )
+                    reverse(
+                    'academico_app:habilitado'
                     )
+                )
             else:
                 Habilitaciones.objects.filter(id=data_cierre.id).update(C3=True, CF=True, B3= True )
                 Acciones.objects.create(usuario = str(informacion.username), nombre= str(informacion.nombres) +" "+ str(informacion.apellidos), accion = "Ha cerrado el corte 3")
                 return HttpResponseRedirect(
-                        reverse(
-                        'academico_app:habilitado'
-                        )
+                    reverse(
+                    'academico_app:habilitado'
                     )
+                )
         
         else:
             if data == "CF":
                 Habilitaciones.objects.filter(id=data_cierre.id).update(CF=True, Cerrado = True)
+                Banner.objects.filter(materia__is_active=True).update(promedio=(F('corte1')+F('corte2')+F('corte3'))/3)
+                Materias.objects.filter(is_active=True).update(is_active=False, updated_at=datetime.now() )
                 Acciones.objects.create(usuario = str(informacion.username), nombre= str(informacion.nombres) +" "+ str(informacion.apellidos), accion = "Ha cerrado el semestre")
                 return HttpResponseRedirect(
-                        reverse(
-                        'academico_app:habilitado'
-                        )
+                    reverse(
+                    'academico_app:habilitado'
                     )
+                )
 
 
 #Vista ok aunque se puede seguir mejorando, cargue de notas de los estudiantes a la BD

@@ -6,25 +6,18 @@ from .models import *
 
 
 class FacturasForm(forms.ModelForm):
-
     
     class Meta:
 
         model = FacturasSub
-        fields = ['facturas','observacion','consecutivo', 'pagado' ]
+        fields = ['consecutivo', 'pagado','observacion' ]
         # campos requeridos 
         widgets = {
-
-            "facturas":  HiddenInput(
-                attrs={
-                    "id": "facturas"
-                }
-            ),
 
             "pagado": forms.NumberInput(
                 attrs={
                     "class": "form-control",
-                    "id": "pagado"
+                    "id": "pagado",
                 }
             ),
             "observacion": forms.Textarea(
@@ -41,3 +34,7 @@ class FacturasForm(forms.ModelForm):
             ),
         }
     
+    def __init__(self, *args, **kwargs):
+        super(FacturasForm, self).__init__(*args, **kwargs)
+        self.fields['observacion'].label = "Observación"
+        self.fields['pagado'].label = "Valor a pagar"

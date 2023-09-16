@@ -1,97 +1,92 @@
-{% extends "base.html" %}
+
 {% load  static %}
 
-{% block content %}
-<div class="col-5">
-  
-  
-  {% for i in datos  %}
-  <div>
-    <label for="">Código de la factura a modificar: {{i.codigo}}</label>
-  </div>
-  <div>
-    <label for="">Valor original de la factura: {{i.monto}}</label>
-  </div>
-  <div>
-    <label for="">Valor pagado a la fecha: {{i.pagado.pagado__sum}}</label>
-  </div>
-  <div>
-    <label for="">Valor pendiente a la fecha: {{i.pendiente}}</label>
-  </div>
-  {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message}}</li>
-      {% endfor %}
-  </ul>     
-{% endif %}
-  <form  method="POST" id="dataform"  action="{% url 'finance_app:finance-list-invoice-sub' %}" >{% csrf_token %}
 
-    {{form.as_p}}
-    <button type="submit" id="data" >Registrar</button>
+<div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"><i id="iconos" style="padding-left: 3px" class="fa-solid fa-money-bill"></i> Nuevo pago</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    {% for i in datos %}
+    <div class="modal-body">
+      <div id="submenu" style=" height:120px; width:100%; padding: 15px; display: flex">
+        <div >
+        
+          <div style="display: flex" ><h1 class="h6" id="tit">Código de la factura:</h1><h6>&nbsp;{{i.codigo}}</h6></div>
+          <div style="display: flex" ><h1 class="h6" id="tit">Valor inicial:</h1><h6>&nbsp;{{i.monto}}</h6></div>
+          <div style="display: flex" ><h1 class="h6" id="tit">Valor pagado:</h1><h6>&nbsp;{{i.pagado}}</h6></div>
+          <div style="display: flex" ><h1 class="h6" id="tit">Valor pendiente:</h1><h6>&nbsp;{{i.pendiente}}</h6></div>
+        
+        </div>
+        
+      </div>
+      <div class="linea"></div>
+      
+      <form  method="POST" id="dataform" action="{% url 'finance_app:finance-list-invoice-sub' %}" style="padding-top: 15px">{% csrf_token %}
+        <div id="errores" ></div>
+        <input type="hidden" name="facturas" id="facturas" class="accion" value="{{i.codigo}}">
+        <input type="hidden" name="pendiente" id="pendiente" class="accion" value="{{i.pendiente2}}">
+        {{form.as_p}}
+        <div class="modal-footer">
+          
+        <button type="button" id="button" style="background-color: #405FC9; color: white; border: none" onclick="sendpayment()" >Registrar pago</button>
+        <button type="button" class="btn btn-danger"  id="button2" data-dismiss="modal">Cerrar</button>
+        </div>
+      </form>
+      {% endfor %}
+    </div> 
+  </div>
 </div>
-</form>
-  {% endfor %}
-  
-</div>
-{% endblock content %}
 
 {% block js %}
+<script type="text/javascript">
 
-<script>
+  function sendpayment() {
+    var serializedData = $("#dataform").serialize();
+    var pagado = parseFloat(document.getElementById("pagado").value);
+    var consecutivo = parseFloat(document.getElementById("consecutivo").value);
+    var observaciones = document.getElementById("observacion").value;
+    var pendiente = parseFloat(document.getElementById("pendiente").value);
 
 
-$(document).ready(function() {
-  {% for i in datos %}
-  $("#facturas").val({{i.codigo}});
-  var pendiente = parseFloat({{i.pendiente}});
-   
-    $('#data').on('click', function(e) {
-        e.preventDefault();
-        var pagado = parseFloat(document.getElementById("pagado").value);
-        var consecutivo = parseFloat(document.getElementById("consecutivo").value);
-        var observaciones = document.getElementById("observacion").value;
-
-        
-        if(pagado  <= 0){
-            alert("El valor a pagar no puede ser negativo ni 0(cero)");
-            
+    console.log(consecutivo)
+    if (pagado == "" || consecutivo == "" || observaciones == "") {
+      mostrarErrorblanco();
+    }else if(pagado < 0 || consecutivo < 0){
+      Swal.fire({
+        "title": "Aún falta algo",
+        "text": "El valor a pagar y el consecutivo no pueden ser negativo",
+        "icon": "error"
+      })
+    }else if(pagado > pendiente){
+      Swal.fire({
+        "title": "Aún falta algo",
+        "text": "El valor a pagar no puede ser mayor al saldo pendiente",
+        "icon": "error"
+      })
+    } else {
+  
+      var request = $.ajax({
+        type: 'POST',
+        url: "{% url 'finance_app:finance-list-invoice-sub' %}",
+        data: serializedData,
+        success: function (response) {
+          $("#edicion").modal("hide");
+          location.reload(true);
+          mostrarOkpayments();
+        },
+        error: function (error) {
+          mostrarErroresCreacion2(error);
+          mostrarError();
         }
-        else if(pagado  > pendiente ){
-            alert("El monto debe ser menor o igual al valor pendiente");
-            
-        }
-        else if(pagado  == "" || consecutivo == "" || observaciones== ""  ){
-          alert("No pueden haber valores en blanco");
-          
-        }
-        else if(consecutivo <= 0 ){
-          alert("El valor del consecutivo no puede ser negativo ni 0(cero)");
-        }
-        
-        else{
-
-            var serializedData = $("#dataform").serialize();
-
-            $.ajax({
-            type : 'POST',
-            url : "{% url 'finance_app:finance-list-invoice-sub' %}",
-            data : serializedData,
-            success : function(response){
-                window.location = "{% url 'finance_app:finance-list-invoice' %}";
-            }
-            });
-        }
-    });
-  {% endfor %} 
-});
+      });
+    }
+  }
+  
 
 </script>
 
-
 {% endblock js %}
-
-
-
-
-

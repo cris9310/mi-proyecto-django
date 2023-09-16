@@ -1,47 +1,99 @@
 {% extends "Base2.html" %}
 {% load  static %}
 
+{% block title %}Estudiantes | Portal CNE{% endblock title %}
+
 {% block extracontent %}
 
 <div class="container-fluid">
-  <div class="row" style="height:90px; align-items: end; padding-left: 15px" >
-    <h1 class="h1" id="tit">Docentes</h1>
+  <div class="row" style=" padding-left: 15px" >
+    <h1 class="h3" id="tit"><i class="fa-solid fa-graduation-cap"></i> Estudiantes</h1>
   </div>
-  <div class="row" style=" height:60px;">
-    <nav class="nav">
-      <a class="nav-link active"  id="tod"  aria-current="page" href="?order=todos">Todos</a>
-      <a class="nav-link active"  id="acti" aria-current="page" href="?order=activos">Activos</a>
-      <a class="nav-link active"  id="ina" aria-current="page" href="?order=inactivos">Inactivos</a>
-    </nav>
+  <div id="submenu" style=" height:55px; width:100%;">
+    <ul class="nav" style="padding-top: 12px; ">
+      <li class="nav-item" id="tod1">
+        <a
+          id="tod"
+          class="nav-link"
+          
+          href="?order=todos"
+          >Todos <span class="sr-only">(current)</span></a
+        >
+        
+      </li>
+      <li class="nav-item" id="act1">
+        <a
+          id="act"
+          class="nav-link"
+          
+          href="?order=activos"
+          >Activos</a
+        >
+      </li>
+      <li class="nav-item" id="ina1">
+        <a
+          id="ina"
+          class="nav-link"
+          
+          href="?order=inactivos"
+          >Inactivos</a
+        >
+      </li>
+    </ul>
   </div>
 </div>
 
-    <div class="grid-x grid-margin-x">
-        <div>
-          <button><a href="{% url 'academico_app:create-student'%}">crear</a>
-          </button>
+<div class="container-fluid" style="">
+  <div  class="row" >
+    <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
+      <div class="col" id="anadir">
+        <div class="row" >
+          <h1 class="h5" id="tit"> Acciones globales:</h1>
         </div>
-        <div>
-          
-          <p>Acciones Masivas</p>
-          <button><a href="{% url 'academico_app:list-top-asignar'%}">Crear Estudiantes</a></button>
-          <button><a href="{% url 'academico_app:list-top-graduado'%}">Graduar estudiantes</a></button>
-          {% if masivo > 0 %}
-          <button><a  class="dropdown-item" href="{% url 'academico_app:list-student-cargue'%}" ><i class="fas fa-circle" style="color: red;"></i></a></button>
-          {% else %}
-          <button><a  class="dropdown-item" href="#" ><i class="fas fa-circle" style="color: green;"></i></a></button>
-          {% endif %}
-          
-          
+        <div class="row">
+          <div style="display:flex" > 
+            <div >
+              <button  type="button" title="Crear estudiante" class="btn btn-outline-primary" onclick="abrir_modal_general('{% url 'academico_app:create-student'%}')">
+                <a >
+                  <i class="fa-solid fa-user-plus fa-lg"></i></a>
+              </button>
+              <button type="button" title="Crear multiples estudiantes" class="btn btn-outline-primary"  onclick="abrir_modal_general('{% url 'academico_app:list-top-asignar'%}')">
+                <a >
+                  <i class="fa-solid fa-people-group fa-lg"></i></a>
+              </button>
+              <button type="button" title="Graduar estudiantes"  class="btn btn-outline-primary"  onclick="location.href='{% url 'academico_app:list-top-graduado'%}'">
+                <a  >
+                  <i class="fa-solid fa-user-graduate fa-lg" ></i></a>
+              </button>
+              
+              {% if masivo > 0 %}
+              <span id="group">
+                <button type="button" class="btn btn-outline-primary" title="Ver estudiantes pendientes"  onclick="location.href='{% url 'academico_app:list-student-cargue'%}'">
+                  <i class="fas fa-bell fa-xl" ></i>
+                </button>
+                <span class="badge badge-light">{{masivo}}</span>
+              </span>
+              {% else %}
+              <span id="group">
+                <button type="button" class="btn btn-outline-primary" title="Ver estudiantes pendientes" onclick="{% url 'academico_app:list-student-cargue'%}">
+                  <i class="fas fa-bell fa-xl" ></i>
+                </button>
+                <span class="badge badge-light" id="sin">0</span>
+              </span>
+              {% endif %}
+            </div >
+          </div >
         </div>
-        <div class='col-10' style="margin-top: 2em;">
-          
-          {% if student %}
-          <table class="table table-striped">
-            <thead>
-              <th>Código </th>
+      </div>
+      <div class="linea"></div>
+      <div class ="tabla" style=" " >
+        {% if student %}
+          <table id="table_id2"  class="hover" style="width:100%; ">
+            <thead >
+              <th>Código</th>
               <th>Nombre del estudiante</th>
               <th>Programa</th>
+              <th>Estado</th>
               <th>Acciones</th>
             </thead>
             <tbody>
@@ -50,8 +102,8 @@
                   <td ><a href="{% url 'academico_app:notes' estudiante.pk %}">{{estudiante.codigo}}</a></td>
                   <td>{{estudiante.apellidos}} {{estudiante.nombre}}</td>
                   <td>{{estudiante.carrera}}</td>
-                  
-                  
+                  <td>{{estudiante.is_active}}</td>
+
                   {% if estudiante.is_active %}
                   <td>
                     <div class="dropdown show">
@@ -85,7 +137,7 @@
                         {% if estudiante.is_graduado %}
                         <a class="dropdown-item" href="#"><i class="fas fa-graduation-cap"></i></a>
                         {% else %}
-                        <a class="dropdown-item" href="{% url 'academico_app:estate-student' estudiante.pk  %}" >inhabilitado</a>
+                        <a class="dropdown-item" href="#" >inhabilitado</a>
                         {% endif %}
                       </div>
                     </div>
@@ -96,55 +148,38 @@
               </tr>
                 
               {% endfor %}
+              
             </tbody>
-          </table>
-
-          {% else %}
-             <p>No hay estudiantes para mostrar</p>
-              
-          {% endif %}
-              
-          
-        </div>
-        <div class="cell">
-            
-          {% if is_paginated %}
-          <nav aria-label="Pagination">
-              <ul class="pagination">
-                
-                {% if page_obj.has_previous %}
-                  <li class="pagination-previous">
-                     <a href="?page={{page_obj.previous_page_number}}">Atrás</a>
-                  </li>   
-                {% endif %}
-                
-                {% for pagina in paginator.page_range  %}
-    
-                
-                {% if pagina == page_obj.number  %} 
-                <li class="current"><span class="show-for-sr">You're on page</span>{{ pagina }}</li> 
-                {% else %}
-                <li><a href="?page={{pagina}}">{{ pagina }}</a></li>   
-                {% endif %}
-                {% endfor %}
-    
-                {% if page_obj.has_next %}     
-                <li class="pagination-next">
-                    <a href="?page={{page_obj.next_page_number}}">siguiente</a>
-                  </li>
-                {% endif %}
-              </ul>
-          </nav>
-              
-          {% endif %}
-                
-            
-
-        </div>
+          </table> 
+        {% else %}
+        <table id="table_id2"  class="hover" style="width:100%; ">
+          <thead >
+            <th>Código</th>
+            <th>Nombre del estudiante</th>
+            <th>Programa</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td > - </td >
+              <td > - </td >
+              <td > - </td >
+              <td > - </td >
+              <td > - </td >
+            </tr>
+          </tbody>
+        </table>   
+        {% endif %}
+      </div>
     </div>
-  <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
-
   </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
 {% endblock extracontent %}
 
 {% block js %}

@@ -214,7 +214,7 @@ class BuscadorManager(models.Manager):
         if valor2 is not None:
             return valor2
         else:
-            return 0
+            return 0.0
         
         
     def get_secret(self, secret_name):
@@ -225,7 +225,14 @@ class BuscadorManager(models.Manager):
         except:
             mgs= 'la variable %s no existe' % secret_name
             raise ImproperlyConfigured(mgs)
-
+        
+    def mes(self, var):
+        if var.month <=7:
+            return "1"
+        else:
+            return "2"
+        
+    
 
 
 

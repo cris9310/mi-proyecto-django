@@ -43,18 +43,27 @@
     
   </div>
 </div>
+
 <div class="container-fluid" style="">
   <div  class="row" >
     <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
-      <div class="row">
-        <div class="col" id="anadir">
-          <button  type="button" id="button" class="btn btn-sm" style="background-color: #405FC9" onclick="abrir_modal_general('{% url 'academico_app:create-teacher' %}')">
-            <a style="color: #FFFFFF; font-weight: bold" >
-              <i class="fa-solid fa-user-plus" style="color: #ffffff;"></i> &nbsp; Añadir docente</a>
-          </button>
-          <div class="linea"></div>
+      <div class="col" id="anadir">
+        <div class="row" >
+          <h1 class="h5" id="tit"> Acciones globales:</h1>
+        </div>
+        <div class="row">
+          <div style="display:flex" > 
+            <div >
+              <button  type="button" title="Crear docente" class="btn btn-outline-primary" onclick="abrir_modal_general('{% url 'academico_app:create-teacher' %}')">
+                <a >
+                  <i class="fa-solid fa-user-plus fa-lg"></i></a>
+              </button>
+              
+            </div >
+          </div >
         </div>
       </div>
+      <div class="linea"></div>
       <div class ="tabla" style=" " >
         {% if teacher %}
           <table id="table_id2"  class="hover" style="width:100%; ">
@@ -99,15 +108,14 @@
                 </td>
               </tr>
         {% endfor %}
-              
-            </tbody>
+            
           </table> 
         {% else %}
         <table id="table_id2"  class="hover" style="width:100%; ">
           <thead >
-            <th>Salones </th>
-            <th>Nro. Documento</th>
-            <th>Nombre del Docente</th>
+            <th>Código</th>
+            <th>Nombre del estudiante</th>
+            <th>Programa</th>
             <th>Estado</th>
             <th>Acciones</th>
           </thead>
@@ -125,7 +133,6 @@
       </div>
     </div>
   </div>
-    
   </div>
 </div>
 
