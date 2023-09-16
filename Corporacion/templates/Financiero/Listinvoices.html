@@ -82,11 +82,11 @@
                 <td >{{i.pagado}}</td>
                 {% if i.pagado == i.monto %}
                 <td>
-                  <a ><i id="iconos" class="fa-solid fa-check"></i></a>
+                  <a ><i id="iconos" style="padding-left: 3px" class="fa-solid fa-check"></i></a>
                 </td>
                 {% else %}
                 <td >
-                  <a onclick="abrir_modal_general3('{% url 'finance_app:finance-list-invoice-detail-up' i.pk %}')" title="Editar"><i id="iconos" class="fa-regular fa-pen-to-square"></i></a>
+                  <a onclick="abrir_modal_general3('{% url 'finance_app:finance-list-invoice-detail-up' i.pk %}')" title="Editar"><i id="iconos" style="padding-left: 3px" class="fa-regular fa-pen-to-square"></i></a>
                 </td>
                 {% endif %}
               </tr>
