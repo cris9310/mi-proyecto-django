@@ -191,42 +191,36 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="container">
             <table id="table_idinf"  class="hover" style="width:100%; ">
               <thead>
-                <th>Seleccionar</th>
-                <th>Código</th>
-                <th>Estudiante</th>
+                <th ><input type="checkbox"> Código</th>
+                <th >Estudiante</th>
               </thead>
               <tbody>
                 {% for i in finaly %}
                 <tr>
-                  <td style="width:15%">
-                    <span ><input type="checkbox" class="form-check-input"  value="{{i.pk}}"></span>
-                  </td>
-                  <td style="width:25%">{{i.codigo}}</td>
+                  <td ><span ><input type="checkbox"  value="{{i.pk}}"></span> {{i.codigo}}</td>
                   <td>{{i.estudiante}}</td>
                 </tr>
                 {% endfor %}
               </tbody>
             </table>
-          </div>
           <div class="linea"></div>
         <div style="padding-top: 15px">
           <form  method="POST" id="dataGeneralForm" action="{% url 'academico_app:list-top-a-graduar' %}" >{% csrf_token %}
             
             <div>
-              <label  for="informe1">Seleccione el tipo de informe:</label>
+              <label  id="informe1" for="informe1">Seleccione el tipo de informe:</label>
               <select class="form-control" name="informe1" id="informe1">
+                <option disabled selected value> -- seleccione una opción  -- </option>
                 <option value="1">Académico</option>
                 <option value="2">Financiero</option>
                 <option value="3">Mixto</option>
               </select>
             </div>
             <h3 id="cantChulos"> </h3>
-            <input type="hidden" name="concat2" id="concat2" class="concat2" />
+            <input type="text" name="concat2" id="concat2" class="concat2" />
             <div class="modal-footer" >
-            <div class="linea"></div>
             <button type="submit" id="button" style="background-color: #405FC9; color: white; border: none" >Generar informe</button>
             <button type="button" class="btn btn-danger"  id="button" data-dismiss="modal">Cerrar</button>
             </div>
@@ -308,20 +302,67 @@
     $('#edicion-informe').modal("show");
   }
 
-  function chulos() {
-    // Verificamos cuales son los NO chequeados
-    let suma = checkboxes.reduce((acc, check) => acc + !check.checked, 0);
-    document.getElementById("cantChulos").innerHTML = suma;
-  }
-  
   $(document).ready(function () {
-  // Buscamos los checkboxs
-  let checkboxes = Array.from(document.getElementsByClassName('form-check-input'));
-  // A cada uno le asignamos el listener
-  checkboxes.forEach(check => check.addEventListener('change', chulos()));
+
+    $('#table_idinf thead input[type="checkbox"]').change(function() {
+      var checkboxes = $('#table_idinf tbody input[type="checkbox"]');
+      var texto = document.getElementById('informe1');
+      
+      if ($(this).is(':checked')) {
+        for(var i=0, n=checkboxes.length;i<n;i++) {
+          checkboxes[i].checked = true;
+        }
+        var checkboxesSelect = $('#table_idinf tbody input[type="checkbox"]:checked');
+        var text = i.toString();
+        var arr = checkboxesSelect.map(function () {
+          return this.value;
+        }).get();
+        var str = arr.join(",");
+        $("#concat2").val(arr);
+        texto.innerHTML = 'Seleccione el tipo de informe para los ' + text + ' estudiantes:';
+      }
+      else {
+        for(var i=0, n=checkboxes.length;i<n;i++) {
+          checkboxes[i].checked = false;
+        }
+        $("#concat2").val("");
+        texto.innerHTML = 'Seleccione el tipo de informe:';
+      } 
+         
   });
 
 
+    $('#table_idinf tbody input[type="checkbox"]').click(function() {
+      var checkboxesTodos = $('#table_idinf thead input[type="checkbox"]');
+      var checkboxes = $('#table_idinf tbody input[type="checkbox"]');
+      var texto = document.getElementById('informe1');
+      var cont = 0;
+      var checkboxesSelect = $('#table_idinf tbody input[type="checkbox"]:checked'); 
+      var arr = checkboxesSelect.map(function () {
+        return this.value;
+      }).get();
+      var str = arr.join(",");
+      $("#concat2").val(arr);
+
+      
+      checkboxesTodos.prop("checked", false) ;
+      for (var x=0; x < checkboxes.length; x++) {
+      if (checkboxes[x].checked) {
+        cont = cont + 1;
+      }
+      }
+      if (cont > 1) {
+        var text = cont.toString();
+        texto.innerHTML = 'Seleccione el tipo de informe para los ' + text + ' estudiantes:';
+      }else if (cont == 1) {
+        var text = cont.toString();
+        texto.innerHTML = 'Seleccione el tipo de informe para este estudiante:';
+      }else{
+        var text = cont.toString();
+        texto.innerHTML = 'Seleccione el tipo de informe:';
+      }   
+  });
+});
 
 </script>
 {% endblock js %}

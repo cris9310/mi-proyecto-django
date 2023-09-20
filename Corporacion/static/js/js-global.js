@@ -482,9 +482,8 @@ $(document).ready(function () {
       }
     },
     "columns": [
-      { "className": 'dt-body-center' },
-      null,
-      null,
+      { "width": "25%", },
+      { "width": "75%", },
     ],
 
   });
