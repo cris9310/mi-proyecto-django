@@ -1117,7 +1117,7 @@ def export_users_csv(request):
     sede = CatalogsSede.objects.all()
     wb = Workbook()
 
-    #Nombramos las pestaas que va a llevar el archivo
+    #Nombramos las pestanas que va a llevar el archivo
     ws1 = wb.create_sheet(index=0, title="Plantilla")
     ws = wb.create_sheet(index=1, title="Campos")
 

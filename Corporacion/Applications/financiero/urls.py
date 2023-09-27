@@ -5,51 +5,58 @@ app_name = 'finance_app'
 urlpatterns = [
     path(
         'finance-list-invoice/',
-        views.InvoiceListGeneral.as_view(), 
+        views.InvoiceListGeneral.as_view(),
         name='finance-list-invoice'
     ),
     path(
         'finance-list-invoice/finance-list-invoice-detail/<pk>/',
-        views.InvoiceListviewUser.as_view(), 
+        views.InvoiceListviewUser.as_view(),
         name='finance-list-invoice-detail'
     ),
     path(
         'finance-list-invoice-detail-up/<pk>/',
-        views.InvoiceDetailView.as_view(), 
+        views.InvoiceDetailView.as_view(),
         name='finance-list-invoice-detail-up'
     ),
     path(
         'finance-list-invoice-sub/',
-        views.InvoiceSubCreate.as_view(), 
+        views.InvoiceSubCreate.as_view(),
         name='finance-list-invoice-sub'
     ),
     path(
         'finance-list-invoice/finance-invoice-detail-more/',
-        views.ListInvoiceDetailView.as_view(), 
+        views.ListInvoiceDetailView.as_view(),
         name='finance-invoice-detail-more'
     ),
     path(
         'finance-list-invoice/detail-sub/<pk>/',
-        views.FacturasSubDetailView.as_view(), 
+        views.FacturasSubDetailView.as_view(),
         name='detail-sub'
     ),
     path(
         'finance-list-invoice/delete-sub/<pk>/',
-        views.FacturasSubDeleteView.as_view(), 
+        views.FacturasSubDeleteView.as_view(),
         name='delete-sub'
     ),
+    path(
+        'finance-list-invoice/download-report/',
+        views.InformeView.as_view(),
+        name='download-report'
+    ),
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
-  
-  
+
+
+
+
+
+
+
+
+
+
 ]

@@ -211,7 +211,7 @@
             
             <div>
               <label  id="informe1" for="informe1">Seleccione el tipo de informe:</label>
-              <select class="form-control" name="informe1" id="informe1">
+              <select class="form-control" name="informe12" id="informe12">
                 <option disabled selected value> -- seleccione una opción  -- </option>
                 <option value="1">Académico</option>
                 <option value="2">Financiero</option>
@@ -219,9 +219,9 @@
               </select>
             </div>
             <h3 id="cantChulos"> </h3>
-            <input type="text" name="concat2" id="concat2" class="concat2" />
+            <input type="hidden" name="concat2" id="concat2" class="concat2" />
             <div class="modal-footer" >
-            <button type="submit" id="button" style="background-color: #405FC9; color: white; border: none" >Generar informe</button>
+            <button type="button" id="button" style="background-color: #405FC9; color: white; border: none" onclick="SendDataInform()" >Generar informe</button>
             <button type="button" class="btn btn-danger"  id="button" data-dismiss="modal">Cerrar</button>
             </div>
           </form>
@@ -270,6 +270,58 @@
 <script type="text/javascript">
 
   var $=jQuery.noConflict();
+
+  function SendDataInform() {
+    var serializedData = $("#dataGeneralForm").serialize();
+    var informe1Datos = document.getElementById("informe12");
+    var checkboxes = $('#table_idinf tbody input[type="checkbox"]');
+    var cont = 0;
+
+    for (var x=0; x < checkboxes.length; x++) {
+      if (checkboxes[x].checked) {
+        cont = cont + 1;
+      }
+    }
+
+    
+    if (cont == 0 || informe1Datos.value == "" ) {
+
+      if (cont == 0 ) {
+      
+        Swal.fire({
+          "title": "Aún falta algo",
+          "text": "Por favor verifique que haya seleccionado por lo menos 1 estudiante",
+          "icon": "error"
+        })
+      }
+      else{
+      
+        Swal.fire({
+          "title": "Aún falta algo",
+          "text": "Seleccione el tipo de informe",
+          "icon": "error"
+        })
+      }
+    }
+    else{
+      var request = $.ajax({
+        type: 'POST',
+        url: "{% url 'finance_app:download-report' %}",
+        data: serializedData,
+        success: function (response) {
+          $("#edicion-informe").modal("hide");
+          location.reload(true);
+          mostrarOkpayments();
+        },
+        error: function (error) {
+          mostrarErroresCreacion2(error);
+          mostrarError();
+        }
+      });
+    }
+     
+  }
+
   function abrir_modal_edicion(url) {
     var arr = $('[name="materia"]:checked').map(function () {
       return this.value;
@@ -329,7 +381,7 @@
         texto.innerHTML = 'Seleccione el tipo de informe:';
       } 
          
-  });
+  }); 
 
 
     $('#table_idinf tbody input[type="checkbox"]').click(function() {
