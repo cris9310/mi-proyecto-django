@@ -9,13 +9,13 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.db.models.functions import Coalesce
 from django.db.models import FloatField
-from django.db.models.functions import Coalesce
 
 from Applications.academico.models import *
 from .models import *
 from .forms import *
 
 from openpyxl import Workbook
+import pandas as pd
 
 
 # Vista que muestra el contexto de la factura a mostrar, se encuentra ok
@@ -200,15 +200,28 @@ class InformeView(View):
         estudiantes = str(self.request.POST.get('concat2'))
         select = self.request.POST.get('informe12')
         estudiantes = estudiantes.split(sep=",")
+        listaData = []
 
         for i in estudiantes:
             info = Banner.objects.filter(cod_student_id=i)
             for j in info:
-                print(
-                    j.cod_student.codigo, j.cod_student.nombre,
-                    j.cod_student.apellidos, "Académico",
-                    j.materia.materia.nombre_materia, j.promedio
-                )
+                data = {
+                    "Codigo": j.cod_student.codigo, "Nombre": j.cod_student.nombre + " " +
+                    j.cod_student.apellidos, "Tipo": "Académico",
+                    "Materia": j.materia.materia.nombre_materia, "Promedio": float(j.promedio)
+                }
+                listaData.append(data)
+
+        df = pd.DataFrame(listaData)
+        df["validacion"] = df.duplicated("Codigo")
+        for i in df.index:
+            if df["validacion"][i] == False:
+                print(df["Codigo"][i] + " " + df["Nombre"][i] + " " + df["Tipo"]
+                      [i] + " " + df["Materia"][i] + " " + str(df["Promedio"][i]))
+            else:
+                print("-------------- " + df["Materia"]
+                      [i] + " " + str(df["Promedio"][i]))
+
         wb = Workbook()
 
         # Nombramos las pestanas que va a llevar el archivo
