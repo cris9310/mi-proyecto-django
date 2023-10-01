@@ -200,32 +200,59 @@ class InformeView(View):
         estudiantes = str(self.request.POST.get('concat2'))
         select = self.request.POST.get('informe12')
         estudiantes = estudiantes.split(sep=",")
-        listaData = []
+        listaDataAcademic = []
+        listaDataFinance = []
 
         for i in estudiantes:
-            info = Banner.objects.filter(cod_student_id=i)
-            for j in info:
-                data = {
+            infoAcademic = Banner.objects.filter(cod_student_id=i)
+            infoFinance = Facturas.objects.filter(
+                user_id=Estudiante.objects.get(id=i).codigo)
+
+            for j in infoAcademic:
+                dataAcademic = {
                     "Codigo": j.cod_student.codigo, "Nombre": j.cod_student.nombre + " " +
                     j.cod_student.apellidos, "Tipo": "Académico",
                     "Materia": j.materia.materia.nombre_materia, "Promedio": float(j.promedio)
                 }
-                listaData.append(data)
+                listaDataAcademic.append(dataAcademic)
 
-        df = pd.DataFrame(listaData)
-        df["validacion"] = df.duplicated("Codigo")
-        for i in df.index:
-            if df["validacion"][i] == False:
-                print(df["Codigo"][i] + " " + df["Nombre"][i] + " " + df["Tipo"]
-                      [i] + " " + df["Materia"][i] + " " + str(df["Promedio"][i]))
-            else:
-                print("-------------- " + df["Materia"]
-                      [i] + " " + str(df["Promedio"][i]))
+            for l in infoFinance:
+                dataFinance = {
+                    "Codigo": l.user.codigo, "Nombre": l.user.nombres + " " +
+                    l.user.apellidos, "Tipo": "Financiero",
+                    "Factura": l.codigo, "Estado": l.estado.estado
+                }
+                listaDataFinance.append(dataFinance)
 
+        dfAcademic = pd.DataFrame(listaDataAcademic)
+        dfAcademic["validacion"] = dfAcademic.duplicated("Codigo")
+
+        dfFinance = pd.DataFrame(listaDataFinance)
+        dfFinance["validacion"] = dfFinance.duplicated("Codigo")
+
+        # Creamos archivo y nombramos las pestanas que va a llevar el archivo
         wb = Workbook()
-
-        # Nombramos las pestanas que va a llevar el archivo
         ws1 = wb.create_sheet(index=0, title="Informe")
+
+        #Creacion de la data en el informe
+        if select == "1": #informe Academico
+            for i in dfFinance.index:
+                if dfFinance["validacion"][i] == False:
+                    print(dfFinance["Codigo"][i] + " " + dfFinance["Nombre"][i] + " " + dfFinance["Tipo"]
+                          [i] + " " + dfFinance["Factura"][i] + " " + str(dfFinance["Estado"][i]))
+                else:
+                    print("-------------- " + dfFinance["Factura"]
+                          [i] + " " + str(dfFinance["Estado"][i]))
+        else:
+            #informe financiero
+            for i in dfFinance.index:
+                if dfFinance["validacion"][i] == False:
+                    print(dfFinance["Codigo"][i] + " " + dfFinance["Nombre"][i] + " " + dfFinance["Tipo"]
+                          [i] + " " + dfFinance["Factura"][i] + " " + str(dfFinance["Estado"][i]))
+                else:
+                    print("-------------- " + dfFinance["Factura"]
+                          [i] + " " + str(dfFinance["Estado"][i]))
+                    
 
         return HttpResponseRedirect(
             self.request.META.get("HTTP_REFERER")
