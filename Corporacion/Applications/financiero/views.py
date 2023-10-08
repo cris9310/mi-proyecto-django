@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponseRedirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.generic import (TemplateView,
                                   FormView, CreateView, DeleteView, UpdateView,
                                   DetailView, ListView, View
@@ -10,11 +10,13 @@ from django.contrib import messages
 from django.db.models.functions import Coalesce
 from django.db.models import FloatField
 
+
 from Applications.academico.models import *
 from .models import *
 from .forms import *
 
 from openpyxl import Workbook
+from openpyxl.writer.excel import save_virtual_workbook
 import pandas as pd
 
 
@@ -64,12 +66,12 @@ class InvoiceListviewUser(ListView):
         datos = Facturas.objects.filter(user_id=Estudiante.objects.get(
             pk=self.kwargs['pk']).codigo).order_by("codigo")
         for i in datos:
-            pagado = FacturasSub.objects.filter(facturas_id=i.pk).aggregate(
-                pagado__sum=Coalesce(Sum('pagado', output_field=FloatField()), 0.0))
+            pagado = FacturasSub.objects.filter(
+                facturas_id=i.pk).aggregate(pagados=Sum("pagado"))
             pagados_data = FacturasSub.objects.filter(facturas_id=i.pk)
-            data = pagado['pagado__sum']
+            data = pagado['pagados']
             datos_final = {'pk': i.pk, "codigo": i.codigo, 'descripcion': i.descripcion,
-                           'estado': i.estado, 'monto': f'$ {i.monto:,.2f}', 'pagado': f'$ {data:,.2f}'}
+                           'estado': i.estado, 'monto': f'$ {i.monto:,.2f}', 'pagado':  f'$ {data if data else 0.0 :,.2f}'}
 
             info.append(datos_final)
         return info
@@ -99,14 +101,14 @@ class InvoiceDetailView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(InvoiceDetailView, self).get_context_data(**kwargs)
-        pagado = FacturasSub.objects.filter(facturas_id=self.kwargs['pk']).aggregate(
-            pagado__sum=Coalesce(Sum('pagado', output_field=FloatField()), 0.0))
+        pagado = FacturasSub.objects.filter(
+            facturas_id=self.kwargs['pk']).aggregate(pagados=Sum("pagado"))
         data = Facturas.objects.get(pk=self.kwargs['pk'])
         monto = data.monto
-        pagado2 = pagado['pagado__sum']
+        pagado2 = pagado['pagados']
         pendiente = Facturas.objects.manejo(data, pagado)
         datos = []
-        info = {"codigo": data.codigo, "monto": f'$ {monto:,.2f}', 'pagado': f'$ {pagado2:,.2f}',
+        info = {"codigo": data.codigo, "monto": f'$ {monto:,.2f}', 'pagado': f'$ {pagado2 if pagado2 else 0.0 :,.2f}',
                 'pendiente': f'$ {pendiente:,.2f}', 'pendiente2': pendiente}
         datos.append(info)
         context["datos"] = datos
@@ -225,35 +227,67 @@ class InformeView(View):
                 listaDataFinance.append(dataFinance)
 
         dfAcademic = pd.DataFrame(listaDataAcademic)
-        dfAcademic["validacion"] = dfAcademic.duplicated("Codigo")
-
         dfFinance = pd.DataFrame(listaDataFinance)
-        dfFinance["validacion"] = dfFinance.duplicated("Codigo")
 
-        # Creamos archivo y nombramos las pestanas que va a llevar el archivo
-        wb = Workbook()
-        ws1 = wb.create_sheet(index=0, title="Informe")
+        # Creacion del archivo
+        if select == "1":  # informe Academico
+            wb = Workbook()
+            ws = wb.create_sheet(index=0, title="Academico")
 
-        #Creacion de la data en el informe
-        if select == "1": #informe Academico
-            for i in dfFinance.index:
-                if dfFinance["validacion"][i] == False:
-                    print(dfFinance["Codigo"][i] + " " + dfFinance["Nombre"][i] + " " + dfFinance["Tipo"]
-                          [i] + " " + dfFinance["Factura"][i] + " " + str(dfFinance["Estado"][i]))
-                else:
-                    print("-------------- " + dfFinance["Factura"]
-                          [i] + " " + str(dfFinance["Estado"][i]))
+            headsList = list(dfAcademic.columns.values)
+
+            for number in range(0, len(headsList)):
+                Heads = ws.cell(row=1, column=number + 1)
+                Heads.value = headsList[number]
+
+            var_est = 2
+            for number in range(0, len(dfAcademic)):
+
+                c1 = ws.cell(row=var_est, column=1)
+                c1.value = dfAcademic["Codigo"][number]
+                c2 = ws.cell(row=var_est, column=2)
+                c2.value = dfAcademic["Nombre"][number]
+                c3 = ws.cell(row=var_est, column=3)
+                c3.value = dfAcademic["Tipo"][number]
+                c4 = ws.cell(row=var_est, column=4)
+                c4.value = dfAcademic["Materia"][number]
+                c5 = ws.cell(row=var_est, column=5)
+                c5.value = dfAcademic["Promedio"][number]
+                var_est += 1
+            content = save_virtual_workbook(wb)
+            response = HttpResponse(content)
+            response['Content-Disposition'] = 'attachment; filename=informe_Academico.xlsx'
+            response['Content-Type'] = 'application/x-xlsx'
+            return response
+
         else:
-            #informe financiero
-            for i in dfFinance.index:
-                if dfFinance["validacion"][i] == False:
-                    print(dfFinance["Codigo"][i] + " " + dfFinance["Nombre"][i] + " " + dfFinance["Tipo"]
-                          [i] + " " + dfFinance["Factura"][i] + " " + str(dfFinance["Estado"][i]))
-                else:
-                    print("-------------- " + dfFinance["Factura"]
-                          [i] + " " + str(dfFinance["Estado"][i]))
-                    
+            # informe financiero
 
-        return HttpResponseRedirect(
-            self.request.META.get("HTTP_REFERER")
-        )
+            wb = Workbook()
+            ws = wb.create_sheet(index=0, title="Financiero")
+
+            headsList = list(dfFinance.columns.values)
+
+            for number in range(0, len(headsList)):
+                Heads = ws.cell(row=1, column=number + 1)
+                Heads.value = headsList[number]
+
+            var_est = 2
+            for number in range(0, len(dfFinance)):
+
+                c1 = ws.cell(row=var_est, column=1)
+                c1.value = dfFinance["Codigo"][number]
+                c2 = ws.cell(row=var_est, column=2)
+                c2.value = dfFinance["Nombre"][number]
+                c3 = ws.cell(row=var_est, column=3)
+                c3.value = dfFinance["Tipo"][number]
+                c4 = ws.cell(row=var_est, column=4)
+                c4.value = dfFinance["Factura"][number]
+                c5 = ws.cell(row=var_est, column=5)
+                c5.value = dfFinance["Estado"][number]
+                var_est += 1
+            content = save_virtual_workbook(wb)
+            response = HttpResponse(content)
+            response['Content-Disposition'] = 'attachment; filename=informe_Financiero.xlsx'
+            response['Content-Type'] = 'application/x-xlsx'
+            return response

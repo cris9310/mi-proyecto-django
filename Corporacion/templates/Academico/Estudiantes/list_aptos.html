@@ -207,7 +207,7 @@
             </table>
           <div class="linea"></div>
         <div style="padding-top: 15px">
-          <form  method="POST" id="dataGeneralForm" action="{% url 'academico_app:list-top-a-graduar' %}" >{% csrf_token %}
+          <form  method="POST" id="dataGeneralForm" action="{% url 'finance_app:download-report' %}" >{% csrf_token %}
             
             <div>
               <label  id="informe1" for="informe1">Seleccione el tipo de informe:</label>
@@ -271,7 +271,7 @@
   var $=jQuery.noConflict();
 
   function SendDataInform() {
-    var serializedData = $("#dataGeneralForm").serialize();
+    var serializedData = $("#dataGeneralForm")
     var informe1Datos = document.getElementById("informe12");
     var checkboxes = $('#table_idinf tbody input[type="checkbox"]');
     var cont = 0;
@@ -303,20 +303,10 @@
       }
     }
     else{
-      var request = $.ajax({
-        type: 'POST',
-        url: "{% url 'finance_app:download-report' %}",
-        data: serializedData,
-        success: function (response) {
-          $("#edicion-informe").modal("hide");
-          location.reload(true);
-          mostrarOkpayments();
-        },
-        error: function (error) {
-          mostrarErroresCreacion2(error);
-          mostrarError();
-        }
-      });
+      serializedData.submit();
+      $("#edicion-informe").modal("hide");
+      mostrarOkpayments();
+      
     }
      
   }
@@ -350,6 +340,13 @@
   });
 
   function generar() {
+    var checkboxes = $('#table_idinf input[type="checkbox"]');
+    for(var i=0, n=checkboxes.length;i<n;i++) {
+      checkboxes[i].checked = false;
+    }
+    $('#informe12 option').prop('selected', function() {
+      return this.defaultSelected;
+    });
     $('#edicion-informe').modal("show");
   }
 
