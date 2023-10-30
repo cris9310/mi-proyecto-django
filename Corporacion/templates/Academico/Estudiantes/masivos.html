@@ -1,19 +1,36 @@
 {% extends "Base2.html" %}
 {% load  static %}
 
+
+
+{% block title %}Pendientes | Portal CNE{% endblock title %}
+
 {% block extracontent %}
 
-    <div class="grid-x grid-margin-x">
+<div class="container-fluid">
+  <div class="row" style=" padding-left: 15px" >
+    <h1 class="h3" id="tit"><i class="fa-solid fa-graduation-cap"></i> Estudiantes pendientes</h1>
+  </div>
+  
+</div>
+
+<div class="container-fluid" style="">
+  <div  class="row" >
+    <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
+      <div class="col" id="anadir">
         
-        <div class='col-10' style="margin-top: 2em;">
-          
-          {% if student %}
-          <table class="table table-striped">
+      <div class="linea"></div>
+      <div class ="tabla" style=" " >
+        {% if student %}
+          <table class="table table-striped" id="table_id2">
             <thead>
               <th>Código </th>
               <th>Nombre del estudiante</th>
               <th>Programa</th>
               <th>Acciones</th>
+              <th>Acciones</th>
+
+
             </thead>
             <tbody>
               {% for estudiante in student %}
@@ -33,55 +50,19 @@
                       </div>
                     </div>
                   </td>
+                  <td>{{estudiante.carrera}}</td>
               </tr>
               
               {% endfor %}
             </tbody>
           </table>
-
-          {% else %}
-             <p>No hay estudiantes para mostrar</p>
-              
-          {% endif %}
-              
-          
-        </div>
-        <div class="cell">
-            
-          {% if is_paginated %}
-          <nav aria-label="Pagination">
-              <ul class="pagination">
-                
-                {% if page_obj.has_previous %}
-                  <li class="pagination-previous">
-                     <a href="?page={{page_obj.previous_page_number}}">Atrás</a>
-                  </li>   
-                {% endif %}
-                
-                {% for pagina in paginator.page_range  %}
-    
-                
-                {% if pagina == page_obj.number  %} 
-                <li class="current"><span class="show-for-sr">You're on page</span>{{ pagina }}</li> 
-                {% else %}
-                <li><a href="?page={{pagina}}">{{ pagina }}</a></li>   
-                {% endif %}
-                {% endfor %}
-    
-                {% if page_obj.has_next %}     
-                <li class="pagination-next">
-                    <a href="?page={{page_obj.next_page_number}}">siguiente</a>
-                  </li>
-                {% endif %}
-              </ul>
-          </nav>
-              
-          {% endif %}
-                
-            
-
-        </div>
+        {% endif %}
+      </div>
     </div>
+  </div>
+  </div>
+</div>
+
   <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 
   </div>
