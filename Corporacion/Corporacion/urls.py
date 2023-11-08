@@ -17,15 +17,13 @@ from django.contrib import admin
 from django.urls import path, include, reverse_lazy
 from django.views.generic.base import RedirectView
 
-
-
 urlpatterns = [
-    
+
     path('admin/', admin.site.urls),
 
     path('', include('Applications.homepage.urls')),
     path('user/', include('Applications.academico.urls')),
     path('agenda/', include('Applications.agenda.urls')),
-    path('finance/', include('Applications.financiero.urls')), 
+    path('finance/', include('Applications.financiero.urls')),
 
 ]

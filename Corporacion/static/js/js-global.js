@@ -1,4 +1,45 @@
 
+$(document).ready(function () {
+  window.onload = codeAddress;
+});
+
+
+function codeAddress() {
+  var URLactual = (window.location.pathname).toString().split("/")[2];
+  const urlParams = new URLSearchParams(window.location.search);
+
+  let contenido = document.querySelectorAll(".menu-links li a"),
+    contenidoTotal = document.querySelectorAll(".menu-links li")
+  for (let x in contenido) {
+    var variableDinamica = (contenido[x].getAttribute("href")).toString().split("/")[2];
+    if (URLactual == variableDinamica) {
+      $(".is-active").removeClass("is-active");
+      contenidoTotal[x].className += "is-active"
+      break;
+
+    }
+  }
+
+  if (urlParams == "order=todos") {
+    $("#todos").prop("checked", true);
+    $("#activos").prop("checked", false);
+    $("#inactivos").prop("checked", false);
+  } else if (urlParams == "order=activos") {
+    $("#activos").prop("checked", true);
+    $("#todos").prop("checked", false);
+    $("#inactivos").prop("checked", false);
+  } else if (urlParams == "order=inactivos") {
+    $("#inactivos").prop("checked", true);
+    $("#todos").prop("checked", false);
+    $("#activos").prop("checked", false);
+
+  } else {
+    $("#inactivos").prop("checked", false);
+    $("#todos").prop("checked", false);
+    $("#activos").prop("checked", false);
+
+  }
+}
 
 function abrir_modal_general(url) {
 
@@ -271,74 +312,7 @@ function abrir_modal_crearEvent(url) {
 
 // Esta función modifica el css del menú, teniendo en cuenta el url actual
 
-$(document).ready(function () {
-  var URLactual = (window.location.pathname).toString().split("/")[2];
-  var das = ($("#das").attr('href')).toString().split("/")[2];
-  var doc = ($("#doc").attr('href')).toString().split("/")[2];
-  var est = ($("#est").attr('href')).toString().split("/")[2];
-  var fin = ($("#fin").attr('href')).toString().split("/")[2];
-  var conf = ($("#conf").attr('href')).toString().split("/")[2];
-  var prof = ($("#prof").attr('href'));
-  var usu = ($("#usu").attr('href')).toString().split("/")[2];
 
-  if (URLactual == das) {
-    document.getElementById("das1").style.border = "none";
-    document.getElementById("das1").style.borderBottom = "3px solid #405FC9";
-    document.getElementById("das").style.color = "#405FC9";
-    document.getElementById("das").style.fontSize = "16px";
-    document.getElementById("das").style.fontWeight = "bold";
-
-
-  } else if (URLactual == usu) {
-    document.getElementById("usu1").style.border = "none";
-    document.getElementById("usu1").style.borderBottom = "3px solid #405FC9";
-    document.getElementById("usu").style.color = "#405FC9";
-    document.getElementById("usu").style.fontSize = "16px";
-    document.getElementById("usu").style.fontWeight = "bold";
-
-  } else if (URLactual == doc) {
-    document.getElementById("doc1").style.border = "none";
-    document.getElementById("doc1").style.borderBottom = "3px solid #405FC9";
-    document.getElementById("doc").style.color = "#405FC9";
-    document.getElementById("doc").style.fontSize = "16px";
-    document.getElementById("doc").style.fontWeight = "bold";
-
-
-  } else if (URLactual == est) {
-    document.getElementById("est1").style.border = "none";
-    document.getElementById("est1").style.borderBottom = "3px solid #405FC9";
-    document.getElementById("est").style.color = "#405FC9";
-    document.getElementById("est").style.fontSize = "16px";
-    document.getElementById("est").style.fontWeight = "bold";
-
-
-  } else if (URLactual == fin) {
-    document.getElementById("fin1").style.border = "none";
-    document.getElementById("fin1").style.borderBottom = "3px solid #405FC9";
-    document.getElementById("fin").style.color = "#405FC9";
-    document.getElementById("fin").style.fontSize = "16px";
-    document.getElementById("fin").style.fontWeight = "bold";
-
-
-  } else if (URLactual == conf) {
-
-    document.getElementById("conf1").style.border = "none";
-    document.getElementById("conf1").style.borderBottom = "3px solid #405FC9";
-    document.getElementById("conf").style.color = "#405FC9";
-    document.getElementById("conf").style.fontSize = "16px";
-    document.getElementById("conf").style.fontWeight = "bold";
-
-
-  } else {
-
-    document.getElementById("prof").style.color = "#405FC9";
-    document.getElementById("prof").style.fontSize = "16px";
-
-  }
-
-
-
-});
 
 
 $(document).ready(function () {
@@ -493,41 +467,6 @@ $(document).ready(function () {
 
 
 
-$(document).ready(function () {
-  const urlParams = new URLSearchParams(window.location.search);
-
-
-  if (urlParams == "order=todos") {
-    document.getElementById("tod1").style.border = "none";
-    document.getElementById("tod1").style.borderBottom = "3px solid #405FC9";
-    document.getElementById("tod").style.color = "#405FC9";
-    document.getElementById("tod").style.fontSize = "16px";
-    document.getElementById("tod").style.fontWeight = "bold";
-
-
-
-  } else if (urlParams == "order=activos") {
-    document.getElementById("act1").style.border = "none";
-    document.getElementById("act1").style.borderBottom = "3px solid #405FC9";
-    document.getElementById("act").style.color = "#405FC9";
-    document.getElementById("act").style.fontSize = "16px";
-    document.getElementById("act").style.fontWeight = "bold";
-
-  } else if (urlParams == "order=inactivos") {
-    document.getElementById("ina1").style.border = "none";
-    document.getElementById("ina1").style.borderBottom = "3px solid #405FC9";
-    document.getElementById("ina").style.color = "#405FC9";
-    document.getElementById("ina").style.fontSize = "16px";
-    document.getElementById("ina").style.fontWeight = "bold";
-
-  } else {
-    document.getElementById("tod1").style.border = "none";
-    document.getElementById("tod1").style.borderBottom = "3px solid #405FC9";
-    document.getElementById("tod").style.color = "#405FC9";
-    document.getElementById("tod").style.fontSize = "16px";
-    document.getElementById("tod").style.fontWeight = "bold";
-  }
-})
 
 
 
