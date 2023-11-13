@@ -14,13 +14,14 @@
 
     --body-color: #f4f4fc;
     --sidebar-color: #fff;
-    --primary-color: #3551a6;
+    --primary-color: #266897;
+    --primary-color-dark: #205a83;
     --primary-color-light: #f6f5ff;
     --toogle-color: #ddd;
     --text-color: #707070;
-    --text-color-tittle: #1d1d1d;
-    --text-color-activos: #40c4a4;
-    --text-color-inactivos: #f97b7b;
+    --text-color-tittle: rgb(95, 94, 94);
+    --text-color-activos: #3bb798;
+    --text-color-inactivos: #ff6466;
 
     /* Transicion */
 
@@ -51,6 +52,7 @@
 
 /* sidebar */
 .sidebar {
+
     top: 0;
     left: 0;
     height: auto;
@@ -82,15 +84,11 @@
     color: var(--text-color);
 }
 
-
-
-
 .sidebar .image {
     min-width: 60px;
     display: flex;
     align-items: center;
 }
-
 
 .sidebar li {
     height: 50px;
@@ -275,6 +273,7 @@ header .image-text .header-text {
 
 .header {
     background: var(--sidebar-color);
+
 }
 
 .navbar .btn {
@@ -298,7 +297,8 @@ header .image-text .header-text {
 }
 
 .encabezado {
-    height: 60px;
+    height: 80px;
+    align-items: center;
 }
 
 .encabezado .titulo {
@@ -341,11 +341,193 @@ header .image-text .header-text {
     background: var(--primary-color) !important;
 }
 
+#button {
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    font-family: 'Poppins', sans-serif !important;
+}
+
+#button:hover {
+    color: var(--sidebar-color) !important;
+    font-family: 'Poppins', sans-serif !important;
+    background: var(--primary-color) !important;
+}
+
 .form-check .form-check-input:after {
     background: var(--primary-color) !important;
 }
 
+.conte {
+    height: auto;
+    width: 100%;
+    background: var(--sidebar-color);
+}
 
+.dataTables_length label select {
+    border-color: var(--primary-color) !important;
+}
+
+.dataTables_length label select:focus {
+    border-color: none !important;
+    outline: none !important;
+}
+
+div.dataTables_filter label input {
+    border-color: var(--primary-color) !important;
+}
+
+div.dataTables_filter label input:hover {
+    box-shadow: inset 0 0 5px var(--primary-color);
+}
+
+div.dataTables_filter label input:focus {
+    border-color: none;
+    outline: none;
+    box-shadow: inset 0 0 5px var(--primary-color);
+}
+
+th.sorting {
+    align-content: center !important;
+}
+
+.estado {
+    color: var(--text-color-activos) !important;
+}
+
+.nonEstado {
+    color: var(--text-color-inactivos) !important;
+}
+
+
+.iconos {
+    color: var(--primary-color) !important;
+}
+
+.datos {
+    display: flex;
+    margin-bottom: 10px;
+    justify-content: start;
+}
+
+.datos .card {
+    margin-right: 20px;
+    height: 8rem;
+}
+
+.datos .card .card-body {
+    width: 14rem;
+}
+
+.datos .card {
+    justify-content: center;
+}
+
+
+.datos .total {
+    color: var(--primary-color);
+    border-left-color: var(--primary-color) !important;
+    border-left-width: 8px !important;
+}
+
+.datos .activos {
+
+    color: var(--text-color-activos);
+    border-left-color: var(--text-color-activos) !important;
+    border-left-width: 8px !important;
+}
+
+.datos .inactivos {
+
+    color: var(--text-color-inactivos);
+    border-left-color: var(--text-color-inactivos) !important;
+    border-left-width: 8px !important;
+}
+
+/* Formularios*/
+.modal-dialog {
+    font-size: 14px !important;
+}
+
+.modal-dialog .modal-header .modal-title {
+    color: var(--text-color);
+}
+
+.btn-primary {
+    background: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+
+}
+
+.btn-primary:hover {
+    background: var(--primary-color-dark) !important;
+
+}
+
+.information {
+    background: var(--sidebar-color) !important;
+    width: 100%;
+    display: flex;
+    border-left-color: var(--primary-color) !important;
+    border-left-width: 8px !important;
+    font-size: 14px !important;
+}
+
+.grid-margin-x h5 {
+    color: var(--text-color-activos);
+    font-size: 16px !important;
+}
+
+#anadir .grid-x div {
+    margin-right: 15px;
+}
+
+#spinner-div {
+    display: none;
+}
+
+.titulo {
+    font-size: 20px !important;
+    font-weight: bold;
+    color: var(--primary-color-dark);
+}
+
+.comentarios {
+    margin-top: 10px;
+    color: var(--text-color);
+}
+
+.personal {
+    margin-top: 30px;
+}
+
+.personal-general {
+    display: flex;
+    margin-top: 20px;
+    width: 100%;
+
+
+}
+
+.personal-icon {
+    width: 10%;
+    height: 2rem;
+}
+
+.personal-icon i {
+    font-size: 20px;
+    color: var(--primary-color);
+}
+
+.personal-text-text {
+    font-size: 16px !important;
+    font-weight: bold;
+    color: var(--primary-color-dark);
+}
+
+.personal-text-text-origin {
+    margin-top: 3px;
+    color: var(--text-color);
+}
 
 
 /* Css del body*/

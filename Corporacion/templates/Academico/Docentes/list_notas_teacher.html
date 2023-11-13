@@ -8,184 +8,236 @@
 
 {% block extracontent %}
 
-
-<div class="container-fluid">
+<div class="container-fluid ">
   {% if teacherTp %} 
-    {% for i in topics %}
-  <div class="row" style=" padding-left: 15px" >
-    <h1 class="h3" id="tit"><i class="fa-regular fa-address-book"></i></i> Curso de&nbsp;{{i.materia}} </h1>
+  {% for i in topics %}
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="fa-regular fa-address-book"></i></i> Curso de&nbsp;{{i.materia}} </h2></span>
+      </div>
+      
   </div>
-  <div id="submenu" style=" height:120px; width:100%; padding: 15px; display: flex">
-    <div >
-      <div style="display: flex" ><h1 class="h5" id="tit">Nombre del docente:</h1><h5>&nbsp;{{i.docente}}</h5></div>
-      <div style="display: flex" ><h1 class="h5" id="tit">Código:</h1><h5>&nbsp;{{i.codigo}}</h5></div>
-      <div style="display: flex" ><h1 class="h5" id="tit">Programa:</h1><h5>&nbsp;{{i.programa}}</h5></div> 
-    </div>
-    <div class="divider">
-    </div>
-    <div >
-      <div style="display: flex" ><h1 class="h5" id="tit">Total alumnos:</h1><h5>&nbsp;{{total}}</h5></div>
+  <div class="datos">
+    
+    <div class="card bg-light mb-3 information" style="">
+        <div class="container-fluid" style="">
+          <div class="" style="">
+            <div style="display: flex"  >
+            
+              <strong><p  class="card-title">Nombre del docente:</p></strong>
+              <p class="card-text">&nbsp; {{i.docente}}</p>
+            
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Código:</strong>
+              <p class="card-text">&nbsp; {{i.codigo}}</p>
+
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Programa:</strong>
+              <p class="card-text">&nbsp; {{i.programa}}</p>
+            
+            </div>
+            
+          </div>
+        </div>
+        
     </div>
   </div>
   {% endfor %}
   {% endif %}
-  
-</div>
 
-{% for u in topics %}
-{% if u.is_active %}
-<div class="container-fluid" style="">
-  <div  class="row" >
-    <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
+
+
+  <div class="card">
+    <div class="card-header">
       <div class="row">
-        <div class="col" id="anadir">
-          <div class="grid-x grid-margin-x">
-            <div>
-              {% for i in corte %} 
-              {% if i.C1 == False and i.B1 == True %}
-              <div style="display:flex" > 
-                <div >
-                  <form action="{% url 'academico_app:expor-plant-est' %}" method="post">
-                  {% csrf_token %}
-                  <input
-                    type="hidden"
-                    name="materia"
-                    id="materia"
-                    class="materia"
-                    value="{{u.id}}"
-                  />
-                  <input type="hidden" name="corte" id="corte" class="corte" value="1" />
-                  <button type="submit" id="button" style="background: #405FC9"> <i class="fa-solid fa-download"></i> &nbsp;Archivo corte 1</button>
-                  </form> 
-                </div >
-                <div class="divider"></div >
+        <div class="col-7 boton">
+          {% for u in topics %}
+          {% if u.is_active %}
+          <div class="container-fluid" style="">
+            <div  class="row" >
+              <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
+                <div class="row">
+                  <div class="col" id="anadir">
+                    <div class="grid-x grid-margin-x">
+                      <div>
+                        {% for i in corte %} 
+                        {% if i.C1 == False and i.B1 == True %}
+                        <div style="display:flex" > 
+                          <div >
+                            <form action="{% url 'academico_app:expor-plant-est' %}" method="post">
+                            {% csrf_token %}
+                            <input
+                              type="hidden"
+                              name="materia"
+                              id="materia"
+                              class="materia"
+                              value="{{u.id}}"
+                            />
+                            <input type="hidden" name="corte" id="corte" class="corte" value="1" />
+                            <button type="submit" id="button" class="btn btn-sm"> <i class="fa-solid fa-download"></i> &nbsp;Archivo corte 1</button>
+                            </form> 
+                          </div >
 
-                  
-                <div ><button onclick="abrir_modal_deluxe('{% url 'academico_app:upload-notes' %}', '1', '{{u.codigo}}')" id="button" style="background: #405FC9" ><i class="fa-solid fa-upload"></i> &nbsp;Cargar notas</button>
-                </div >
-              </div >
-              {% elif i.C2 == False and i.B2 == True %}
+                            
+                          <div ><button onclick="abrir_modal_deluxe('{% url 'academico_app:upload-notes' %}', '1', '{{u.codigo}}')" id="button" class="btn btn-sm" ><i class="fa-solid fa-upload"></i> &nbsp;Cargar notas</button>
+                          </div >
+                        </div >
+                        {% elif i.C2 == False and i.B2 == True %}
 
-              <div style="display:flex" > 
-                <div >
-                  <form action="{% url 'academico_app:expor-plant-est' %}" method="post">
-                  {% csrf_token %}
-                  <input
-                    type="hidden"
-                    name="materia"
-                    id="materia"
-                    class="materia"
-                    value="{{u.id}}"
-                  />
-                  <input type="hidden" name="corte" id="corte" class="corte" value="2" />
-                  <button type="submit" id="button" style="background: #405FC9"> <i class="fa-solid fa-download"></i> &nbsp;Archivo corte 2</button>
-                  </form> 
-                </div >
-                <div class="divider"></div >
+                        <div style="display:flex" > 
+                          <div >
+                            <form action="{% url 'academico_app:expor-plant-est' %}" method="post">
+                            {% csrf_token %}
+                            <input
+                              type="hidden"
+                              name="materia"
+                              id="materia"
+                              class="materia"
+                              value="{{u.id}}"
+                            />
+                            <input type="hidden" name="corte" id="corte" class="corte" value="2" />
+                            <button type="submit" id="button" class="btn btn-sm"> <i class="fa-solid fa-download"></i> &nbsp;Archivo corte 2</button>
+                            </form> 
+                          </div >
 
-                  
-                <div ><button onclick="abrir_modal_deluxe('{% url 'academico_app:upload-notes' %}', '2', '{{u.codigo}}')" id="button" style="background: #405FC9"  ><i class="fa-solid fa-upload"></i> &nbsp;Cargar notas</button>
-                </div >
-              </div >
-              {% elif i.C3 == False and i.B3 == True %}
-              <div style="display:flex" > 
-                <div >
-                  <form action="{% url 'academico_app:expor-plant-est' %}" method="post">
-                  {% csrf_token %}
-                  <input
-                    type="hidden"
-                    name="materia"
-                    id="materia"
-                    class="materia"
-                    value="{{u.id}}"
-                  />
-                  <input type="hidden" name="corte" id="corte" class="corte" value="3" />
-                  <button type="submit" id="button" style="background: #405FC9"> <i class="fa-solid fa-download"></i> &nbsp;Archivo corte 3</button>
-                  </form> 
-                </div >
-                <div class="divider"></div >
+                            
+                          <div ><button onclick="abrir_modal_deluxe('{% url 'academico_app:upload-notes' %}', '2', '{{u.codigo}}')" id="button" class="btn btn-sm"  ><i class="fa-solid fa-upload"></i> &nbsp;Cargar notas</button>
+                          </div >
+                        </div >
+                        {% elif i.C3 == False and i.B3 == True %}
+                        <div style="display:flex" > 
+                          <div >
+                            <form action="{% url 'academico_app:expor-plant-est' %}" method="post">
+                            {% csrf_token %}
+                            <input
+                              type="hidden"
+                              name="materia"
+                              id="materia"
+                              class="materia"
+                              value="{{u.id}}"
+                            />
+                            <input type="hidden" name="corte" id="corte" class="corte" value="3" />
+                            <button type="submit" id="button" class="btn btn-sm"> <i class="fa-solid fa-download"></i> &nbsp;Archivo corte 3</button>
+                            </form> 
+                          </div >
+                          <div class="divider"></div >
 
-                  
-                <div ><button onclick="abrir_modal_deluxe('{% url 'academico_app:upload-notes' %}', '3', '{{u.codigo}}'  )" id="button" style="background: #405FC9"  ><i class="fa-solid fa-upload"></i> &nbsp;Cargar notas</button>
-                </div >
-              </div >
-              {% else %}
-              <h5 id="activo" style="width:100%"><i class="fa-regular fa-circle-check"></i> &nbsp;  No hay cortes autorizados</h5>
-              {% endif %} 
-              {% endfor %}
-            </>
+                            
+                          <div ><button onclick="abrir_modal_deluxe('{% url 'academico_app:upload-notes' %}', '3', '{{u.codigo}}'  )" id="button" class="btn btn-sm"  ><i class="fa-solid fa-upload"></i> &nbsp;Cargar notas</button>
+                          </div >
+                        </div >
+                        {% else %}
+                        <h5 id="activo" style="width:100%"><i class="fa-regular fa-circle-check"></i> &nbsp;  No hay cortes autorizados</h5>
+                        {% endif %} 
+                        {% endfor %}
+                      </>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>   
+            </div>
           </div>
-          <div class="linea"></div>
-        </div>
-      </div>
-    </div>
-  </div>   
-  </div>
-</div>
-{% else %}
-<div class="container-fluid" style="">
-  <div  class="row" >
-    <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
-      <div class="row">
-        <div class="col" id="anadir">
-          <div class="grid-x grid-margin-x">
-            <h5 id="activo" style="width:100%"><i class="fa-regular fa-circle-check"></i> &nbsp;  Esta asignatura se encuentra cerrada</h5>
-          </div>
-          <div class="linea"></div>
-        </div>
-      </div>
-    </div>
-  </div>   
-  </div>
-</div>
-{% endif %}
-{% endfor %}
-
-<div class="container-fluid" style="">
-  <div  class="row" >
-    <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
-      <div class ="tabla" style=" " >
-        {% if teacherTp %}
-          <table id="table_id3"  class="hover" style="width:100%; ">
-            <thead >
-              <th>Código</th>
-              <th>Nombre</th>
-              <th>Corte 1</th>
-              <th>Corte 2</th>
-              <th>Corte 3</th>
-              <th>Promedio</th>
-              <th>Estado</th>
-            </thead>
-            <tbody>
-              {% for i in teacherTp %}
-              <tr>
-                <td>{{i.cod_student.codigo}}</td>
-                <td>{{i.cod_student.nombre}} {{i.cod_student.apellidos}}</td>
-                <td>{{i.corte1}}</td>
-                <td>{{i.corte2}}</td>
-                <td>{{i.corte3}}</td>
-                <td>{{i.promedio}}</td>
-                {% if i.promedio >= 3 %}
-                <td><span id="activo" style="width:100%"><i class="fa-regular fa-circle-check"></i> &nbsp; Aprobada</span></td>
-                {% elif i.promedio < 3 and i.promedio > 0 %}
-                <td><span id="inactivo"><i class="fa-solid fa-circle-xmark"></i> &nbsp; Reprobada</span></td>
-                {% else %}
-                <td><span id="cursando"><i class="fa-solid fa-hourglass-half"></i> &nbsp; En curso</span></td>
-                {% endif %}
-              </tr>
-              {% endfor %}
-              
-            </tbody>
-          </table>
           {% else %}
-          <div>No hay estudiantes matriculados</div>    
-        {% endif %}
+          
+
+          <div class="container-fluid" style="">
+            <div  class="row" >
+              <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
+                <div class="row">
+                  <div class="col" id="anadir">
+                    <div class="grid-x grid-margin-x">
+                      <h5 id="activo" style="width:100%"><i class="fa-regular fa-circle-check"></i> &nbsp;  Esta asignatura se encuentra cerrada</h5>
+                    </div>
+                    <div class="linea"></div>
+                  </div>
+                </div>
+              </div>
+            </div> 
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
       </div>
     </div>
+    <div class="card-body">
+      <div class="container-fluid" style="">
+        <div  class="row">
+          <div class="conte">
+            <div class ="conteTabla">
+
+              {% if teacherTp %}
+                <table id="table_id3"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Corte 1</th>
+                    <th>Corte 2</th>
+                    <th>Corte 3</th>
+                    <th>Promedio</th>
+                    <th>Estado</th>
+                  </thead>
+                  <tbody>
+                    {% for i in teacherTp %}
+                    <tr>
+                      <td>{{i.cod_student.codigo}}</td>
+                      <td>{{i.cod_student.nombre}} {{i.cod_student.apellidos}}</td>
+                      <td>{{i.corte1}}</td>
+                      <td>{{i.corte2}}</td>
+                      <td>{{i.corte3}}</td>
+                      <td>{{i.promedio}}</td>
+                      {% if i.promedio >= 3 %}
+                      <td><span class="estado" ><i class="fa-regular fa-circle-check"></i> &nbsp; Aprobada</span></td>
+                      {% elif i.promedio < 3 and i.promedio > 0 %}
+                      <td><span class="nonEstado"><i class="fa-solid fa-circle-xmark"></i> &nbsp; Reprobada</span></td>
+                      {% else %}
+                      <td><span class="iconos"><i class="fa-solid fa-hourglass-half"></i> &nbsp; En curso</span></td>
+                      {% endif %}
+                    </tr>
+                    {% endfor %}
+                    
+                  </tbody>
+                </table>
+                {% else %}
+                <table id="table_id3"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Corte 1</th>
+                    <th>Corte 2</th>
+                    <th>Corte 3</th>
+                    <th>Promedio</th>
+                    <th>Estado</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                    </tr>
+                  </tbody>
+                </table> 
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      
+    </div>
   </div>
-    
-  </div>
+
 </div>
+
+
 
 
 <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>

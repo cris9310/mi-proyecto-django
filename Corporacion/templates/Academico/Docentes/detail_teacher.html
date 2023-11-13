@@ -1,64 +1,153 @@
 
-<div class="modal-dialog" role="document">
+<div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-chalkboard-user" id="iconos" style="padding-left: 3px"></i> <h1 class="h4" id="tit">&nbsp; 
-          {{ object.nombres }}&nbsp;{{ object.apellidos }}</h1> </h5>
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-chalkboard-user" ></i>&nbsp; 
+          {{ object.nombres }}&nbsp;{{ object.apellidos }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
         <div class="modal-body">
-          {% csrf_token %}
-          <table class="table table-striped">
-              <tbody>
-                  <tr>
-                    <th scope="row">T. Documento:</th>
-                    <td>{{ object.tDocument }}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Identificación:</th>
-                    <td>{{ object.codigo }}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Teléfono:</th>
-                    <td>{{ object.telefono }}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Dirección:</th>
-                    <td>{{ object.direccion }}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Fecha de Nacimiento:</th>
-                    <td>{{ object.nacimiento}}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Correo:</th>
-                    <td>{{ object.email}}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Sexo:</th>
-                    
-                    {% if object.sexo == 'M' %}
-                       <td>Masculino</td>
-                    {% else %}
-                      <td>Femenino</td> 
-                    {% endif %}
-                  </tr>
-                  <tr>
-                    <th scope="row">Usuario:</th>
-                    <td>{{ object.username }}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Creado desde:</th>
-                    <td>{{ object.fecha_reg }}</td>
-                  </tr>
+          <div class="container-fluid personal">
+            <div class="card">
+              
+              <div class="card-body" style="display: flex">
+                <div class="col">
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-address-card"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        T. Documento:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.tDocument }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-address-card"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Identificación:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.codigo }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-address-card"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Teléfono:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.telefono }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-address-card"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Dirección:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.direccion }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-address-card"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Fecha de Nacimiento:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.nacimiento }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-address-card"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Correo electrónico:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.email}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-address-card"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Género:
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {% if object.sexo == 'M' %}
+                         Masculino
+                        {% else %}
+                          Femenino
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-address-card"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Usuario
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.username }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="personal-general">
+                    <div class="personal-icon text-center align-self-center">
+                      <i class="fa-regular fa-address-card"></i>
+                    </div>
+                    <div class="personal-text">
+                      <div class="personal-text-text">
+                        Creado desde
+                      </div>
+                      <div class="personal-text-text-origin">
+                        {{ object.fecha_reg }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                
                   
-              </tbody>
-          </table>
+                </div>
+              </div>        
+            </div>
+          </div>
         </div> 
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger"  id="button" data-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
         </div>
     </div>
   </div>

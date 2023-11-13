@@ -3,7 +3,7 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel"><i id="iconos" style="padding-left: 3px" class="fa-solid fa-upload"></i> Cargue de notas</h5>
+    <h5 class="modal-title" id="exampleModalLabel"><i id="iconos" class="fa-solid fa-upload"></i> Cargue de notas</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
         <span aria-hidden="true">&times;</span>
     </button>
@@ -25,7 +25,7 @@
       {{form.as_p}}
       
       <div class="modal-footer">
-        <button type="button" id="button" onclick="sendnotes()" style="background: #405FC9" ><i class="fa-solid fa-upload"></i> &nbsp;Cargar notas</button>
+        <button type="button" id="button" onclick="sendnotes()" class="btn btn-sm" ><i class="fa-solid fa-upload"></i> &nbsp;Cargar notas</button>
         </div>
     </form>
     </div> 
@@ -38,7 +38,7 @@
   function sendnotes() {
     var formData = new FormData();
     var serializedData = document.getElementById('archivo');
-    
+    $('#spinner-div').show();
     if (serializedData.files.length != 0) {
       
       formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
@@ -54,15 +54,16 @@
         contentType: false,
         enctype: 'multipart/form-data',
         success: function (response) {
-          $('#spinner-div').show()
           $("#edicion").modal("hide");
           window.location.reload();
           mostrarOk()
   
         },
         error: function (error) {
-          mostrarErroresCreacion2(error);
+          $('#spinner-div').hide()
+          mostrarErroresCreacion(error);
           mostrarError()
+          
         }
       });
     }else {

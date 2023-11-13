@@ -6,7 +6,7 @@
 <div class="modal-dialog" role="document" >
     <div class="modal-content">
       <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel"> <i id="iconos" style="padding-left: 3px" class="fa-solid fa-user-minus"></i> Eliminación de docente</h5>
+      <h5 class="modal-title" id="exampleModalLabel"> <i  class="fa-solid fa-user-minus"></i> Eliminación de docente</h5>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
           <span aria-hidden="true">&times;</span>
       </button>
@@ -16,16 +16,16 @@
             <div class="cell medium-7">
                 <div >
                     <div >
-                        <h4>Desea eliminar a:</h4>  
-                      <h4>{{ object.nombres }}, {{ object.apellidos }}</h4>
+                        <h6>Desea eliminar a:</h6>  
+                      <h6>{{ object.nombres }}, {{ object.apellidos }}</h6>
                       
                       <input type="hidden" name="codigo" id="codigo" class="codigo" value="{{object.codigo}}">
                     </div>
                 </div>
             </div>
           <div class="modal-footer">
-          <button type="submit" id="button" style="background-color: #405FC9; color: white; border: none" >Eliminar docente</button>
-          <button type="button" class="btn btn-danger"  id="button" data-dismiss="modal">Cerrar</button>
+          <button type="submit" id="button2" class="btn btn-primary" >Eliminar docente</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
           </div>
          </form>
       </div> 

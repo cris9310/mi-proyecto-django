@@ -3,19 +3,19 @@
 <div class="modal-dialog" role="document" >
   <div class="modal-content">
     <div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel"><i id="iconos" style="padding-left: 3px" class="fa-regular fa-pen-to-square"></i> Actualización docente</h5>
+    <h5 class="modal-title" id="exampleModalLabel"><i class="fa-regular fa-pen-to-square"></i> Actualización docente</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
         <span aria-hidden="true">&times;</span>
     </button>
     </div>
     <div class="modal-body">
       <form  method="POST" id="dataGeneralForm" action="{% url 'academico_app:Habilit-teacher' object.pk %}">{% csrf_token %}
-        <h4 id="tittle"></h4>
-        <h4>{{ object.nombres }}, {{ object.apellidos }}</h4>
+        <h6 id="tittle"></h6>
+        <h6>{{ object.nombres }}, {{ object.apellidos }}</h6>
         <input type="hidden" name="accion" id="accion" class="accion" value="">
         <div class="modal-footer">
-        <button type="submit" id="button" style="background-color: #405FC9; color: white; border: none" >Actualizar docente</button>
-        <button type="button" class="btn btn-danger"  id="button" data-dismiss="modal">Cerrar</button>
+        <button type="submit" id="button2" class="btn btn-primary" >Actualizar docente</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
         </div>
        </form>
     </div> 

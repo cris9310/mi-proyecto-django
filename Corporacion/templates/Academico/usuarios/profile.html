@@ -1,11 +1,26 @@
 {% extends "Base2.html" %} {% load static %}
 
+{% block title %}Perfil | Portal CNE{% endblock title %}
 {% block extracontent %}
-
-
 
 {% for i in consulta %}
 {% if request.user.tipe.rol == "Estudiante"%}
+
+<div class="container-fluid ">
+  <div class="card">
+    <div class="card-header">
+      
+    </div>
+
+
+    <div class="card-body">
+        
+    </div>
+
+
+  </div>
+</div>
+
 <table class="table table-striped">
     <tbody>
       <tr>
@@ -98,35 +113,103 @@
   </tbody>
 </table>
 {% else %}
-<table class="table table-striped">
-  <tbody>
-    <tr>
-        <th scope="row">Código:</th>
-        <td>{{ i.codigo }}</td>
-      </tr>
-      <tr>
-        <th scope="row">Tipo de permiso:</th>
-        <td>{{ i.tipe }}</td>
-      </tr>
-      <tr>
-        <th scope="row">Fecha de creación:</th>
-        <td>{{ i.created_at }}</td>
-      </tr>
-      <tr>
-        <th scope="row">Nombre:</th>
-        <td style="text-transform: capitalize;">{{ i.nombres}} {{ i.apellidos}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Correo:</th>
-        <td>{{ i.email}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Usuario:</th>
-        <td>{{ i.username }}</td>
-      </tr>
-      
-  </tbody>
-</table>
+<div class="container-fluid personal">
+  <div class="card">
+    <div class="card-header">
+      <div class="titulo">
+        Tu información personal
+      </div>
+      <div class="comentarios">
+        Se compone de todos los datos recogidos al momento de tu matrícula, si necesitas alguna modificación por favor comunicate con la administración.
+      </div>
+    </div>
+
+
+    <div class="card-body">
+      <div class="personal-general">
+        <div class="personal-icon text-center align-self-center">
+          <i class="fa-regular fa-address-card"></i>
+        </div>
+        <div class="personal-text">
+          <div class="personal-text-text">
+            Código:
+          </div>
+          <div class="personal-text-text-origin">
+            {{ i.codigo }}
+          </div>
+        </div>
+      </div>
+      <div class="personal-general">
+        <div class="personal-icon text-center align-self-center">
+          <i class="fa-regular fa-user"></i>
+        </div>
+        <div class="personal-text">
+          <div class="personal-text-text">
+            Tipo de usuario
+          </div>
+          <div class="personal-text-text-origin">
+            {{ i.tipe }}
+          </div>
+        </div>
+      </div>
+      <div class="personal-general">
+        <div class="personal-icon text-center align-self-center">
+          <i class="fa-regular fa-calendar-days"></i>
+        </div>
+        <div class="personal-text">
+          <div class="personal-text-text">
+            Fecha de creación
+          </div>
+          <div class="personal-text-text-origin">
+            {{ i.created_at }}
+          </div>
+        </div>
+      </div>
+      <div class="personal-general">
+        <div class="personal-icon text-center align-self-center">
+          <i class="fa-solid fa-signature"></i>
+        </div>
+        <div class="personal-text">
+          <div class="personal-text-text">
+            Nombre completo
+          </div>
+          <div class="personal-text-text-origin">
+            {{ i.nombres}} {{ i.apellidos}}
+          </div>
+        </div>
+      </div>
+      <div class="personal-general">
+        <div class="personal-icon text-center align-self-center">
+          <i class="fa-regular fa-envelope"></i>
+        </div>
+        <div class="personal-text">
+          <div class="personal-text-text">
+            Correo electrónico
+          </div>
+          <div class="personal-text-text-origin">
+            {{ i.email}}
+          </div>
+        </div>
+      </div>
+      <div class="personal-general">
+        <div class="personal-icon text-center align-self-center">
+          <i class="fa-regular fa-user"></i>
+        </div>
+        <div class="personal-text">
+          <div class="personal-text-text">
+            Usuario
+          </div>
+          <div class="personal-text-text-origin">
+            {{ i.username }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
 {% endif %}
 {% endfor %}
 

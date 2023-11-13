@@ -169,14 +169,23 @@ class TeacherForm(forms.ModelForm):
                 format=('%Y-%m-%d'),
                 attrs={
                     'type':'date',
-                    'class':'form-control'
+                    'class':'form-control',
+                    'id': 'nacimiento'
+                }
+            ),
+            'nacionalidad': Select(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control ',
+                    'id': 'nacionalidad'
                 }
             ),
 
              'tDocument': Select(
                 attrs={
                     'autocomplete': 'off',
-                    'class':'form-control'
+                    'class':'form-control',
+                    "id": "tDocument"
                 }
             ),
 
@@ -195,21 +204,24 @@ class TeacherForm(forms.ModelForm):
                 attrs={
                     'placeholder':"Ingrese nombres",
                     'autocomplete': 'off',
-                    'class':'form-control'
+                    'class':'form-control',
+                    'id': 'nombres'
                 }
             ),
             'apellidos': TextInput(
                 attrs={
                     'placeholder':"Ingrese apellidos",
                     'autocomplete': 'off',
-                    'class':'form-control'
+                    'class':'form-control',
+                    'id': 'apellidos'
                 }
             ),
             'username': TextInput(
                 attrs={
                     'placeholder':"nombre de usuario",
                     'autocomplete': 'off',
-                    'class':'form-control'
+                    'class':'form-control',
+                    'id': 'username'
                 }
             ),
             
@@ -218,7 +230,8 @@ class TeacherForm(forms.ModelForm):
                 attrs={
                     'placeholder':"nombre dirección",
                     'autocomplete': 'off',
-                    'class':'form-control'
+                    'class':'form-control',
+                    'id': 'direccion'
                 }
             ),
 
@@ -227,7 +240,8 @@ class TeacherForm(forms.ModelForm):
                     'placeholder':"Ingrese teléfono",
                     'autocomplete': 'off',
                     'class':'form-control',
-                    "onkeydown":"noPuntoComa( event )"
+                    "onkeydown":"noPuntoComa( event )",
+                    'id': 'telefono',
                 }
             ),
 
@@ -235,13 +249,15 @@ class TeacherForm(forms.ModelForm):
                 attrs={
                     'placeholder':"Ingrese correo electrónico",
                     'autocomplete': 'off',
-                    'class':'form-control'
+                    'class':'form-control',
+                    'id': 'email',
                 }
             ),
             'sexo': Select(
                 attrs={
                     'autocomplete': 'off',
-                    'class':'form-control'
+                    'class':'form-control',
+                    'id': 'sexo'
                 }
             ),
 
@@ -265,6 +281,122 @@ class TeacherForm(forms.ModelForm):
            self.add_error('username', 'Este usuario ya se encuentra creado')
         else:
            return self.cleaned_data.get('username')
+
+# Formulario para la actualización de los datos del docente
+class TeacherUpdateForm(forms.ModelForm):
+
+
+    class Meta:
+        """Meta definition for MODELNAMEform."""
+
+        model = Docente
+        fields = ('__all__')
+        exclude =['fecha_reg', 'is_active', 'username']
+
+        widgets={
+
+            'nacimiento': DateInput(
+                format=('%Y-%m-%d'),
+                attrs={
+                    'type':'date',
+                    'class':'form-control',
+                    'id': 'nacimiento'
+                }
+            ),
+            'nacionalidad': Select(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control ',
+                    'id': 'nacionalidad'
+                }
+            ),
+
+             'tDocument': Select(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    "id": "tDocument"
+                }
+            ),
+
+            'codigo': NumberInput(
+                attrs={
+                    'autofocus': True,
+                    'placeholder':"Ingrese el documento",
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    "onkeydown":"noPuntoComa( event )",
+                    'id':'cedula'
+                    
+                }
+            ),
+            'nombres': TextInput(
+                attrs={
+                    'placeholder':"Ingrese nombres",
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id': 'nombres'
+                }
+            ),
+            'apellidos': TextInput(
+                attrs={
+                    'placeholder':"Ingrese apellidos",
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id': 'apellidos'
+                }
+            ),
+            
+
+            'direccion': TextInput(
+                attrs={
+                    'placeholder':"nombre dirección",
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id': 'direccion'
+                }
+            ),
+
+            'telefono': NumberInput(
+                attrs={
+                    'placeholder':"Ingrese teléfono",
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    "onkeydown":"noPuntoComa( event )",
+                    'id': 'telefono',
+                }
+            ),
+
+            'email': EmailInput(
+                attrs={
+                    'placeholder':"Ingrese correo electrónico",
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id': 'email',
+                }
+            ),
+            'sexo': Select(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    'id': 'sexo'
+                }
+            ),
+
+        }
+    
+    def clean_nombres(self):
+
+        nombre = str(self.cleaned_data.get('nombres'))
+
+        return nombre.title()
+
+    def clean_apellidos(self):
+
+        nombre = str(self.cleaned_data.get('apellidos'))
+
+        return nombre.title()
+
     
 #Formulario destinado al cargue de notas de los estudiantes.
 class UploadForm(forms.Form):

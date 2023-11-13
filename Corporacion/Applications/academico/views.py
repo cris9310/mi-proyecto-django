@@ -33,6 +33,9 @@ import pandas as pd
 import re
 
 
+#Definir mas adelante si los datos de acceso los vamos a incluir en un boton o en el detailview de cada perfil
+
+
 # Esta vista se tiene que modificar, teniendo en cuenta el perfil de quien se está logueando
 class Dashboard(ListView):
     model = Estudiante
@@ -339,21 +342,20 @@ class TeacherCreateView(CreateView):
 class TeacherUpdateView(UpdateView):
     model = Docente
     template_name = 'Academico/Docentes/update_teacher.html'
-    form_class = TeacherForm
+    form_class = TeacherUpdateForm
     success_url = reverse_lazy('academico_app:list-teacher')
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         cod_teacher = Docente.objects.get(pk=self.kwargs['pk']).codigo
         teacher_c = self.model.objects.get(codigo=cod_teacher)
-        form = TeacherForm(request.POST, instance=teacher_c)
-
+        form = TeacherUpdateForm(request.POST, instance=teacher_c)
         if form.is_valid():
+
             form.save()
             crea_user = User.objects.filter(
                 codigo=cod_teacher
             ).update(
-                username=form.cleaned_data['username'],
                 email=form.cleaned_data['email'],
                 nombres=form.cleaned_data['nombres'],
                 apellidos=form.cleaned_data['apellidos'],
@@ -365,9 +367,11 @@ class TeacherUpdateView(UpdateView):
             response.status_code = 201
             return response
         else:
-            mensaje = f'{self.model.__name__} no se ha podido actualizar'
-            error = form.errors
-            response = JsonResponse({"mensaje": mensaje, "error": error})
+            mensaje1 =[]
+            mensaje1.append(
+                {"error": form.errors}
+            )
+            response = JsonResponse(mensaje1, safe=False)
             response.status_code = 400
             return response
 
@@ -962,6 +966,7 @@ class StudentAsigView(View):
                     response = JsonResponse(mensaje1, safe=False)
                     response.status_code = 400
                     return response
+                    
 
             elif len(new_student) > 35 or len(new_student) == 0:
                 if len(new_student) > 35:
@@ -1162,8 +1167,8 @@ class StudentAsigView(View):
                         )
                     )
         else:
-            mensaje = 'Archivo inválido, recuerde que el archivo tiene por nombre "cargue_estudiantes.xlsx" , por favor verifique y cárguelo nuevamente'
-            response = JsonResponse({"error": mensaje})
+            mensaje1.append({"error":'Archivo inválido, recuerde que el archivo tiene por nombre "cargue_estudiantes.xlsx" , por favor verifique y cárguelo nuevamente'})
+            response = JsonResponse(mensaje1, safe=False)
             response.status_code = 400
             return response
 
@@ -1602,18 +1607,14 @@ class UpdateNotasView(View):
 
         # Asignación de variables y creaciones de listas para verificar la información que cargó el usuario.
         conteo = 0
-        conteo2 = 0
-        conteo3 = 0
-        conteo4 = 0
-        student_no_create = []
-        notas_no_create = []
-        notas_no_decimal = []
-        notas_no_asignatura = []
+        mensaje1 = []
 
         # Validación 1: Verificamos que el documento cargado si se llame como es debido
         if nota_student.name != 'cargue_notas_estudiantes.xlsx':
-            mensaje = 'El archivo que intenta cargar no es el correcto.'
-            response = JsonResponse({"error": mensaje})
+            mensaje1.append(
+                {"error": 'El archivo que intenta cargar no es el correcto, verifique el nombre e inténtelo nuevamente.'}
+            )
+            response = JsonResponse(mensaje1, safe=False)
             response.status_code = 400
             return response
 
@@ -1634,17 +1635,22 @@ class UpdateNotasView(View):
                 if miss_values_count.shape[0]:
                     for name, miss_vals in miss_values_count.items():
                         p = miss_vals > 1
-                        mensaje = f"  - A la columna '{name}' le falta{'n' if p else ''} " f"{miss_vals} dato{'s' if p else ''}."
-                        response = JsonResponse({"error": mensaje})
+                        mensaje1.append(
+                            {"error": f"  - A la columna '{name}' le falta{'n' if p else ''} " f"{miss_vals} dato{'s' if p else ''}."}
+                        )
+                        response = JsonResponse(mensaje1, safe=False)
                         response.status_code = 400
                         return response
-
+                    
                 else:
-                    mensaje = 'La columna con encabezado ' + i + \
-                        ' en su archivo, no es válido, verifique el archivo y vuelva a cargarlo'
-                    response = JsonResponse({"error": mensaje})
+                    mensaje1.append(
+                        {"error": 'La columna con encabezado ' + i + \
+                        ' en su archivo, no es válida, verifique el archivo y vuelva a cargarlo, en este caso se deben cargar notas para el corte' +str(corte)}
+                    )
+                    response = JsonResponse(mensaje1, safe=False)
                     response.status_code = 400
                     return response
+                    
 
             else:
                 # Verificamos que:  1. exista el estudiante en el salon, 2. las notas se encuentren entre cero y cinco.
@@ -1656,63 +1662,45 @@ class UpdateNotasView(View):
                         conteo = 0 + conteo
                     except:
                         conteo = 1 + conteo
-                        student_no_create.append(
-                            nota_student['NOMBRE' + corte][i])
+                        mensaje1.append(
+                            {"error":"Los datos introducidos en el archivo son erróneos, intenta cargar notas para: " + str(nota_student['NOMBRE' + corte][i]) + ", este alumno no existe en esta asignatura. Vuelva a descargar el archivo y rellene nuevamente los datos. Nota: el archivo que se genera corresponde exclusivamente a la asignatura en pantalla "})
+                        
 
                 for i in range(len(nota_student)):
                     try:
                         float(nota_student['CORTE' + corte][i])
-                        conteo3 = 0 + conteo3
+                        conteo = 0 + conteo
                         if float(nota_student['CORTE' + corte][i]) < 0.0 or float(nota_student['CORTE' + corte][i]) > 5.0:
-                            conteo2 = 1 + conteo2
-                            notas_no_create.append(
-                                nota_student['NOMBRE' + corte][i])
+                            conteo = 1 + conteo
+                            mensaje1.append(
+                                {"error":"El Estudiante " + \
+                               str(nota_student['NOMBRE' + corte][i]) + " contiene notas que no se encuentran bajo los parámetros, recuerde que deben estar en un rango de 0.0 a 5.0"}
+                            )
 
                         else:
-                            conteo2 = 0 + conteo2
+                            conteo = 0 + conteo
 
                     except:
-                        conteo3 = 1 + conteo3
-                        notas_no_decimal.append(
-                            nota_student['NOMBRE' + corte][i])
+                        conteo = 1 + conteo
+                        mensaje1.append(
+                            {"error":"El Estudiante " + \
+                            str(nota_student['NOMBRE' + corte][i]) + " contiene valores en notas que no son decimales, por favor verifique."}
+                        )
 
                 for i in range(len(nota_student)):
                     if str(nota_student['COD_MATERIA' + corte][i]) != str(asignatura):
-                        conteo4 = 1 + conteo4
-                        notas_no_asignatura.append(asignatura)
+                        conteo = 1 + conteo
+                        mensaje1.append(
+                            {"error":"Está intentando cargar notas a una asignatura que no corresponde, recuerde que en este caso se deben cargar notas a la asignatura con código: " + \
+                            str(asignatura)}
+                        )
                     else:
-                        conteo4 = 0 + conteo4
+                        conteo = 0 + conteo
 
-                if conteo > 0:
-                    for i in student_no_create:
-                        mensaje = "Los datos introducidos en el archivo son erróneos, intenta cargar notas a alumnos que no existen en esta asignatura. Vuelva a descargar el archivo y rellene nuevamente los datos. Nota: el archivo que se genera corresponde exclusivamente a la asignatura en pantalla "
-                        response = JsonResponse({"error": mensaje})
-                        response.status_code = 400
-                        return response
-
-                elif conteo4 > 0:
-                    for i in notas_no_asignatura:
-                        mensaje = "Está intentando cargar notas a una asignatura que no corresponde, recuerde que en este caso se deben cargar notas a la asignatura con código: " + \
-                            str(i)
-                        response = JsonResponse({"error": mensaje})
-                        response.status_code = 400
-                        return response
-
-                elif conteo3 > 0:
-                    for i in notas_no_decimal:
-                        mensaje = "El Estudiante " + \
-                            str(i) + " contiene valores en notas que no son decimales, por favor verifique."
-                        response = JsonResponse({"error": mensaje})
-                        response.status_code = 400
-                        return response
-
-                elif conteo2 > 0:
-                    for i in notas_no_create:
-                        mensaje = "El Estudiante " + \
-                            str(i) + " contiene notas que no se encuentran bajo los parámetros, recuerde que deben estar en un rango de 0.0 a 5.0"
-                        response = JsonResponse({"error": mensaje})
-                        response.status_code = 400
-                        return response
+                if len(mensaje1) > 0:
+                    response = JsonResponse(mensaje1, safe=False)
+                    response.status_code = 400
+                    return response
 
                 # 4. Actualizamos las notas del estudiante.
                 else:

@@ -1,7 +1,7 @@
 
 {% load static %}
 
-<div class="modal-dialog" role="document" >
+<div class="modal-dialog modal-xl" role="document" >
   <div class="modal-content">
     <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLabel"><i id="iconos" style="padding-left: 3px" class="fa-regular fa-pen-to-square"></i> Actualización docente</h5>
@@ -12,10 +12,80 @@
     <div class="modal-body">
       <form  method="POST" id="dataGeneralForm" action="{% url 'academico_app:update-teacher' object.pk %}">{% csrf_token %}
         <div id="errores" ></div>      
-        {{form.as_p}}
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="{{ form.tDocument.id_for_label }}" ></div>
+                <label for="{{ form.tDocument.id_for_label }}">Tipo de documento:</label>
+                {{ form.tDocument }}
+              </div>
+              <div class="col-md-6 ms-auto"">
+                <div class="{{ form.codigo.id_for_label }}" ></div>
+                <label for="{{ form.codigo.id_for_label }}">Número de documento:</label>
+                {{ form.codigo }}
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid" style="margin-top: 15px">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="{{ form.nombres.id_for_label }}" ></div>
+                <label for="{{ form.nombres.id_for_label }}">Nombre(s):</label>
+                {{ form.nombres }}
+              </div>
+              <div class="col-md-6 ms-auto"">
+                <div class="{{ form.apellidos.id_for_label }}" ></div>
+                <label for="{{ form.apellidos.id_for_label }}">Apellidos:</label>
+                {{ form.apellidos }}
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid" style="margin-top: 15px">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="{{ form.direccion.id_for_label }}" ></div>
+                <label for="{{ form.direccion.id_for_label }}">Direccion:</label>
+                {{ form.direccion }}
+              </div>
+              <div class="col-md-6 ms-auto"">
+                <div class="{{ form.telefono.id_for_label }}" ></div>
+                <label for="{{ form.telefono.id_for_label }}">Teléfono:</label>
+                {{ form.telefono }}
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid" style="margin-top: 15px">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="{{ form.sexo.id_for_label }}" ></div>
+                <label for="{{ form.sexo.id_for_label }}">Género:</label>
+                {{ form.sexo }}
+              </div>
+              <div class="col-md-6 ms-auto"">
+                <div class="{{ form.nacionalidad.id_for_label }}" ></div>
+                <label for="{{ form.nacionalidad.id_for_label }}">Nacionalidad:</label>
+                {{ form.nacionalidad }}
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid" style="margin-top: 15px">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="{{ form.nacimiento.id_for_label }}" ></div>
+                <label for="{{ form.nacimiento.id_for_label }}">Fecha de nacimiento:</label>
+                {{ form.nacimiento }}
+              </div>
+              <div class="col-md-6 ms-auto">
+                <div class="{{ form.email.id_for_label }}" ></div>
+                <label for="{{ form.email.id_for_label }}">Correo electrónico:</label>
+                {{ form.email }}
+              </div>
+            </div>
+          </div>
+          
         <div class="modal-footer">
-        <button type="button" id="button" style="background-color: #405FC9; color: white; border: none" onclick="sendUser()" >Actualizar docente</button>
-        <button type="button" class="btn btn-danger"  id="button" data-dismiss="modal">Cerrar</button>
+        <button type="button" id="button2" class="btn btn-primary" onclick="sendUser()" >Actualizar docente</button>
+        <button type="button" class="btn btn-danger"   data-dismiss="modal">Cerrar</button>
         </div>
        </form>
     </div> 
@@ -44,7 +114,7 @@
           mostrarOk();          
         },
         error: function (error) {
-          mostrarErroresCreacion(error);
+          mostrarErroresCreacionEditar(error);
           mostrarError();
         }
       });

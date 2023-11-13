@@ -6,63 +6,97 @@
 {% block extracontent %} 
 
 
-<div class="container-fluid">
-  <div class="row" style=" padding-left: 15px" >
-    <h1 class="h3" id="tit"><i class="fa-regular fa-address-book"></i></i> Cursos</h1>
-  </div>
-  <div id="submenu" style=" height:120px; width:100%; padding: 15px">
-    {% if teacherTp %} 
-    {% for i in topics %}
-    <div style="display: flex" ><h1 class="h5" id="tit">Nombre del docente: </h1><h5>&nbsp;{{i.apellidos}} {{i.nombres}}</h5></div>
-    <div style="display: flex" ><h1 class="h5" id="tit">Código:</h1><h5>&nbsp;{{i.codigo}}</h5></div>
-    <div style="display: flex" ><h1 class="h5" id="tit">Total asignaturas:</h1><h5>&nbsp;{{Tmaterias}}</h5></div>
-
-    {% endfor %}
-    {% endif %}
-  </div>
-  <div class="linea"></div>
-  
-</div>
-
-<div class="container-fluid" style="">
-  <div  class="row" >
-    <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
-      <div class ="tabla" style=" " >
-        {% if teacherTp %}
-          <table id="table_id4"  class="hover" style="width:100%; ">
-            <thead >
-              <th>Código clase</th>
-              <th>Programa</th>
-              <th>Asignatura</th>
-              <th>Alumnos</th>
-              <th>Periodo</th>
-              <th>Acciones</th>
-            </thead>
-            <tbody>
-              {% for i in teacherTp %}
-              <tr>
-                <td >{{i.codigo}}</td>
-                <td>{{i.programa}}</td>
-                <td>{{i.materia}}</td>
-                <td>{{i.total}}</td>
-                <td>{{i.periodo}}</td>
-                {% if i.total > 0  %}
-                <td><a href="{% url 'academico_app:topic-list-notes' i.pk %}" title="Consultar" ><i id="iconos" style="" class="fa-solid fa-magnifying-glass" ></i></a></td>
-                {% else %}
-                <td ><a href="#" title="Consultar" ><i id="iconos2" style="padding-left: 5px" class="fa-solid fa-magnifying-glass" ></i></a></td>
-                {% endif %}
-              </tr>
-              {% endfor %}
-              
-            </tbody>
-          </table>    
-        {% endif %}
+<div class="container-fluid ">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="fa-regular fa-address-book"></i></i> Cursos</h2></span>
       </div>
+      
+  </div>
+  <div class="datos">
+    
+    <div class="card bg-light mb-3 information" style="">
+        <div class="container-fluid" style="">
+          <div class="" style="">
+            {% if teacherTp %} 
+            {% for i in topics %}
+            <div style="display: flex"  >
+            
+              <strong><p  class="card-title">Nombre del docente:</p></strong>
+              <p class="card-text">&nbsp; {{i.apellidos}} {{i.nombres}}</p>
+            
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Código:</strong>
+              <p class="card-text">&nbsp; {{i.codigo}}</p>
+
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Total asignaturas:</strong>
+              <p class="card-text">&nbsp; {{Tmaterias}}</p>
+            
+            </div>
+            {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+        
     </div>
   </div>
+
+  <div class="card">
     
+    <div class="card-body">
+        <div class="container-fluid" style="">
+          <div  class="row">
+            <div class="conte">
+              <div class ="conteTabla">
+
+                {% if teacherTp %}
+                <table id="table_id4"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Código clase</th>
+                    <th>Programa</th>
+                    <th>Asignatura</th>
+                    <th>Alumnos</th>
+                    <th>Periodo</th>
+                    <th>Acciones</th>
+                  </thead>
+                  <tbody>
+                    {% for i in teacherTp %}
+                    <tr>
+                      <td >{{i.codigo}}</td>
+                      <td>{{i.programa}}</td>
+                      <td>{{i.materia}}</td>
+                      <td>{{i.total}}</td>
+                      <td>{{i.periodo}}</td>
+                      {% if i.total > 0  %}
+                      <td><a href="{% url 'academico_app:topic-list-notes' i.pk %}" title="Consultar" ><i  class="fa-solid fa-magnifying-glass estado" ></i></a></td>
+                      {% else %}
+                      <td ><a href="#" title="Consultar" ><i  class="fa-solid fa-magnifying-glass nonEstado" ></i></a></td>
+                      {% endif %}
+                    </tr>
+                    {% endfor %}
+                    
+                  </tbody>
+                </table>    
+              {% endif %}
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+
   </div>
 </div>
+
+
 {% endblock extracontent %}
 
 

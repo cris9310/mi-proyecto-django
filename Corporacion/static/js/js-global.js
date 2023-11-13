@@ -179,17 +179,6 @@ function noPuntoComa(event) {
   }
 }
 
-function mostrarErroresCreacion(errores) {
-  $("#errores").html("");
-  let error = "";
-
-  for (let item in errores.responseJSON.error) {
-    error += '<div class ="alert alert-danger" <strong>' + errores.responseJSON.error[item] + '</strong></div>'
-
-  }
-  $("#errores").append(error);
-}
-
 function getPensum() {
   var estadoId = $("#carrera").val();
   if (estadoId) {
@@ -217,7 +206,7 @@ function getPensum() {
 }
 
 function mostrarErroresDetalle(error) {
-  const array1 = ['tDocument', 'cedula', 'nombre', 'apellidos', 'nacionalidad', 'telefono', 'sexo',
+  const array1 = ['tDocument', 'cedula', 'codigo', 'nombre', 'nombres', 'apellidos', 'nacionalidad', 'telefono', 'sexo',
     'direccion', 'nacimiento', 'carrera', 'pensum_asig', 'email', 'sede', 'periodo_matriculado',
     'username', 'nombre_acudiente', 'apellidos_acudiente', 'telefono_acudiente', 'cedula_acudiente'];
 
@@ -235,14 +224,38 @@ function mostrarErroresDetalle(error) {
 }
 
 
-function mostrarErroresCreacion2(errores) {
+function mostrarErroresCreacion(errores) {
+
   $("#errores").html("");
   let error = "";
-  for (let item in errores.responseJSON) {
-    error += '<div class ="alert alert-danger" <strong>' + errores.responseJSON[item].error + '</strong></div>'
+
+  let datos = errores.responseJSON;
+
+  for (let index = 0; index < datos.length; index++) {
+    const element = datos[index];
+    $("#errores").append(`<div class ="alert alert-danger" <strong>'${element.error}</strong></div>`);
+  }
+
+}
+
+function mostrarErroresCreacionEditar(errores) {
+
+  const array1 = ['tDocument', 'cedula', 'codigo', 'nombre', 'nombres', 'apellidos', 'nacionalidad', 'telefono', 'sexo',
+    'direccion', 'nacimiento', 'carrera', 'pensum_asig', 'email', 'sede', 'periodo_matriculado',
+    'username', 'nombre_acudiente', 'apellidos_acudiente', 'telefono_acudiente', 'cedula_acudiente'];
+
+  for (const i in array1) {
+    const lista = array1[i]
+    $('div[class="' + lista + '"]').html("");
+  }
+
+  let error = "";
+  for (let i in errores.responseJSON[0].error) {
+
+    $('div[class="' + i + '"]').append('<div class ="alert alert-danger" <strong>' + errores.responseJSON[0].error[i][0] + '</strong></div>');
 
   }
-  $("#errores").append(error);
+
 }
 
 function sendUser() {
@@ -344,7 +357,7 @@ $(document).ready(function () {
       { "width": "4%", "className": 'dt-body-center' },
       null,
       null,
-      { "className": 'dt-body-center' },
+      null,
       null,
     ],
 

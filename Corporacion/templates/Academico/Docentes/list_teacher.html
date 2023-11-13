@@ -5,13 +5,38 @@
 
 {% block extracontent %}
 
+
 <div class="container-fluid ">
   <div class="row encabezado">
-      <div class="col titulo">
-        <span class=""><h3>Docentes</h3></span>
+      <div class="titulo">
+        <span class=""><h2><i class="fa-solid fa-chalkboard-user icon"></i> Docentes</h2></span>
       </div>
+      
   </div>
-
+  <div class="datos">
+    <div class="card text-center total " >
+      
+      <div class="card-body ">
+        <h1 class="card-title">{{todos}}</h1>
+      </div>
+      <div class="card-footer">Total docentes</div>
+    </div>
+    <div class="card text-center  activos">
+      
+      <div class="card-body ">
+        <h1 class="card-title">{{activos}}</h1>
+      </div>
+      <div class="card-footer">Activos</div>
+    </div>
+    <div class="card text-center  inactivos">
+      
+      <div class="card-body ">
+        <h1 class="card-title">{{inactivos}}</h1>
+      </div>
+      <div class="card-footer">Inactivos</div>
+    </div>
+    
+  </div>
 
   <div class="card">
     <div class="card-header">
@@ -53,9 +78,9 @@
 
     <div class="card-body">
         <div class="container-fluid" style="">
-          <div  class="row" >
-            <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
-              <div class ="tabla" style=" " >
+          <div  class="row">
+            <div class="conte">
+              <div class ="conteTabla">
 
 
                 {% if teacher %}
@@ -71,32 +96,32 @@
                       {% for teach in teacher %}
                       <tr>
                         {% if teach.estado  %}
-                        <td ><a href="{% url 'academico_app:topic-list' teach.pk %}" title="Consultar" ><i id="iconos" style="padding-left: 0px" class="fa-solid fa-magnifying-glass" ></i></a></td>
+                        <td ><a href="{% url 'academico_app:topic-list' teach.pk %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass estado" ></i></a></td>
                         {% else %}
-                        <td ><a href="#" title="Consultar" ><i id="iconos2" style="padding-left: 0px" class="fa-solid fa-magnifying-glass" ></i></a></td>
+                        <td ><a href="#" title="Consultar" ><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a></td>
                         {% endif %}
                         <td><a">{{teach.codigo}}</a></td>
                         <td>{{teach.apellidos}} {{teach.nombres}}</td>
                         {% if teach.is_active %}
-                        <td><span id="activo" style="width:100%"><i class="fa-regular fa-circle-check"></i> &nbsp; Activo</span></td>
+                        <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
                         {% else %}
-                        <td><span id="inactivo"><i class="fa-solid fa-circle-xmark"></i> &nbsp; Inactivo</span></td>
+                        <td><span class="nonEstado"><i class="fa-solid fa-circle-xmark"></i>&nbsp;Inactivo</span></td>
                         {% endif %}
                         <td>
-                          <a  onclick="abrir_modal_general('{% url 'academico_app:detail-teacher' teach.pk %}')" title="Ver docente"><i id="iconos" class="fa-regular fa-eye"></i></a>
-                          <a onclick="abrir_modal_general('{% url 'academico_app:update-teacher' teach.pk %}')" title="Editar"><i id="iconos" class="fa-regular fa-pen-to-square"></i></a>
+                          <a  onclick="abrir_modal_general('{% url 'academico_app:detail-teacher' teach.pk %}')" title="Ver docente"><i  class="fa-regular fa-eye iconos"></i></a>
+                          <a onclick="abrir_modal_general('{% url 'academico_app:update-teacher' teach.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
         
                           {% if teach.estado == True and teach.is_active == True %}
-                            <a  onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'inhabilitar')" title="Inhabilitar"><i  id="iconos" class="fa-solid fa-user-xmark"></i></a>
+                            <a  onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'inhabilitar')" title="Inhabilitar"><i   class="fa-solid fa-user-xmark iconos"></i></a>
                           {% elif teach.estado == True and teach.is_active == False %}
-                            <a onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'habilitar')" title="Habilitar"><i  id="iconos" class="fa-solid fa-user-check"></i></a>
+                            <a onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'habilitar')" title="Habilitar"><i   class="fa-solid fa-user-check iconos"></i></a>
                           
                           {% elif teach.estado == False and teach.is_active == True %}
-                            <a onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'inhabilitar')" title="Inhabilitar"><i  id="iconos" class="fa-solid fa-user-xmark"></i></a>
-                            <a onclick="actulizar_eliminar('{% url 'academico_app:delete-teacher' teach.pk %}', 'eliminar')" title="Eliminar"><i  id="iconos" class="fa-regular fa-trash-can"></i></a>
+                            <a onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'inhabilitar')" title="Inhabilitar"><i   class="fa-solid fa-user-xmark iconos"></i></a>
+                            <a onclick="actulizar_eliminar('{% url 'academico_app:delete-teacher' teach.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
                           {% else %}
-                            <a onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'habilitar')" title="Habilitar"><i  id="iconos" class="fa-solid fa-user-check"></i></a>
-                            <a onclick="actulizar_eliminar('{% url 'academico_app:delete-teacher' teach.pk %}', 'eliminar')" title="Eliminar"><i  id="iconos" class="fa-regular fa-trash-can"></i></a>
+                            <a onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'habilitar')" title="Habilitar"><i   class="fa-solid fa-user-check iconos"></i></a>
+                            <a onclick="actulizar_eliminar('{% url 'academico_app:delete-teacher' teach.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
                           {% endif %}
                         </td>
                       </tr>
@@ -135,137 +160,6 @@
 
   </div>
 </div>
-<!--
-<div class="container-fluid ">
-  <div class="row encabezado">
-      <div class="col titulo">
-        <span class=""><h3>Docentes</h3></span>
-      </div>
-      <div class="col boton">
-        <button  type="button" title="Crear docente" class="btn btn-sm" onclick="abrir_modal_general('{% url 'academico_app:create-teacher' %}')">
-          <a >
-            <i class="fa-solid fa-user-plus fa-lg"></i>
-            Crear docente
-          </a>
-        </button>
-      </div>
-  </div>
-
-  <div style="">
-    <ul class="nav" style="">
-      <li class="nav-item">
-        <a
-          id="tod"
-          class="nav-link"
-          
-          href="?order=todos"
-          >Todos <span class="sr-only">(current)</span></a
-        >
-        
-      </li>
-      <li class="nav-item" id="act1">
-        <a
-          id="act"
-          class="nav-link"
-          
-          href="?order=activos"
-          >Activos</a
-        >
-      </li>
-      <li class="nav-item" id="ina1">
-        <a
-          id="ina"
-          class="nav-link"
-          
-          href="?order=inactivos"
-          >Inactivos</a
-        >
-      </li>
-    </ul>
-
-    
-  </div>
-  <div class="container-fluid" style="">
-    <div  class="row" >
-      <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
-        <div class="linea"></div>
-        <div class ="tabla" style=" " >
-          {% if teacher %}
-            <table id="table_id2"  class="hover" style="width:100%; ">
-              <thead >
-                <th>Salones </th>
-                <th>Nro. Documento</th>
-                <th>Nombre del Docente</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </thead>
-              <tbody>
-                {% for teach in teacher %}
-                <tr>
-                  {% if teach.estado  %}
-                  <td ><a href="{% url 'academico_app:topic-list' teach.pk %}" title="Consultar" ><i id="iconos" style="padding-left: 0px" class="fa-solid fa-magnifying-glass" ></i></a></td>
-                  {% else %}
-                  <td ><a href="#" title="Consultar" ><i id="iconos2" style="padding-left: 0px" class="fa-solid fa-magnifying-glass" ></i></a></td>
-                  {% endif %}
-                  <td><a">{{teach.codigo}}</a></td>
-                  <td>{{teach.apellidos}} {{teach.nombres}}</td>
-                  {% if teach.is_active %}
-                  <td><span id="activo" style="width:100%"><i class="fa-regular fa-circle-check"></i> &nbsp; Activo</span></td>
-                  {% else %}
-                  <td><span id="inactivo"><i class="fa-solid fa-circle-xmark"></i> &nbsp; Inactivo</span></td>
-                  {% endif %}
-                  <td>
-                    <a  onclick="abrir_modal_general('{% url 'academico_app:detail-teacher' teach.pk %}')" title="Ver docente"><i id="iconos" class="fa-regular fa-eye"></i></a>
-                    <a onclick="abrir_modal_general('{% url 'academico_app:update-teacher' teach.pk %}')" title="Editar"><i id="iconos" class="fa-regular fa-pen-to-square"></i></a>
-  
-                    {% if teach.estado == True and teach.is_active == True %}
-                      <a  onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'inhabilitar')" title="Inhabilitar"><i  id="iconos" class="fa-solid fa-user-xmark"></i></a>
-                    {% elif teach.estado == True and teach.is_active == False %}
-                      <a onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'habilitar')" title="Habilitar"><i  id="iconos" class="fa-solid fa-user-check"></i></a>
-                    
-                    {% elif teach.estado == False and teach.is_active == True %}
-                      <a onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'inhabilitar')" title="Inhabilitar"><i  id="iconos" class="fa-solid fa-user-xmark"></i></a>
-                      <a onclick="actulizar_eliminar('{% url 'academico_app:delete-teacher' teach.pk %}', 'eliminar')" title="Eliminar"><i  id="iconos" class="fa-regular fa-trash-can"></i></a>
-                    {% else %}
-                      <a onclick="actulizar_eliminar('{% url 'academico_app:Habilit-teacher' teach.pk  %}', 'habilitar')" title="Habilitar"><i  id="iconos" class="fa-solid fa-user-check"></i></a>
-                      <a onclick="actulizar_eliminar('{% url 'academico_app:delete-teacher' teach.pk %}', 'eliminar')" title="Eliminar"><i  id="iconos" class="fa-regular fa-trash-can"></i></a>
-                    {% endif %}
-                  </td>
-                </tr>
-          {% endfor %}
-              
-            </table> 
-          {% else %}
-          <table id="table_id2"  class="hover" style="width:100%; ">
-            <thead >
-              <th>Código</th>
-              <th>Nombre del estudiante</th>
-              <th>Programa</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </thead>
-            <tbody>
-              <tr>
-                <td > - </td >
-                <td > - </td >
-                <td > - </td >
-                <td > - </td >
-                <td > - </td >
-              </tr>
-            </tbody>
-          </table>   
-          {% endif %}
-        </div>
-      </div>
-    </div>
-    </div>
-  </div>
-  
-</div>
-
-
--->
-
 
 
 <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
