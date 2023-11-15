@@ -25,7 +25,7 @@ class Facturas(models.Model):
 
 class FacturasSub(models.Model):
     facturas = models.ForeignKey(Facturas, on_delete=models.CASCADE)
-    observacion=models.CharField(max_length=400, blank=True, null=True)
+    observacion=models.CharField(max_length=100, blank=True, null=True)
     consecutivo= models.PositiveIntegerField(null=False, blank=False, unique=True)
     pagado =  models.DecimalField(max_digits= 100, decimal_places=0)
     created_at = models.DateTimeField(auto_now_add=True)

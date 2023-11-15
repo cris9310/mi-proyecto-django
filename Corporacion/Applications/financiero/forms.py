@@ -18,6 +18,8 @@ class FacturasForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "id": "pagado",
+                    'placeholder':"Ingrese el valor pagado",
+                    "onkeydown":"noPuntoComa( event )"
                 }
             ),
             "observacion": forms.Textarea(
@@ -29,7 +31,9 @@ class FacturasForm(forms.ModelForm):
             'consecutivo': forms.NumberInput(
                 attrs={
                     "class": "form-control",
-                    "id": "consecutivo"
+                    "id": "consecutivo",
+                    'placeholder':"Ingrese el consecutivo",
+                    "onkeydown":"noPuntoComa( event )"
                 }
             ),
         }

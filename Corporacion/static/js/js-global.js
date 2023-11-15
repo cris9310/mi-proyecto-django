@@ -125,6 +125,15 @@ function abrir_modal_deluxe(url, corte, asignatura) {
 
 }
 
+function mostrarOkInformes() {
+  Swal.fire({
+    "title": "Excelente!",
+    "text": "El informe ha sido generado",
+    "icon": "success",
+    "timer": 10000,
+  })
+}
+
 function mostrarOkpayments() {
   Swal.fire({
     "title": "Excelente!",
@@ -208,7 +217,7 @@ function getPensum() {
 function mostrarErroresDetalle(error) {
   const array1 = ['tDocument', 'cedula', 'codigo', 'nombre', 'nombres', 'apellidos', 'nacionalidad', 'telefono', 'sexo',
     'direccion', 'nacimiento', 'carrera', 'pensum_asig', 'email', 'sede', 'periodo_matriculado',
-    'username', 'nombre_acudiente', 'apellidos_acudiente', 'telefono_acudiente', 'cedula_acudiente'];
+    'username', 'nombre_acudiente', 'apellidos_acudiente', 'telefono_acudiente', 'cedula_acudiente', 'consecutivo'];
 
   for (const i in array1) {
     const lista = array1[i]

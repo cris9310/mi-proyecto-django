@@ -1,39 +1,76 @@
 
 {% load  static %}
 
-
-<div class="modal-dialog modal-lg" role="document">
+<div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel"><i id="iconos" style="padding-left: 3px" class="fa-solid fa-money-bill"></i> Nuevo pago</h5>
+    <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-user-plus"></i> Nuevo pago</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
         <span aria-hidden="true">&times;</span>
     </button>
     </div>
     {% for i in datos %}
     <div class="modal-body">
-      <div id="submenu" style=" height:120px; width:100%; padding: 15px; display: flex">
-        <div >
-        
-          <div style="display: flex" ><h1 class="h6" id="tit">Código de la factura:</h1><h6>&nbsp;{{i.codigo}}</h6></div>
-          <div style="display: flex" ><h1 class="h6" id="tit">Valor inicial:</h1><h6>&nbsp;{{i.monto}}</h6></div>
-          <div style="display: flex" ><h1 class="h6" id="tit">Valor pagado:</h1><h6>&nbsp;{{i.pagado}}</h6></div>
-          <div style="display: flex" ><h1 class="h6" id="tit">Valor pendiente:</h1><h6>&nbsp;{{i.pendiente}}</h6></div>
-        
+      <div class="card bg-light mb-3 information" style="">
+        <div class="container-fluid" style="">
+          <div class="" style="">
+            <div style="display: flex"  >
+            
+              <strong><p  class="card-title">Código de la factura:</p></strong>
+              <p class="card-text">&nbsp; {{i.codigo}}</p>
+            
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Valor inicial:</strong>
+              <p class="card-text">&nbsp; {{i.monto}}</p>
+
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Valor pagado:</strong>
+              <p class="card-text">&nbsp; {{i.pagado}}</p>
+            
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Valor pendiente:</strong>
+              <p class="card-text">&nbsp; {{i.pendiente}}</p>
+            
+            </div>
+            
+          </div>
         </div>
         
-      </div>
-      <div class="linea"></div>
-      
-      <form  method="POST" id="dataform" action="{% url 'finance_app:finance-list-invoice-sub' %}" style="padding-top: 15px">{% csrf_token %}
+    </div>
+      <form  method="POST" id="dataGeneralForm"  action="{% url 'finance_app:finance-list-invoice-sub' %}" >{% csrf_token %}
         <div id="errores" ></div>
         <input type="hidden" name="facturas" id="facturas" class="accion" value="{{i.codigo}}">
         <input type="hidden" name="pendiente" id="pendiente" class="accion" value="{{i.pendiente2}}">
-        {{form.as_p}}
-        <div class="modal-footer">
-          
-        <button type="button" id="button" style="background-color: #405FC9; color: white; border: none" onclick="sendpayment()" >Registrar pago</button>
-        <button type="button" class="btn btn-danger"  id="button2" data-dismiss="modal">Cerrar</button>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="{{ form.consecutivo.id_for_label }}" ></div>
+              <label for="{{ form.consecutivo.id_for_label }}">Número del consecutivo:</label>
+              {{ form.consecutivo }}
+            </div>
+            <div class="col-md-6 ms-auto"">
+              <div class="{{ form.pagado.id_for_label }}" ></div>
+              <label for="{{ form.pagado.id_for_label }}">Valor a pagar:</label>
+              {{ form.pagado }}
+            </div>
+          </div>
+          <div class="row" style="margin-top: 20px">
+            <div class="col">
+              <div class="{{ form.observacion.id_for_label }}" ></div>
+              <label for="{{ form.observacion.id_for_label }}">Observación:</label>
+              {{ form.observacion }}
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="margin-top: 15px;">
+        <button type="button" id="button2" class="btn btn-primary" onclick="sendpayment()" >Registrar pago</button>
+        <button type="button" class="btn btn-danger"   data-dismiss="modal">Cerrar</button>
         </div>
       </form>
       {% endfor %}
@@ -41,18 +78,17 @@
   </div>
 </div>
 
+
 {% block js %}
 <script type="text/javascript">
 
   function sendpayment() {
-    var serializedData = $("#dataform").serialize();
+    var serializedData = $("#dataGeneralForm").serialize();
     var pagado = parseFloat(document.getElementById("pagado").value);
     var consecutivo = parseFloat(document.getElementById("consecutivo").value);
     var observaciones = document.getElementById("observacion").value;
     var pendiente = parseFloat(document.getElementById("pendiente").value);
 
-
-    console.log(consecutivo)
     if (pagado == "" || consecutivo == "" || observaciones == "") {
       mostrarErrorblanco();
     }else if(pagado < 0 || consecutivo < 0){
@@ -68,7 +104,6 @@
         "icon": "error"
       })
     } else {
-  
       var request = $.ajax({
         type: 'POST',
         url: "{% url 'finance_app:finance-list-invoice-sub' %}",
@@ -78,14 +113,14 @@
           location.reload(true);
           mostrarOkpayments();
         },
-        error: function (error) {
-          mostrarErroresCreacion2(error);
+        error: function (error) {;
+          mostrarErroresCreacion(error);
           mostrarError();
         }
       });
     }
   }
-  
+
 
 </script>
 

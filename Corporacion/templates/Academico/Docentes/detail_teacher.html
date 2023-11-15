@@ -11,6 +11,12 @@
         <div class="modal-body">
           <div class="container-fluid personal">
             <div class="card">
+              <div class="card-header">
+                <div class="titulo">
+                  Información personal
+                </div>
+                
+              </div>
               
               <div class="card-body" style="display: flex">
                 <div class="col">
@@ -42,7 +48,7 @@
                   </div>
                   <div class="personal-general">
                     <div class="personal-icon text-center align-self-center">
-                      <i class="fa-regular fa-address-card"></i>
+                      <i class="fa-solid fa-phone"></i>
                     </div>
                     <div class="personal-text">
                       <div class="personal-text-text">
@@ -55,7 +61,7 @@
                   </div>
                   <div class="personal-general">
                     <div class="personal-icon text-center align-self-center">
-                      <i class="fa-regular fa-address-card"></i>
+                      <i class="fa-regular fa-map"></i>
                     </div>
                     <div class="personal-text">
                       <div class="personal-text-text">
@@ -68,7 +74,7 @@
                   </div>
                   <div class="personal-general">
                     <div class="personal-icon text-center align-self-center">
-                      <i class="fa-regular fa-address-card"></i>
+                      <i class="fa-solid fa-cake-candles"></i>
                     </div>
                     <div class="personal-text">
                       <div class="personal-text-text">
@@ -83,7 +89,7 @@
                 <div class="col">
                   <div class="personal-general">
                     <div class="personal-icon text-center align-self-center">
-                      <i class="fa-regular fa-address-card"></i>
+                      <i class="fa-regular fa-envelope"></i>
                     </div>
                     <div class="personal-text">
                       <div class="personal-text-text">
@@ -96,15 +102,17 @@
                   </div>
                   <div class="personal-general">
                     <div class="personal-icon text-center align-self-center">
-                      <i class="fa-regular fa-address-card"></i>
+                      <i class="fa-solid fa-person-half-dress"></i>
                     </div>
                     <div class="personal-text">
                       <div class="personal-text-text">
                         Género:
                       </div>
                       <div class="personal-text-text-origin">
-                        {% if object.sexo == 'M' %}
+                        {% if object.sexo == 'Masculino' %}
                          Masculino
+                        {% elif object.sexo == "Otros" %}
+                        Otro
                         {% else %}
                           Femenino
                         {% endif %}
@@ -113,7 +121,7 @@
                   </div>
                   <div class="personal-general">
                     <div class="personal-icon text-center align-self-center">
-                      <i class="fa-regular fa-address-card"></i>
+                      <i class="fa-regular fa-user"></i>
                     </div>
                     <div class="personal-text">
                       <div class="personal-text-text">
@@ -126,7 +134,7 @@
                   </div>
                   <div class="personal-general">
                     <div class="personal-icon text-center align-self-center">
-                      <i class="fa-regular fa-address-card"></i>
+                      <i class="fa-regular fa-calendar-days"></i>
                     </div>
                     <div class="personal-text">
                       <div class="personal-text-text">
@@ -145,9 +153,6 @@
               </div>        
             </div>
           </div>
-        </div> 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
         </div>
     </div>
   </div>

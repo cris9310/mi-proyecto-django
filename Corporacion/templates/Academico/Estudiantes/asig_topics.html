@@ -6,7 +6,7 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel"><i id="iconos" style="padding-left: 3px" class="fa-solid fa-upload"></i> Cargue de estudiantes</h5>
+    <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-upload"></i> Cargue de estudiantes</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
         <span aria-hidden="true">&times;</span>
     </button>
@@ -17,15 +17,13 @@
         <span class="sr-only">Loading...</span>
       </div>
       </div>
-      <form action="{% url 'academico_app:list-top-asignar' %}" method="post" enctype="multipart/form-data" id="data" >
-        
+      <form action="{% url 'academico_app:list-top-asignar' %}" method="post" enctype="multipart/form-data" id="data" > 
       {% csrf_token %}
       <div id="errores" ></div>
-      
       {{form.as_p}}
       <div class="modal-footer">
-        <button type="button" id="button" class="exito" style="background-color:#40c4a4;"><a href="{% url 'academico_app:export-plant-student' %}"><i class="fa-solid fa-cloud-arrow-down"></i>&nbsp; Exportar plantilla</a></button>
-        <button type="button" id="button" class="azules" onclick="sendStudents()"  ><i class="fa-solid fa-upload"></i> &nbsp;Cargar estudiantes</button>
+        <button type="button"  class="btn btn-primary"><a href="{% url 'academico_app:export-plant-student' %}"><i class="fa-solid fa-cloud-arrow-down"></i>&nbsp; Exportar plantilla</a></button>
+        <button type="button" class="btn btn-danger" onclick="sendStudents()"  ><i class="fa-solid fa-upload"></i> &nbsp;Cargar estudiantes</button>
       </div>
     </form>
     </div> 

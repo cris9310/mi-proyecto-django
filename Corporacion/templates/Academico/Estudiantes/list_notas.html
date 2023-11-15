@@ -3,126 +3,144 @@
 {% block title %}Calificaciones | Portal CNE{% endblock title %}
 {% block extracontent %}
 
-<div class="container-fluid">
-  <div class="row" style=" padding-left: 15px" >
-    <h1 class="h3" id="tit"> <i class="fa-solid fa-school-circle-check"></i> Calificaciones</h1>
+<div class="container-fluid ">
+  
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="fa-solid fa-school-circle-check"></i> Calificaciones</span>
+      </div>
   </div>
-</div>
 
-<div class="container-fluid">
   {% if notas %} 
   {% for j in student %}
-  <div id="submenu" style=" height:120px; width:100%; padding: 15px; display: flex">
-    <div >
-      <div style="display: flex" ><h1 class="h5" id="tit">Nombre del estudiante:</h1><h5>&nbsp;{{j.apellidos}} {{j.nombre}}</h5></div>
-      <div style="display: flex" ><h1 class="h5" id="tit">Código:</h1><h5>&nbsp;{{j.codigo}}</h5></div>
-      <div style="display: flex" ><h1 class="h5" id="tit">Programa:</h1><h5>&nbsp;{{j.carrera}}</h5></div> 
-    </div>
-    </div>
+  <div class="datos">
     
+    <div class="card bg-light mb-3 information" style="">
+        <div class="container-fluid" style="">
+          <div class="" style="">
+            <div style="display: flex"  >
+            
+              <strong><p  class="card-title">Nombre del estudiante:</p></strong>
+              <p class="card-text">&nbsp;{{j.apellidos}} {{j.nombre}}</p>
+            
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Código:</strong>
+              <p class="card-text">&nbsp; {{j.codigo}}</p>
+
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Programa:</strong>
+              <p class="card-text">&nbsp; {{j.carrera}}</p>
+            
+            </div>
+            
+          </div>
+        </div>
+        
+    </div>
   </div>
   {% endfor %}
   {% endif %}
-  
-</div>
 
-<div class="container-fluid" style="">
-  <div  class="row" >
-    <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
-      <div class="col" id="anadir">
-        <div class="row" >
-          <h1 class="h5" id="tit"> Progreso académico del estudiante:</h1>
+
+
+  <div class="card">
+    <div class="card-header">
+      
+      <div class="container-fluid ">
+        
+        <div class="progreso-content"> <strong >Cumplimiento académico:</strong></div>
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progreso}}%">
+            {{progreso}} %
+          </div>
         </div>
-        <div class="row">
-          <div style="display:flex" >
-            <div class="progress" >
-              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progreso}}%">
-              </div>
-            </div>
-            <div>
-              &nbsp;
-            </div>
-            <div>
-              <h1 class="h5" id="tit"> {{progreso}} % </h1>
-            </div>
-          </div >
-        </div>
-      </div>
-      <div class="linea"></div>
-      <div class ="tabla" style=" " >
-        {% if notas %} 
-          <table id="table_id3"  class="hover" style="width:100%; ">
-            <thead>
-              <th>Acciones</th>
-              <th>Asignatura</th>
-              <th>Corte 1</th>
-              <th>Corte 2</th>
-              <th>Corte 3</th>
-              <th>Promedio</th>
-              <th>Estado</th>
-            </thead>
-            <tbody>
-              {% for i in notas %}
-                <tr>
-                  <td>
-                    <button
-                      onclick="abrir_modal_edicion('{% url 'academico_app:detail-topic' i.materia.id %}')"
-                      class="btn btn-sm"
-                      title="Ver"
-                      data-toggle="tooltip"
-                    >
-                      <i id="iconos" style="padding-left: 0px" class="far fa-eye"></i>
-                    </button>
-                  </td>
-                  <td>{{i.materia.materia.nombre_materia}} </td>
-                  <td>{{i.corte1}}</td>
-                  <td>{{i.corte2}}</td>
-                  <td>{{i.corte3}}</td>
-                  <td>{{i.promedio}}</td>
-                  {% if i.promedio >= 3 %}
-                  <td><span id="activo" style="width:100%"><i class="fa-regular fa-circle-check"></i> &nbsp; Aprobada</span></td>
-                  {% elif i.promedio < 3 and i.promedio > 0 %}
-                  <td><span id="inactivo"><i class="fa-solid fa-circle-xmark"></i> &nbsp; Reprobada</span></td>
-                  {% elif i.promedio == 0 and not i.materia.is_active  %}
-                  <td><span id="cursando"><i class="fa-solid fa-hourglass-half"></i> &nbsp; Sin calificación</span></td>
-                  {% else %}
-                  <td><span id="cursando"><i class="fa-solid fa-hourglass-half"></i> &nbsp; En curso</span></td>
-                  {% endif %}
-                </tr>
-              {% endfor %} 
-            </tbody>
-          </table> 
-        {% else %}
-        <table id="table_id4"  class="hover" style="width:100%; ">
-          <thead >
-            <th>Acciones</th>
-            <th>Asignatura</th>
-            <th>Corte 1</th>
-            <th>Corte 2</th>
-            <th>Corte 3</th>
-            <th>Promedio</th>
-            <th>Estado</th>
-          </thead>
-          <tbody>
-            <tr>
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-            </tr>
-          </tbody>
-        </table>   
-        {% endif %}
+        
       </div>
     </div>
+
+    <div class="card-body">
+      <div class="container-fluid" style="">
+        <div  class="row">
+          <div class="conte">
+            <div class ="conteTabla">
+
+              {% if notas %} 
+                <table id="table_id3"  class="hover" style="width:100%; ">
+                  <thead>
+                    <th>Acciones</th>
+                    <th>Asignatura</th>
+                    <th>Corte 1</th>
+                    <th>Corte 2</th>
+                    <th>Corte 3</th>
+                    <th>Promedio</th>
+                    <th>Estado</th>
+                  </thead>
+                  <tbody>
+                    {% for i in notas %}
+                      <tr>
+                        <td>
+                          <a  onclick="abrir_modal_general('{% url 'academico_app:detail-topic' i.materia.id  %}')" title="Ver"><i  class="fa-regular fa-eye iconos"></i></a>
+                          
+                        </td>
+                        <td>{{i.materia.materia.nombre_materia}} </td>
+                        <td>{{i.corte1}}</td>
+                        <td>{{i.corte2}}</td>
+                        <td>{{i.corte3}}</td>
+                        <td>{{i.promedio}}</td>
+                        {% if i.promedio >= 3 %}
+                        <td><span class="estado"><i class="fa-regular fa-circle-check "></i> &nbsp; Aprobada</span></td>
+                        {% elif i.promedio < 3 and i.promedio > 0 %}
+                        <td><span class="nonEstado"><i class="fa-solid fa-circle-xmark "></i> &nbsp; Reprobada</span></td>
+                        {% elif i.promedio == 0 and not i.materia.is_active  %}
+                        <td><span class="iconos"><i class="fa-solid fa-hourglass-half "></i> &nbsp; Sin calificación</span></td>
+                        {% else %}
+                        <td><span class="iconos"><i class="fa-solid fa-hourglass-half "></i> &nbsp; En curso</span></td>
+                        {% endif %}
+                      </tr>
+                    {% endfor %} 
+                  </tbody>
+                </table> 
+              {% else %}
+              <table id="table_id4"  class="hover" style="width:100%; ">
+                <thead >
+                  <th>Acciones</th>
+                  <th>Asignatura</th>
+                  <th>Corte 1</th>
+                  <th>Corte 2</th>
+                  <th>Corte 3</th>
+                  <th>Promedio</th>
+                  <th>Estado</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                  </tr>
+                </tbody>
+              </table>   
+              {% endif %}
+              
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      
+    </div>
   </div>
+    
   </div>
+
 </div>
-
-
 
 <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 

@@ -832,6 +832,10 @@ class Studentlistview(ListView):
         context = super().get_context_data(**kwargs)
         context['programas'] = Programas.objects.all()
         context['masivo'] = Estudiante.objects.filter(masivo=True).count()
+        context['todos'] = Estudiante.objects.filter(masivo=False).count()
+        context['activos'] = Estudiante.objects.filter(is_active=True).count()
+        context['inactivos'] = Estudiante.objects.filter(is_active=False).count()
+        context['graduados'] = Estudiante.objects.filter(is_graduado=True).count()
         return context
 
     def get_queryset(self):

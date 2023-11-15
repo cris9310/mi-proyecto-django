@@ -106,7 +106,7 @@ class InvoiceDetailView(FormView):
         data = Facturas.objects.get(pk=self.kwargs['pk'])
         monto = data.monto
         pagado2 = pagado['pagados']
-        pendiente = Facturas.objects.manejo(data, pagado)
+        pendiente = Facturas.objects.manejo(data, pagado2)
         datos = []
         info = {"codigo": data.codigo, "monto": f'$ {monto:,.2f}', 'pagado': f'$ {pagado2 if pagado2 else 0.0 :,.2f}',
                 'pendiente': f'$ {pendiente:,.2f}', 'pendiente2': pendiente}
@@ -131,7 +131,7 @@ class InvoiceSubCreate(View):
 
         if FacturasSub.objects.filter(consecutivo=consecutivo) or Gastos.objects.filter(consecutivo=consecutivo):
             mensaje1.append(
-                {"error": 'El consecutivo que intenta crear ya existe, por favor verifique el número del recibo de pago.'})
+                {"error": "El consecutivo que intenta crear ya existe, por favor verifique el número del recibo de pago."})
             response = JsonResponse(mensaje1, safe=False)
             response.status_code = 400
             return response

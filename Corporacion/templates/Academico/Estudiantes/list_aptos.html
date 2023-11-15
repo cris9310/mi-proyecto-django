@@ -3,132 +3,135 @@
 {% block title %}Progresos | Portal CNE{% endblock title %}
 {% block extracontent %}
 
-<div class="container-fluid">
-  <div class="row" style=" padding-left: 15px" >
-    <h1 class="h3" id="tit"><i class="fa-solid fa-spinner"></i> Progresos estudiantiles</h1>
-  </div>
-</div>
 {% if finaly %}
-<div class="container-fluid" style="">
-  <div  class="row" >
-    <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
-      <div class="col" id="anadir">
-        <div class="row" >
-          <h1 class="h5" id="tit"> Acciones globales:</h1>
-        </div>
-        <div class="row">
-          <div style="display:flex" > 
-            <div >
-              <button  type="button" title="Graduar estudiante" id="mostrar" onclick="abrir_modal_edicion('{% url 'academico_app:list-top-a-graduar' %}')" class="btn btn-outline-primary">
-                
-                  <i class="fa-regular fa-rectangle-list fa-lg"></i>
-              </button>
-              <button  type="button" title="Generar informe" id="informe" onclick="generar()" class="btn btn-outline-primary">
-                
-                  <i class="fa-solid fa-laptop-file fa-lg"></i>
-              </button>             
-            </div >
-          </div >
-        </div>
+
+<div class="container-fluid ">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="fa-solid fa-spinner"></i> Progresos estudiantiles </h2></span>
       </div>
-      <div class="linea"></div>
-      <div class ="tabla" style=" " >
-        {% if finaly %}
-          <table id="table_id4"  class="hover" style="width:100%; ">
-            <thead>
-              <th>Seleccionar</th>
-              <th>Código</th>
-              <th>Estudiante</th>
-              <th>Programa</th>
-              <th>Indicador académico</th>
-              <th>Indicador financiero</th>
-            </thead>
-            <tbody>
-              {% for i in finaly %} 
-              {% if i.indicador == 100 and i.financiero == 100 %}
-              <tr>
-                <td>
-                  <span id="activo" style="width:100%"><input type="checkbox" id="materia" name="materia" value="{{i.pk}}"> &nbsp; Apto</span>
-                </td>
-                <td>{{i.codigo}}</td>
-                <td>{{i.estudiante}}</td>
-                <td>{{i.programa}}</td>
-                <td >
-                  <div >
-                    <div class="progress" >
-                      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.indicador}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.indicador}}%">
-                        <a id="barra" href="{% url 'academico_app:notes' i.pk %}">{{i.indicador}} %</a>
-                        
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="progress" >
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.financiero}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.financiero}}%">
-                      <a id="barra" href="{% url 'finance_app:finance-list-invoice-detail' i.pk %}">{{i.financiero}} %</a>
-                    </div>
-                  </div>
-                  
-                </td>
-              </tr>
-              {% else %}
-              <tr>
-                <td><span id="inactivo"><i class="fa-solid fa-circle-xmark"></i> &nbsp; No apto</span></td></td>
-                <td>{{i.codigo}}</td>
-                <td>{{i.estudiante}}</td>
-                <td>{{i.programa}}</td>
-                <td>
-                  <div >
-                    <div class="progress" >
-                      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.indicador}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.indicador}}%">
-                        <a id="barra" href="{% url 'academico_app:notes' i.pk %}">{{i.indicador}} %</a>
-                        
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="progress" >
-                    <div  id="uno" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.financiero}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.financiero}}%">
-                      <a id="barra" href="{% url 'finance_app:finance-list-invoice-detail' i.pk %}">{{i.financiero}} %</a>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              {% endif %} 
-              {% endfor %}
-            </tbody>
-          </table> 
-        {% else %}
-        <table id="table_id4"  class="hover" style="width:100%; ">
-          <thead >
-            <th>Seleccionar</th>
-            <th>Código</th>
-            <th>Estudiante</th>
-            <th>Programa</th>
-            <th>Indicador académico</th>
-            <th>Indicador financiero</th>
-          </thead>
-          <tbody>
-            <tr>
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-            </tr>
-          </tbody>
-        </table>   
-        {% endif %}
+      
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class=" boton">
+          <button  type="button" title="Graduar estudiante"  onclick="abrir_modal_edicion('{% url 'academico_app:list-top-a-graduar' %}')" id="button" class="btn btn-sm bloq">
+                 
+            <i class="fa-regular fa-rectangle-list fa-lg"></i> &nbsp; Graduar
+          </button>
+          <button  type="button" title="Generar informe"  onclick="generar()" id="button" class="btn btn-sm">
+            
+              <i class="fa-solid fa-laptop-file fa-lg"></i>&nbsp; Informe
+          </button>
+        </div>
       </div>
     </div>
+    <div class="card-body">
+      <div class="container-fluid" style="">
+        <div  class="row">
+          <div class="conte">
+            <div class ="conteTabla">
+              {% if finaly %}
+                  <table id="table_id4"  class="hover" style="width:100%; ">
+                    <thead>
+                      <th>Seleccionar</th>
+                      <th>Código</th>
+                      <th>Estudiante</th>
+                      <th>Programa</th>
+                      <th>Indicador académico</th>
+                      <th>Indicador financiero</th>
+                    </thead>
+                    <tbody>
+                      {% for i in finaly %} 
+                      {% if i.indicador == 100 and i.financiero == 100 %}
+                      <tr>
+                        <td>
+                          <span class="estado" style="width:100%"><input type="checkbox" id="materia" name="materia" value="{{i.pk}}"> &nbsp; Apto</span>
+                        </td>
+                        <td>{{i.codigo}}</td>
+                        <td>{{i.estudiante}}</td>
+                        <td>{{i.programa}}</td>
+                        <td >
+                          <div >
+                            <div class="progress" >
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.indicador}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.indicador}}%">
+                                <a id="barra" href="{% url 'academico_app:notes' i.pk %}">{{i.indicador}} %</a>
+                                
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="progress" >
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.financiero}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.financiero}}%">
+                              <a id="barra" href="{% url 'finance_app:finance-list-invoice-detail' i.pk %}">{{i.financiero}} %</a>
+                            </div>
+                          </div>
+                          
+                        </td>
+                      </tr>
+                      {% else %}
+                      <tr>
+                        <td><span class="nonEstado"><i class="fa-solid fa-circle-xmark"></i> &nbsp; No apto</span></td></td>
+                        <td>{{i.codigo}}</td>
+                        <td>{{i.estudiante}}</td>
+                        <td>{{i.programa}}</td>
+                        <td>
+                          <div >
+                            <div class="progress" >
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.indicador}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.indicador}}%">
+                                <a class="barra" href="{% url 'academico_app:notes' i.pk %}">{{i.indicador}} %</a>
+                                
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="progress" >
+                            <div   class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{i.financiero}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.financiero}}%">
+                              <a class="barra" href="{% url 'finance_app:finance-list-invoice-detail' i.pk %}">{{i.financiero}} %</a>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      {% endif %} 
+                      {% endfor %}
+                    </tbody>
+                  </table> 
+                {% else %}
+                <table id="table_id4"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Seleccionar</th>
+                    <th>Código</th>
+                    <th>Estudiante</th>
+                    <th>Programa</th>
+                    <th>Indicador académico</th>
+                    <th>Indicador financiero</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                    </tr>
+                  </tbody>
+                </table>   
+                {% endif %}
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      
+    </div>
   </div>
-  </div>
+
 </div>
-
-
 
 <div class="col-10" style="margin-top: 2em">
   
@@ -180,7 +183,7 @@
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"><i class="fa-regular fa-file" id="iconos" style="padding-left: 9px"></i> Parámetros del informe</h5>
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa-regular fa-file" ></i> Parámetros del informe</h5>
           <button
             type="button"
             class="close"
@@ -220,8 +223,8 @@
             <h3 id="cantChulos"> </h3>
             <input type="hidden" name="concat2" id="concat2" class="concat2" />
             <div class="modal-footer" >
-            <button type="button" id="button" style="background-color: #405FC9; color: white; border: none" onclick="SendDataInform()" >Generar informe</button>
-            <button type="button" class="btn btn-danger"  id="button" data-dismiss="modal">Cerrar</button>
+              <button type="button"  class="btn btn-primary" onclick="SendDataInform()" >Generar informe</button>
+              <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
             </div>
           </form>
         </div>
@@ -305,7 +308,7 @@
     else{
       serializedData.submit();
       $("#edicion-informe").modal("hide");
-      mostrarOkpayments();
+      mostrarOkInformes();
       
     }
      
@@ -329,9 +332,9 @@
 
   $(document).ready(function () {
     if ($("#materia").length) {
-      $("#mostrar").prop("disabled", false);
+      $(".bloq").prop("disabled", false);
     } else {
-      $("#mostrar").prop("disabled", true);
+      $(".bloq").prop("disabled", true);
     }
   });
 

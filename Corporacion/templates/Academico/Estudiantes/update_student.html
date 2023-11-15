@@ -1,20 +1,27 @@
-{% extends "Base2.html" %} {% load static %} {% block extracontent %}
-<div class="col-5">
-  <form
-    method="POST"
-    action="{% url 'academico_app:update-student' object.pk %}"
-  >
-    {% csrf_token %} {{form.as_p}}
-    <div>
-      <button type="submit" class="alert button">Actualizar</button>
-      <a
-        href="{% url 'academico_app:list-student' %}"
-        class="btn btn-success btn-sm"
-        >Volver</a
-      >
+{% load static %} {% block extracontent %}
+
+
+<div class="modal-dialog modal-xl" role="document" >
+  <div class="modal-content">
+    <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"><i id="iconos" style="padding-left: 3px" class="fa-regular fa-pen-to-square"></i> Actualización docente</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+        <span aria-hidden="true">&times;</span>
+    </button>
     </div>
-  </form>
+    <div class="modal-body">
+      <form  method="POST" id="dataGeneralForm" action="{% url 'academico_app:update-student' object.pk %}">{% csrf_token %}
+        <div id="errores" ></div>      
+        {{form.as_p}}
+        <div class="modal-footer">
+        <button type="submit" class="alert button">Actualizar</button>
+        <button type="button" class="btn btn-danger"   data-dismiss="modal">Cerrar</button>
+        </div>
+       </form>
+    </div> 
+  </div>
 </div>
+
 {% endblock extracontent %} {% block js %}
 
 <script type="text/javascript">

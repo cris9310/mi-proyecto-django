@@ -3,126 +3,153 @@
 {% block title %}Pagos | Portal CNE{% endblock title %}
 {% block extracontent %}
 
-<div class="container-fluid">
-  <div class="row" style=" padding-left: 15px" >
-    <h1 class="h3" id="tit"> <i class="fa-solid fa-circle-dollar-to-slot"></i> Historial de pagos</h1>
+<div class="container-fluid ">
+  
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="fa-solid fa-circle-dollar-to-slot"></i> Historial de pagos</span>
+      </div>
   </div>
-</div>
-
-<div class="container-fluid">
+  
+  {% if datos %} 
   {% for j in datos %}
-  <div id="submenu" style=" height:120px; width:100%; padding: 15px; display: flex">
-    <div >
-      <div style="display: flex" ><h1 class="h5" id="tit">Nombre del estudiante:</h1><h5>&nbsp;{{j.apellidos}} {{j.nombre}}</h5></div>
-      <div style="display: flex" ><h1 class="h5" id="tit">Código:</h1><h5>&nbsp;{{j.codigo}}</h5></div>
-      <div style="display: flex" ><h1 class="h5" id="tit">Programa:</h1><h5>&nbsp;{{j.carrera.programa_name}}</h5></div> 
-    </div>
-    </div>
+  <div class="datos">
     
+    <div class="card bg-light mb-3 information" style="">
+        <div class="container-fluid" style="">
+          <div class="" style="">
+            <div style="display: flex"  >
+            
+              <strong><p  class="card-title">Nombre del estudiante:</p></strong>
+              <p class="card-text">&nbsp;{{j.apellidos}} {{j.nombre}}</p>
+            
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Código:</strong>
+              <p class="card-text">&nbsp; {{j.codigo}}</p>
+
+            </div>
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Programa:</strong>
+              <p class="card-text">&nbsp; {{j.carrera.programa_name}}</p>
+            
+            </div>
+            
+          </div>
+        </div>
+        
+    </div>
   </div>
   {% endfor %}
-</div>
-<div class="container-fluid" style="">
-  <div  class="row" >
-    <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
-      <div class="col" id="anadir">
-        <div class="row" >
-          <h1 class="h5" id="tit"> Progreso financiero del estudiante:</h1>
+  {% endif %}
+
+
+
+  <div class="card">
+    <div class="card-header">
+      
+      <div class="container-fluid ">
+        
+        <div class="progreso-content"> <strong >Cumplimiento financiero:</strong></div>
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progreso}}%">
+            {{progreso}} %
+          </div>
         </div>
-        <div class="row">
-          <div style="display:flex" >
-            <div class="progress" >
-              <div id="uno" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progreso}}%">
-              </div>
-            </div>
-            <div>
-              &nbsp;
-            </div>
-            <div>
-              <h1 class="h5" id="tit"> {{progreso}} % </h1>
-            </div>
-          </div >
-        </div>
+        
       </div>
-      <div class="linea"></div>
-      <div class ="tabla" style=" " >
-        {% if datos %} 
-          <table id="table_id7"  class="hover" style="width:100%; ">
-            <thead>
-              <th>Detalle </th>
-              <th>Código </th>
-              <th>Descripción</th>
-              <th>Estado</th>
-              <th>Monto</th>
-              <th>Pagado</th>
-              <th>Acción</th>
-            </thead>
-            <tbody>
-              {% for i in invoice  %}
-              <tr>
-                {% if i.pagado != "$ 0.00" %}
-                <td class='dt-control' defaultContent="" orderable='false' data= "null" >
-                  <input type="hidden" name="funt" id="funt" class="funt" value="{{i.pk}}">
-                </td>
-                {% else %}
-                <td ><span id="inactivo"><i class="fa-solid fa-circle-xmark"></i></span></td></td>
-                {% endif %}
-                <td >{{i.codigo}}</td>
-                <td >{{i.descripcion}}</td>
-                <td >
-                  {% if i.estado.estado == "Pagada"  %}
-                  <span id="activo" style="width:100%"><i class="fa-regular fa-circle-check"></i> &nbsp; {{i.estado.estado}} </span>
-                  {% elif i.estado.estado == "Abono" %}
-                  <span id="cursando"><i class="fa-solid fa-money-bill-wave"></i> &nbsp; {{i.estado.estado}} </span>
-                  {% else %}
-                  <span id="inactivo"><i class="fa-solid fa-circle-xmark"></i> &nbsp; {{i.estado.estado}} </span>
-                  {% endif %}
-                </td>
-                <td >{{i.monto}}</td>
-                <td >{{i.pagado}}</td>
-                {% if i.pagado == i.monto %}
-                <td>
-                  <a ><i id="iconos" style="padding-left: 3px" class="fa-solid fa-check"></i></a>
-                </td>
-                {% else %}
-                <td >
-                  <a onclick="abrir_modal_general3('{% url 'finance_app:finance-list-invoice-detail-up' i.pk %}')" title="Editar"><i id="iconos" style="padding-left: 3px" class="fa-regular fa-pen-to-square"></i></a>
-                </td>
-                {% endif %}
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table> 
-        {% else %}
-        <table id="table_id4"  class="hover" style="width:100%; ">
-          <thead >
-            <th>Detalle </th>
-            <th>Código </th>
-            <th>Descripción</th>
-            <th>Estado</th>
-            <th>Monto</th>
-            <th>Pagado</th>
-            <th>Acción</th>
-          </thead>
-          <tbody>
-            <tr>
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-            </tr>
-          </tbody>
-        </table>   
-        {% endif %}
+    </div>
+
+    <div class="card-body">
+      <div class="container-fluid" style="">
+        <div  class="row">
+          <div class="conte">
+            <div class ="conteTabla">
+              
+              {% if datos %} 
+              <table id="table_id7"  class="hover" style="width:100%; ">
+                <thead>
+                  <th>Detalle </th>
+                  <th>Código </th>
+                  <th>Descripción</th>
+                  <th>Estado</th>
+                  <th>Monto</th>
+                  <th>Pagado</th>
+                  <th>Acción</th>
+                </thead>
+                <tbody>
+                  {% for i in invoice  %}
+                  <tr>
+                    {% if i.pagado != "$ 0.00" %}
+                    <td class='dt-control' defaultContent="" orderable='false' data= "null" >
+                      <input type="hidden" name="funt" id="funt" class="funt" value="{{i.pk}}">
+                    </td>
+                    {% else %}
+                    <td ><span class="nonEstado"><i class="fa-solid fa-circle-xmark"></i></span></td></td>
+                    {% endif %}
+                    <td >{{i.codigo}}</td>
+                    <td >{{i.descripcion}}</td>
+                    <td >
+                      {% if i.estado.estado == "Pagada"  %}
+                      <span class="estado" ><i class="fa-regular fa-circle-check"></i> &nbsp; {{i.estado.estado}} </span>
+                      {% elif i.estado.estado == "Abono" %}
+                      <span class="iconos"><i class="fa-solid fa-money-bill-wave"></i> &nbsp; {{i.estado.estado}} </span>
+                      {% else %}
+                      <span class="nonEstado"><i class="fa-solid fa-circle-xmark"></i> &nbsp; {{i.estado.estado}} </span>
+                      {% endif %}
+                    </td>
+                    <td >{{i.monto}}</td>
+                    <td >{{i.pagado}}</td>
+                    {% if i.pagado == i.monto %}
+                    <td class="estado">
+                      <i class="fa-regular fa-circle-check"></i>
+                    </td>
+                    {% else %}
+                    <td class="iconos">
+                      <a onclick="abrir_modal_general3('{% url 'finance_app:finance-list-invoice-detail-up' i.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square"></i></a>
+                    </td>
+                    {% endif %}
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table> 
+            {% else %}
+            <table id="table_id4"  class="hover" style="width:100%; ">
+              <thead >
+                <th>Detalle </th>
+                <th>Código </th>
+                <th>Descripción</th>
+                <th>Estado</th>
+                <th>Monto</th>
+                <th>Pagado</th>
+                <th>Acción</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td > - </td >
+                  <td > - </td >
+                  <td > - </td >
+                  <td > - </td >
+                  <td > - </td >
+                  <td > - </td >
+                  <td > - </td >
+                </tr>
+              </tbody>
+            </table>   
+            {% endif %}
+            </div>
+          </div>
+        </div>
+        </div>
       </div>
     </div>
   </div>
+    
   </div>
-</div>
 
+</div>
 
 
 <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
@@ -182,11 +209,11 @@ $(document).ready(function () {
       return (
         
         '<tbody>' +
-        '<td>' + dat.consecutivo+'</td>' + '<td>'+ dat.payed +'</td>' +'<td>' + dat.fecha+'</td>' +'<td><a onclick="abrir_modal_general3('+
+        '<td>' + dat.consecutivo+'</td>' + '<td>'+ dat.payed +'</td>' +'<td>' + dat.fecha+'</td>' +'<td class="iconos"><a onclick="abrir_modal_general3('+
            link
-          +')" title="Editar"><i id="iconos" class="fa-regular fa-eye"></i></a>   <a onclick="abrir_modal_general3('+
+          +')" title="Editar"><i class="fa-regular fa-eye"></i></a>   <a onclick="abrir_modal_general3('+
           eliminar
-         +')" title="Eliminar"><i id="iconos" class="fa-solid fa-trash-can"></i></a> </td>' + 
+         +')" title="Eliminar"><i class="fa-solid fa-trash-can"></i></a> </td>' + 
         '</tbody>'   
       );
     });

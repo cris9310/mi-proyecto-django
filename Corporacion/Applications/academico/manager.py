@@ -205,7 +205,7 @@ class BuscadorManager(models.Manager):
     def manejo(self, valor1, valor2):
         try:
 
-            valor = float(valor1.monto)-float(valor2['pagado__sum'])
+            valor = float(valor1.monto)-float(valor2)
         except:
             valor= int(valor1.monto)
         return valor

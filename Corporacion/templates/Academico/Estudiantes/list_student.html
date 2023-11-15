@@ -5,178 +5,211 @@
 
 {% block extracontent %}
 
-<div class="container-fluid">
-  <div class="row"  >
-    <h1 class="h3" id="tit"><i class="fa-solid fa-graduation-cap"></i> Estudiantes</h1>
-  </div>
-  <div id="submenu" ">
-    <ul class="nav"  ">
-      <li class="nav-item" id="tod1">
-        <a
-          id="tod"
-          class="nav-link"
-          
-          href="?order=todos"
-          >Todos <span class="sr-only">(current)</span></a
-        >
-        
-      </li>
-      <li class="nav-item" id="act1">
-        <a
-          id="act"
-          class="nav-link"
-          
-          href="?order=activos"
-          >Activos</a
-        >
-      </li>
-      <li class="nav-item" id="ina1">
-        <a
-          id="ina"
-          class="nav-link"
-          
-          href="?order=inactivos"
-          >Inactivos</a
-        >
-      </li>
-    </ul>
-  </div>
-</div>
 
-<div class="" style="">
-  <div  class="row" >
-    <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
-      <div class="col" id="anadir">
-        <div class="row" >
-          <h1 class="h5" id="tit"> Acciones globales:</h1>
-        </div>
-        <div class="row">
-          <div style="display:flex" > 
-            <div >
-              <button  type="button" title="Crear estudiante" class="btn btn-outline-primary" onclick="abrir_modal_general('{% url 'academico_app:create-student'%}')">
-                <a >
-                  <i class="fa-solid fa-user-plus fa-lg"></i></a>
-              </button>
-              <button type="button" title="Crear multiples estudiantes" class="btn btn-outline-primary"  onclick="abrir_modal_general('{% url 'academico_app:list-top-asignar'%}')">
-                <a >
-                  <i class="fa-solid fa-people-group fa-lg"></i></a>
-              </button>
-              <button type="button" title="Graduar estudiantes"  class="btn btn-outline-primary"  onclick="location.href='{% url 'academico_app:list-top-graduado'%}'">
-                <a  >
-                  <i class="fa-solid fa-user-graduate fa-lg" ></i></a>
-              </button>
-              
-              {% if masivo > 0 %}
-              <span id="group">
-                <button type="button" class="btn btn-outline-primary" title="Ver estudiantes pendientes"  onclick="location.href='{% url 'academico_app:list-student-cargue'%}'">
-                  <i class="fas fa-bell fa-xl" ></i>
-                </button>
-                <span class="badge badge-light">{{masivo}}</span>
-              </span>
-              {% else %}
-              <span id="group">
-                <button type="button" class="btn btn-outline-primary" title="Ver estudiantes pendientes" onclick="{% url 'academico_app:list-student-cargue'%}">
-                  <i class="fas fa-bell fa-xl" ></i>
-                </button>
-                <span class="badge badge-light" id="sin">0</span>
-              </span>
-              {% endif %}
-            </div >
-          </div >
-        </div>
+
+<div class="container-fluid ">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="fa-solid fa-graduation-cap"></i> Estudiantes</h1></span>
       </div>
-      <div class="linea"></div>
-      <div class ="tabla" style=" " >
-        {% if student %}
-          <table id="table_id2"  class="hover" style="width:100%; ">
-            <thead >
-              <th>Código</th>
-              <th>Nombre del estudiante</th>
-              <th>Programa</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </thead>
-            <tbody>
-              {% for estudiante in student %}
-                <tr>
-                  <td ><a href="{% url 'academico_app:notes' estudiante.pk %}">{{estudiante.codigo}}</a></td>
-                  <td>{{estudiante.apellidos}} {{estudiante.nombre}}</td>
-                  <td>{{estudiante.carrera}}</td>
-                  <td>{{estudiante.is_active}}</td>
+      
+  </div>
+  <div class="datos">
+    <div class="card text-center total " >
+      
+      <div class="card-body ">
+        <h1 class="card-title">{{todos}}</h1>
+      </div>
+      <div class="card-footer">Total estudiantes</div>
+    </div>
+    <div class="card text-center total " >
+      
+      <div class="card-body ">
+        <h1 class="card-title">{{graduados}}</h1>
+      </div>
+      <div class="card-footer">Total graduados</div>
+    </div>
+    <div class="card text-center  activos">
+      
+      <div class="card-body ">
+        <h1 class="card-title">{{activos}}</h1>
+      </div>
+      <div class="card-footer">Activos</div>
+    </div>
+    <div class="card text-center  inactivos">
+      
+      <div class="card-body ">
+        <h1 class="card-title">{{inactivos}}</h1>
+      </div>
+      <div class="card-footer">Inactivos</div>
+    </div>
+    
+  </div>
 
-                  {% if estudiante.is_active %}
-                  <td>
-                    <div class="dropdown show">
-                      <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        click
-                      </a> 
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <a class="dropdown-item" ><button  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top"><i class="far fa-eye"></i></button></a>
-                        <a class="dropdown-item" href="{% url 'academico_app:update-student' estudiante.pk %}" >editar</a>
-                        <a class="dropdown-item" href="{% url 'academico_app:delete-student' estudiante.pk %}" >eliminar</a>
-                        {% if estudiante.is_matriculado  %} 
-                        <a  class="dropdown-item" href="#" ><i class="fas fa-circle" style="color: green;"></i></a>
-                        <a class="dropdown-item"href="{% url 'academico_app:agre-more' estudiante.pk %}" >add +</a>
-                        {% else %}
-                        <a  class="dropdown-item" href="{% url 'academico_app:list-periodos-asignar' estudiante.pk  %}" ><i class="fas fa-circle" style="color: red;"></i></a>
-                        {% endif %}
-                        
-                      </div>
-                    </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        
+        <div class="col filtro">
+          <span class="text nav-text">Filtrar por:</span>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="todos" onchange="window.location.href='?order=todos'">
+            <label class="form-check-label" for="todos">
+              Todos
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="activos" onchange="window.location.href='?order=activos'">
+            <label class="form-check-label" for="activos">
+              Activos
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="inactivos" onchange="window.location.href='?order=inactivos'">
+            <label class="form-check-label" for="inactivos">
+              Inactivos
+            </label>
+          </div>
+          
+        </div>
+        <div class="col botones-miltiples">
 
-                  </td>
-                  
-                  {% else %}
-                  <td>
-                    <div class="dropdown show">
-                      <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                       click
-                      </a>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item"><button  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top"><i class="far fa-eye"></i></button></a>
-                        {% if estudiante.is_graduado %}
-                        <a class="dropdown-item" href="#"><i class="fas fa-graduation-cap"></i></a>
-                        {% else %}
-                        <a class="dropdown-item" href="#" >inhabilitado</a>
-                        {% endif %}
-                      </div>
-                    </div>
-                    
-                  </td>
-                  {% endif %} 
-                    
-              </tr>
-                
-              {% endfor %}
-              
-            </tbody>
-          </table> 
-        {% else %}
-        <table id="table_id2"  class="hover" style="width:100%; ">
-          <thead >
-            <th>Código</th>
-            <th>Nombre del estudiante</th>
-            <th>Programa</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </thead>
-          <tbody>
-            <tr>
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-              <td > - </td >
-            </tr>
-          </tbody>
-        </table>   
-        {% endif %}
+          <button  type="button" title="Crear estudiante" class="btn btn-sm" onclick="abrir_modal_general('{% url 'academico_app:create-student'%}')">
+            <a >
+              <i class="fa-solid fa-user-plus fa-lg"></i></a>
+          </button>
+          <button type="button" title="Crear multiples estudiantes" class="btn btn-sm"  onclick="abrir_modal_general('{% url 'academico_app:list-top-asignar'%}')">
+            <a >
+              <i class="fa-solid fa-people-group fa-lg"></i></a>
+          </button>
+          <button type="button" title="Graduar estudiantes"  class="btn btn-sm"  onclick="location.href='{% url 'academico_app:list-top-graduado'%}'">
+            <a  >
+              <i class="fa-solid fa-user-graduate fa-lg" ></i></a>
+          </button>
+          
+          {% if masivo > 0 %}
+          <span id="group">
+            <button type="button" class="btn btn-sm" title="Ver estudiantes pendientes"  onclick="location.href='{% url 'academico_app:list-student-cargue'%}'">
+              <i class="fas fa-bell fa-xl" ></i>
+            </button>
+            <span class="badge badge-light">{{masivo}}</span>
+          </span>
+          {% else %}
+          <span id="group">
+            <button type="button" class="btn btn-sm" title="Ver estudiantes pendientes" onclick="{% url 'academico_app:list-student-cargue'%}">
+              <i class="fas fa-bell fa-xl" ></i>
+            </button>
+            <span class="badge badge-light sin-student">0</span>
+          </span>
+          {% endif %}
+        </div>
       </div>
     </div>
-  </div>
+
+
+    <div class="card-body">
+        <div class="container-fluid" style="">
+          <div  class="row">
+            <div class="conte">
+              <div class ="conteTabla">
+
+                {% if student %}
+                <table id="table_id2"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Código</th>
+                    <th>Nombre del estudiante</th>
+                    <th>Programa</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </thead>
+                  <tbody>
+                    {% for estudiante in student %}
+                      <tr>
+                        <td ><a href="{% url 'academico_app:notes' estudiante.pk %}">{{estudiante.codigo}}</a></td>
+                        <td>{{estudiante.apellidos}} {{estudiante.nombre}}</td>
+                        <td>{{estudiante.carrera}}</td>
+                        <td>{{estudiante.is_active}}</td>
+
+                        {% if estudiante.is_active %}
+                        <td>
+                          <div class="dropdown show">
+                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              click
+                            </a> 
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                              <a class="dropdown-item" ><button  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top"><i class="far fa-eye"></i></button></a>
+                              <a class="dropdown-item" href="{% url 'academico_app:update-student' estudiante.pk %}" >editar</a>
+                              <a class="dropdown-item" href="{% url 'academico_app:delete-student' estudiante.pk %}" >eliminar</a>
+                              {% if estudiante.is_matriculado  %} 
+                              <a  class="dropdown-item" href="#" ><i class="fas fa-circle" style="color: green;"></i></a>
+                              <a class="dropdown-item"href="{% url 'academico_app:agre-more' estudiante.pk %}" >add +</a>
+                              {% else %}
+                              <a  class="dropdown-item" href="{% url 'academico_app:list-periodos-asignar' estudiante.pk  %}" ><i class="fas fa-circle" style="color: red;"></i></a>
+                              {% endif %}
+                              
+                            </div>
+                          </div>
+
+                        </td>
+                        
+                        {% else %}
+                        <td>
+                          <div class="dropdown show">
+                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            click
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item"><button  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top"><i class="far fa-eye"></i></button></a>
+                              {% if estudiante.is_graduado %}
+                              <a class="dropdown-item" href="#"><i class="fas fa-graduation-cap"></i></a>
+                              {% else %}
+                              <a class="dropdown-item" href="#" >inhabilitado</a>
+                              {% endif %}
+                            </div>
+                          </div>
+                          
+                        </td>
+                        {% endif %} 
+                          
+                    </tr>
+                      
+                    {% endfor %}
+                    
+                  </tbody>
+                </table> 
+              {% else %}
+              <table id="table_id2"  class="hover" style="width:100%; ">
+                <thead >
+                  <th>Código</th>
+                  <th>Nombre del estudiante</th>
+                  <th>Programa</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                    <td > - </td >
+                  </tr>
+                </tbody>
+              </table>   
+              {% endif %}
+                
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+
   </div>
 </div>
-
 
 <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 

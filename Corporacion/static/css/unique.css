@@ -317,7 +317,14 @@ header .image-text .header-text {
 .card .card-header .filtro {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+}
+
+.card .card-header .filtro .nav-text {
+    margin-right: 15px;
+}
+
+.card .card-header .filtro .form-check {
+    margin-right: 15px;
 }
 
 
@@ -325,6 +332,15 @@ header .image-text .header-text {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+}
+
+.card .card-header .botones-miltiples {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.card .card-header .botones-miltiples button {
+    margin-right: 10px;
 }
 
 
@@ -463,6 +479,16 @@ th.sorting {
 
 }
 
+.btn-primary a {
+    text-decoration: none;
+    color: var(--sidebar-color);
+}
+
+.btn-primary a:hover {
+    text-decoration: none;
+    color: var(--sidebar-color);
+}
+
 .information {
     background: var(--sidebar-color) !important;
     width: 100%;
@@ -518,6 +544,7 @@ th.sorting {
     color: var(--primary-color);
 }
 
+
 .personal-text-text {
     font-size: 16px !important;
     font-weight: bold;
@@ -528,6 +555,62 @@ th.sorting {
     margin-top: 3px;
     color: var(--text-color);
 }
+
+.filtro .nav-text,
+.form-check-label {
+    font-size: 13px !important;
+    font-weight: bold;
+    color: var(--primary-color-dark);
+}
+
+.linea {
+    border-top: 1px solid #e7e4e4;
+    width: 100%;
+    padding: 0;
+    margin: 20px auto 0 auto;
+
+}
+
+.bloq {
+    margin-right: 20px;
+    margin-left: 10px;
+}
+
+.progress-bar {
+    background-color: var(--text-color-activos) !important;
+}
+
+.barra {
+    text-decoration: none !important;
+    color: var(--sidebar-color) !important;
+}
+
+.progreso-content {
+    margin-bottom: 10px;
+}
+
+.badge {
+    position: relative;
+    top: -20px;
+    left: -25px;
+    border: 1px solid black;
+    border-radius: 50%;
+    color: var(--sidebar-color) !important;
+    background-color: var(--text-color-inactivos) !important;
+    border-color: var(--text-color-inactivos) !important;
+}
+
+.sin-student {
+    position: relative;
+    top: -20px;
+    left: -25px;
+    border: 1px solid black;
+    border-radius: 50%;
+    color: var(--sidebar-color) !important;
+    background-color: var(--text-color-activos) !important;
+    border-color: var(--text-color-activos) !important;
+}
+
 
 
 /* Css del body*/
@@ -854,7 +937,7 @@ tbody a:link {
     border-color: #f97b7b !important;
 }
 
-#sin {
+.sin-student {
     position: relative;
     top: -20px;
     left: -25px;

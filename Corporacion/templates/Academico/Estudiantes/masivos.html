@@ -7,65 +7,91 @@
 
 {% block extracontent %}
 
-<div class="container-fluid">
-  <div class="row" style=" padding-left: 15px" >
-    <h1 class="h3" id="tit"><i class="fa-solid fa-graduation-cap"></i> Estudiantes pendientes</h1>
-  </div>
-  
-</div>
 
-<div class="container-fluid" style="">
-  <div  class="row" >
-    <div id="conte" style="height:auto; width: 100%; background: #FFFFFF; ">
-      <div class="col" id="anadir">
-        
-      <div class="linea"></div>
-      <div class ="tabla" style=" " >
-        {% if student %}
-          <table class="table table-striped" id="table_id2">
-            <thead>
-              <th>Código </th>
-              <th>Nombre del estudiante</th>
-              <th>Programa</th>
-              <th>Acciones</th>
-              <th>Acciones</th>
-
-
-            </thead>
-            <tbody>
-              {% for estudiante in student %}
-                <tr>
-                  <td ><a href="">{{estudiante.codigo}}</a></td>
-                  <td>{{estudiante.apellidos}} {{estudiante.nombre}}</td>
-                  <td>{{estudiante.carrera}}</td>
-                  <td>
-                    <div class="dropdown show">
-                      <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        click
-                      </a>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <a class="dropdown-item" href="{% url 'academico_app:update-student' estudiante.pk %}" >editar</a>
-                        <a class="dropdown-item" href="{% url 'academico_app:delete-student' estudiante.pk %}" >eliminar</a>
-                        
-                      </div>
-                    </div>
-                  </td>
-                  <td>{{estudiante.carrera}}</td>
-              </tr>
-              
-              {% endfor %}
-            </tbody>
-          </table>
-        {% endif %}
+<div class="container-fluid ">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="fa-solid fa-graduation-cap"></i> Estudiantes pendientes </h2></span>
       </div>
+      
+  </div>
+
+  <div class="card">
+    
+    <div class="card-body">
+      <div class="container-fluid" style="">
+        <div  class="row">
+          <div class="conte">
+            <div class ="conteTabla">
+              {% if student %}
+              <table id="table_id2"  class="hover" style="width:100%; ">
+                <thead>
+                  <th>Código </th>
+                  <th>Nombre del estudiante</th>
+                  <th>Programa</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+
+
+                </thead>
+                <tbody>
+                  {% for estudiante in student %}
+                    <tr>
+                      <td >{{estudiante.codigo}}</td>
+                      <td>{{estudiante.apellidos}} {{estudiante.nombre}}</td>
+                      <td>{{estudiante.carrera}}</td>
+
+                      {% if estudiante.is_active %}
+                        <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
+                        {% else %}
+                        <td><span class="nonEstado"><i class="fa-solid fa-circle-xmark"></i>&nbsp;Inactivo</span></td>
+                        {% endif %}
+                        <td>
+                          <a onclick="abrir_modal_general('{% url 'academico_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                          <a onclick="actulizar_eliminar('{% url 'academico_app:delete-student' estudiante.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+
+                        </td>
+
+                  </tr>
+                  
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% else %}
+                <table id="table_id2"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Código </th>
+                    <th>Nombre del estudiante</th>
+                    <th>Programa</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                    </tr>
+                  </tbody>
+                </table>
+            {% endif %}
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      
     </div>
   </div>
-  </div>
+
 </div>
 
-  <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 
-  </div>
+
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
 {% endblock extracontent %}
 
 {% block js %}
