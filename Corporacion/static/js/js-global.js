@@ -4,6 +4,7 @@ $(document).ready(function () {
 });
 
 
+
 function codeAddress() {
   var URLactual = (window.location.pathname).toString().split("/")[2];
   const urlParams = new URLSearchParams(window.location.search);
@@ -239,7 +240,6 @@ function mostrarErroresCreacion(errores) {
   let error = "";
 
   let datos = errores.responseJSON;
-
   for (let index = 0; index < datos.length; index++) {
     const element = datos[index];
     $("#errores").append(`<div class ="alert alert-danger" <strong>'${element.error}</strong></div>`);

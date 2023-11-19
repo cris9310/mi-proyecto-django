@@ -841,14 +841,48 @@ class Studentlistview(ListView):
     def get_queryset(self):
         kword = self.request.GET.get('kword', '')
         order = self.request.GET.get('order', '')
-        if kword or order:
-            queryset = Estudiante.objects.filtrar_student(
-                kword, order).exclude(masivo=True)
-        else:
-            queryset = Estudiante.objects.filter(
-                is_active=True).exclude(masivo=True)
 
-        return queryset
+        data_student = []
+        if kword or order:
+            data_prin = Estudiante.objects.filtrar_student(
+                kword, order).exclude(masivo=True)
+            for i in data_prin:
+
+                if Banner.objects.filter(cod_student_id=i.id).exists():
+                    data_json = {"pk": i.id, "codigo": i.codigo, "nombres": i.nombre,
+                                 "apellidos": i.apellidos, "estado": True, "carrera": i.carrera,
+                                 "is_active": i.is_active, "is_matriculado": i.is_matriculado,
+                                 "is_graduado": i.is_graduado}
+                    data_student.append(data_json)
+                else:
+                    data_json = {"pk": i.id, "codigo": i.codigo, "nombres": i.nombre,
+                                 "apellidos": i.apellidos, "estado": False, "carrera": i.carrera,
+                                 "is_active": i.is_active, "is_matriculado": i.is_matriculado,
+                                 "is_graduado": i.is_graduado}
+                    data_student.append(data_json)
+            queryset = data_student
+            return queryset
+
+        else:
+            data_prin = Estudiante.objects.all().exclude(masivo=True)
+            print(data_prin)
+            for i in data_prin:
+                if Banner.objects.filter(cod_student_id=i.id).exists():
+                    print(Banner.objects.filter(cod_student_id=i.id).exists())
+                    data_json = {"pk": i.id, "codigo": i.codigo, "nombres": i.nombre,
+                                 "apellidos": i.apellidos, "estado": True, "carrera": i.carrera,
+                                 "is_active": i.is_active, "is_matriculado": i.is_matriculado,
+                                 "is_graduado": i.is_graduado}
+                    data_student.append(data_json)
+                else:
+                    data_json = {"pk": i.id, "codigo": i.codigo, "nombres": i.nombre,
+                                 "apellidos": i.apellidos, "estado": False, "carrera": i.carrera,
+                                 "is_active": i.is_active, "is_matriculado": i.is_matriculado,
+                                 "is_graduado": i.is_graduado}
+                    data_student.append(data_json)
+            queryset = data_student
+            return queryset
+
 
 
 class StudentCargueListview(ListView):
@@ -879,27 +913,72 @@ class StudentDetailView(DetailView):
     model = Estudiante
 
 
-class StudentUpdateView(UpdateView):
+class StudentMasiveUpdateView(UpdateView):
     model = Estudiante
     template_name = 'Academico/Estudiantes/update_student.html'
-    form_class = StudentRegisterForm
+    form_class = StudentUpdateForm
     success_url = reverse_lazy('academico_app:list-student')
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         cod_estudiante = Estudiante.objects.get(pk=self.kwargs['pk']).codigo
         estudiante_c = self.model.objects.get(codigo=cod_estudiante)
-        form = StudentRegisterForm(request.POST, instance=estudiante_c)
+        form = StudentUpdateForm(request.POST, instance=estudiante_c)
 
         if form.is_valid():
+            codigo_invoice = Facturas.objects.code_invoice()
+            mensaje1 =[]
+            inv_list =[]
             form.save()
             crea_user = User.objects.filter(
                 codigo=cod_estudiante
-            ).update(username=form.cleaned_data['username'],
+            ).update(
                      email=form.cleaned_data['email'])
             act = Estudiante.objects.filter(
                 pk=self.kwargs['pk']).update(masivo=False)
-        return HttpResponseRedirect(self.success_url)
+            
+            
+        
+            l = ["Matricula", "Derechos de grado"]
+            for i in l:
+                matricula = Facturas.objects.create(
+                    user=User.objects.get(
+                        username=form.cleaned_data.get('username')),
+                    codigo=codigo_invoice,
+                    email=form.cleaned_data.get('email'),
+                    monto=Programas.objects.get(
+                        programa_name=form.cleaned_data.get('carrera')).matricula,
+                    descripcion=i,
+                    estado=CatalogsTypesInvoices.objects.get(
+                        estado="Pendiente"),
+                )
+            for i in range(int(Programas.objects.get(programa_name=form.cleaned_data.get('carrera')).cuotas)):
+                inv_list.append(Facturas(
+                    user=User.objects.get(
+                        username=form.cleaned_data.get('username')),
+                    codigo=int(Facturas.objects.code_invoice()) + i,
+                    email=form.cleaned_data.get('email'),
+                    monto=Programas.objects.get(
+                        programa_name=form.cleaned_data.get('carrera')).cuota_valor,
+                    descripcion="Mensualidad número " + str(i+1),
+                    estado=CatalogsTypesInvoices.objects.get(
+                        estado="Pendiente"),
+
+                ))
+            Facturas.objects.bulk_create(inv_list)
+
+            mensaje1.append({"error": 'Registrado correctamente'})
+            response = JsonResponse(mensaje1, safe=False)
+            response.status_code = 201
+            return response
+        else:
+            mensaje1 =[]
+            mensaje1.append(
+                {"error": form.errors}
+            )
+            response = JsonResponse(mensaje1, safe=False)
+            response.status_code = 400
+            return response
 
 # Vista para cargar estudiantes de forma masiva se encuentra ok
 

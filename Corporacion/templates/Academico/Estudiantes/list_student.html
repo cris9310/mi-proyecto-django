@@ -96,7 +96,7 @@
           </span>
           {% else %}
           <span id="group">
-            <button type="button" class="btn btn-sm" title="Ver estudiantes pendientes" onclick="{% url 'academico_app:list-student-cargue'%}">
+            <button type="button" class="btn btn-sm" title="Sin estudiantes pendientes" href="#">
               <i class="fas fa-bell fa-xl" ></i>
             </button>
             <span class="badge badge-light sin-student">0</span>
@@ -125,48 +125,43 @@
                   <tbody>
                     {% for estudiante in student %}
                       <tr>
-                        <td ><a href="{% url 'academico_app:notes' estudiante.pk %}">{{estudiante.codigo}}</a></td>
-                        <td>{{estudiante.apellidos}} {{estudiante.nombre}}</td>
+                        <td >{{estudiante.codigo}}</td>
+                        <td>{{estudiante.apellidos}} {{estudiante.nombres}}</td>
                         <td>{{estudiante.carrera}}</td>
-                        <td>{{estudiante.is_active}}</td>
-
                         {% if estudiante.is_active %}
+                        <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
+                        
                         <td>
-                          <div class="dropdown show">
-                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              click
-                            </a> 
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                              <a class="dropdown-item" ><button  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top"><i class="far fa-eye"></i></button></a>
-                              <a class="dropdown-item" href="{% url 'academico_app:update-student' estudiante.pk %}" >editar</a>
-                              <a class="dropdown-item" href="{% url 'academico_app:delete-student' estudiante.pk %}" >eliminar</a>
-                              {% if estudiante.is_matriculado  %} 
-                              <a  class="dropdown-item" href="#" ><i class="fas fa-circle" style="color: green;"></i></a>
-                              <a class="dropdown-item"href="{% url 'academico_app:agre-more' estudiante.pk %}" >add +</a>
-                              {% else %}
-                              <a  class="dropdown-item" href="{% url 'academico_app:list-periodos-asignar' estudiante.pk  %}" ><i class="fas fa-circle" style="color: red;"></i></a>
-                              {% endif %}
-                              
-                            </div>
-                          </div>
+
+                          {% if teach.estado == False and teach.is_active == True %}
+                          <a href="{% url 'academico_app:topic-list' teach.pk %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
+                          <a  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
+                          <a onclick="abrir_modal_general('{% url 'academico_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                          <a onclick="actulizar_eliminar('{% url 'academico_app:delete-student' estudiante.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                          {% else %}
+                          <a href="#" title="Consultar" ><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a>
+                          <a  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
+                          <a onclick="abrir_modal_general('{% url 'academico_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                          {% endif %}
+                          {% if estudiante.is_matriculado  %}
+                          <a href="{% url 'academico_app:agre-more' estudiante.pk %}" title="agregar materias" ><i class="fa-solid fa-plus iconos"></i></a>
+                          {% else %}
+                          <a href="{% url 'academico_app:list-periodos-asignar' estudiante.pk  %}" title="periodos" ><i class="fa-solid fa-plus iconos"></i></a>
+                          {% endif %}
+                          
 
                         </td>
-                        
                         {% else %}
+                        <td><span class="nonEstado"><i class="fa-solid fa-circle-xmark"></i>&nbsp;Inactivo</span></td>
                         <td>
-                          <div class="dropdown show">
-                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            click
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                              <a class="dropdown-item"><button  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" class="btn btn-success btn-sm" title="Ver"  data-toggle="tooltip" data-placement="top"><i class="far fa-eye"></i></button></a>
-                              {% if estudiante.is_graduado %}
-                              <a class="dropdown-item" href="#"><i class="fas fa-graduation-cap"></i></a>
-                              {% else %}
-                              <a class="dropdown-item" href="#" >inhabilitado</a>
-                              {% endif %}
-                            </div>
-                          </div>
+                          
+                          <a  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
+                          {% if estudiante.is_graduado %}
+                          <a class="" href="#"><i class="fas fa-graduation-cap iconos"></i></a>
+                          {% else %}
+                          <a class="" href="#" ><i class="fa-solid fa-check iconos"></i></a>
+                          {% endif %}
+                          
                           
                         </td>
                         {% endif %} 

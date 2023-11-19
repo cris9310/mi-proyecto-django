@@ -177,7 +177,7 @@ urlpatterns = [
     ),
     path(
         'update-student/<pk>/',
-        views.StudentUpdateView.as_view(),
+        views.StudentMasiveUpdateView.as_view(),
         name='update-student'
     ),
     path(

@@ -48,7 +48,7 @@
                         {% endif %}
                         <td>
                           <a onclick="abrir_modal_general('{% url 'academico_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
-                          <a onclick="actulizar_eliminar('{% url 'academico_app:delete-student' estudiante.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                          <a onclick="abrir_modal_general('{% url 'academico_app:delete-student' estudiante.pk %}')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
 
                         </td>
 
