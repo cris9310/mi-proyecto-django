@@ -556,12 +556,7 @@ th.sorting {
     color: var(--text-color);
 }
 
-.filtro .nav-text,
-.form-check-label {
-    font-size: 13px !important;
-    font-weight: bold;
-    color: var(--primary-color-dark);
-}
+
 
 .linea {
     border-top: 1px solid #e7e4e4;
@@ -611,7 +606,9 @@ th.sorting {
     border-color: var(--text-color-activos) !important;
 }
 
-
+#nav-document .form-check {
+    margin-bottom: 10px;
+}
 
 /* Css del body*/
 

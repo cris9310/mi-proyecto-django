@@ -83,29 +83,91 @@ class Dashboard(ListView):
         return estudiante_calc
 
 
-class UserCreateView(FormView):
+class UserCreateView(CreateView):
+    model = User
     form_class = UserRegisterForm
     template_name = 'Academico/usuarios/register_user.html'
     success_url = reverse_lazy('academico_app:create-user')
 
-    def form_valid(self, form):
-        crea_user = User.objects.create_user(
-            tipe=form.cleaned_data['tipe'],
-            codigo=form.cleaned_data['codigo'],
-            username=form.cleaned_data['username'],
-            email=form.cleaned_data['email'],
-            password=form.cleaned_data['password1'],
-            nombres=form.cleaned_data['nombres'],
-            apellidos=form.cleaned_data['apellidos'],
-            is_superuser=False,
-            is_active=True,
-            is_staff=False,
+    def post(self, request, *args, **kwargs):
+        form = UserRegisterForm(self.request.POST)
+        
+        if form.is_valid():
+            crea_user = User.objects.create_user(
+                tipe=form.cleaned_data.get('tipe'),
+                codigo=form.cleaned_data.get('codigo'),
+                username=form.cleaned_data.get('username'),
+                email=form.cleaned_data.get('email'),
+                password=form.cleaned_data.get('password1'),
+                nombres=form.cleaned_data.get('nombres'),
+                apellidos=form.cleaned_data.get('apellidos'),
+                is_superuser=False,
+                is_active=True,
+                is_staff=False,
 
-        )
+            )
+            mensaje = f'{self.model.__name__} creado correctamente'
+            error = "No hay error!"
+            response = JsonResponse({"mensaje": mensaje, "error": error})
+            response.status_code = 201
+            return response
+        else:
+            mensaje1 =[]
+            mensaje1.append(
+                {"error": form.errors}
+            )
+            response = JsonResponse(mensaje1, safe=False)
+            response.status_code = 400
+            return response
 
-        return HttpResponseRedirect(self.success_url)
+class UserListView(ListView):
+    model = User
+    template_name = 'Academico/usuarios/list_users.html'
+    context_object_name = 'users'
+
+    def get_queryset(self):
+        data_periodos = User.objects.all().exclude(tipe_id__in=[4,5])
+        return data_periodos
+
+# Muestra el detalle de los usuarios creados, se encuentra ok
+class UserDetailView(DetailView):
+    model = User
+    template_name = 'Academico/usuarios/detail_users.html'
 
 
+class UserUpdateView(UpdateView):
+    template_name = 'Academico/usuarios/update_user.html'
+    model = User
+    form_class = UserUpdateForm
+    success_url = reverse_lazy('academico_app:list-user')
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        cod_user = User.objects.get(pk=self.kwargs['pk']).codigo
+        user_c = self.model.objects.get(codigo=cod_user)
+        form = UserUpdateForm(request.POST, instance=user_c)
+        
+        if form.is_valid():
+            form.save()
+            mensaje = f'{self.model.__name__} Actualizado correctamente'
+            error = "No hay error!"
+            response = JsonResponse({"mensaje": mensaje, "error": error})
+            response.status_code = 201
+            return response
+        else:
+            mensaje1 =[]
+            mensaje1.append(
+                {"error": form.errors}
+            )
+            response = JsonResponse(mensaje1, safe=False)
+            response.status_code = 400
+            return response
+
+class UserDeleteView(DeleteView):
+    template_name = 'Academico/usuarios/delete_user.html'
+    model = User
+    success_url = reverse_lazy('academico_app:list-user')
+ 
 # Vista ok
 class ConfigTemplateView(TemplateView):
     template_name = "Academico/settings/setings.html"
@@ -832,9 +894,9 @@ class Studentlistview(ListView):
         context = super().get_context_data(**kwargs)
         context['programas'] = Programas.objects.all()
         context['masivo'] = Estudiante.objects.filter(masivo=True).count()
-        context['todos'] = Estudiante.objects.filter(masivo=False).count()
-        context['activos'] = Estudiante.objects.filter(is_active=True).count()
-        context['inactivos'] = Estudiante.objects.filter(is_active=False).count()
+        context['todos'] = Estudiante.objects.filter(masivo=False, is_graduado= False).count()
+        context['activos'] = Estudiante.objects.filter(is_active=True, masivo=False,  is_graduado= False ).count()
+        context['inactivos'] = Estudiante.objects.filter(is_active=False, masivo=False, is_graduado= False ).count()
         context['graduados'] = Estudiante.objects.filter(is_graduado=True).count()
         return context
 
@@ -865,10 +927,8 @@ class Studentlistview(ListView):
 
         else:
             data_prin = Estudiante.objects.all().exclude(masivo=True)
-            print(data_prin)
             for i in data_prin:
                 if Banner.objects.filter(cod_student_id=i.id).exists():
-                    print(Banner.objects.filter(cod_student_id=i.id).exists())
                     data_json = {"pk": i.id, "codigo": i.codigo, "nombres": i.nombre,
                                  "apellidos": i.apellidos, "estado": True, "carrera": i.carrera,
                                  "is_active": i.is_active, "is_matriculado": i.is_matriculado,
@@ -1212,38 +1272,6 @@ class StudentAsigView(View):
 
                     Estudiante.objects.bulk_create(data_list)
 
-                    # Generamos las facturas relacionadas con el estudiante, hace referencia a matrícula y a las facturas de las pensiones mensuales
-
-                    for i in range(len(new_student)):
-                        codigo_invoice = Facturas.objects.code_invoice()
-                        for e in l:
-                            data_fac_matricula.append(Facturas(
-                                user=User.objects.get(
-                                    username=new_student['USERNAME'][i]),
-                                codigo=int(codigo_invoice) + i,
-                                email=new_student['EMAIL'][i],
-                                monto=Programas.objects.get(
-                                    programa_name=new_student['CARRERA_ID'][i]).matricula,
-                                descripcion=e,
-                                estado=CatalogsTypesInvoices.objects.get(
-                                    estado="Pendiente"),
-
-                            ))
-                        for e in range(int(Programas.objects.get(programa_name=new_student['CARRERA_ID'][i]).cuotas)):
-                            data_fac_matricula.append(Facturas(
-                                user=User.objects.get(
-                                    username=new_student['USERNAME'][i]),
-                                codigo=int(codigo_invoice) + i + e + 1,
-                                email=new_student['EMAIL'][i],
-                                monto=Programas.objects.get(
-                                    programa_name=new_student['CARRERA_ID'][i]).cuota_valor,
-                                descripcion="Mensualidad número " + str(e+1),
-                                estado=CatalogsTypesInvoices.objects.get(
-                                    estado="Pendiente"),
-
-                            ))
-                        Facturas.objects.bulk_create(data_fac_matricula)
-
                     return HttpResponseRedirect(
                         reverse(
                             'academico_app:list-student'
@@ -1419,7 +1447,7 @@ class GraduateView(CreateView):
 
         )
 
-
+# Vista se encuentra ok, elimina estudiantes.
 class StudentDeleteView(DeleteView):
     template_name = 'Academico/Estudiantes/delete_student.html'
     model = Estudiante
@@ -1489,7 +1517,6 @@ class AsignamateriasCreateView(View):
 class AddMateriasList(ListView):
     model = Banner
     template_name = 'Academico/Estudiantes/AddMateriasList.html'
-    paginate_by = 10
     context_object_name = 'agregando'
 
     def get_context_data(self, **kwargs):

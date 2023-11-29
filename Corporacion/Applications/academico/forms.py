@@ -4,6 +4,8 @@ from .models import *
 from datetime import date
 from .choices import ROLES, PROGRAMAS_TIPOS
 import pandas as pd
+from crispy_forms.helper import *
+from crispy_forms.layout import *
 
 
 from django.core.exceptions import ValidationError
@@ -20,7 +22,9 @@ class UserRegisterForm(forms.ModelForm):
         widget=forms.PasswordInput(
             attrs={
                 'placeholder':'Contraseña',
-                'class':'form-control '
+                'class':'form-control ',
+                'id':'password1'
+
             }
         )
 
@@ -31,7 +35,9 @@ class UserRegisterForm(forms.ModelForm):
         widget=forms.PasswordInput(
             attrs={
                 'placeholder':'Repetir contraseña',
-                'class':'form-control '
+                'class':'form-control ',
+                'id':'password2'
+
             }
         )
 
@@ -41,35 +47,73 @@ class UserRegisterForm(forms.ModelForm):
 
         model = User
         fields = ('__all__')
-        exclude =['password','last_login', 'is_superuser', 'is_active','is_staff']
+        exclude =['password','last_login', 'is_superuser', 'is_active','is_staff','created_at']
         
         widgets={
 
 
         'codigo' :NumberInput(
             attrs={
+                'placeholder':'Ingrese el código',
                 'class':'form-control ',
-                 'id':'cedula'
+                 'id':'codigo'
+            }
+        ),
+        'tipe': Select(
+                attrs={
+                    
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    "id": "tipe"
+                }
+            ),
+        'nombres' :TextInput(
+            attrs={
+                'placeholder':'Ingrese el nombre',
+                'autocomplete': 'off',
+                'class':'form-control ',
+                "id": "nombres"
+            }
+        ),
+        'apellidos' :TextInput(
+            attrs={
+                'placeholder':'Ingrese apellidos',
+                'autocomplete': 'off',
+                'class':'form-control ',
+                "id": "apellidos"
             }
         ),
     
 
         'username' :TextInput(
             attrs={
+                'placeholder':'Ingrese username',
                 'autocomplete': 'off',
-                'class':'form-control '
+                'class':'form-control ',
+                "id": "username"
             }
         ),
         
 
         'email' : EmailInput(
+            
             attrs={
+                'placeholder':'Ingrese email',
                 'autocomplete': 'off',
-                'class':'form-control '
+                'class':'form-control ',
+                "id": "email"
             }
         )
         
     }
+    
+    def clean_tipe(self):
+        tipe = str(self.cleaned_data.get("tipe"))
+        if tipe == "Estudiante" or tipe == "Docente":
+            raise forms.ValidationError("En este formulario no se pueden crear perfiles para estudiantes ni docentes.")
+        return self.cleaned_data.get("tipe")
+
+             
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -78,6 +122,80 @@ class UserRegisterForm(forms.ModelForm):
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError("Las contraseñas no coinciden")
         return password2
+    
+class UserUpdateForm(forms.ModelForm):
+
+
+    class Meta:
+
+        model = User
+        fields = ('__all__')
+        exclude =['password','last_login', 'is_superuser', 'is_active','is_staff','created_at']
+        
+        widgets={
+
+
+        'codigo' :NumberInput(
+            attrs={
+                'placeholder':'Ingrese el código',
+                'class':'form-control ',
+                 'id':'codigo'
+            }
+        ),
+        'tipe': Select(
+                attrs={
+                    
+                    'autocomplete': 'off',
+                    'class':'form-control',
+                    "id": "tipe"
+                }
+            ),
+        'nombres' :TextInput(
+            attrs={
+                'placeholder':'Ingrese el nombre',
+                'autocomplete': 'off',
+                'class':'form-control ',
+                "id": "nombres"
+            }
+        ),
+        'apellidos' :TextInput(
+            attrs={
+                'placeholder':'Ingrese apellidos',
+                'autocomplete': 'off',
+                'class':'form-control ',
+                "id": "apellidos"
+            }
+        ),
+    
+
+        'username' :TextInput(
+            attrs={
+                'placeholder':'Ingrese username',
+                'autocomplete': 'off',
+                'class':'form-control ',
+                "id": "username"
+            }
+        ),
+        
+
+        'email' : EmailInput(
+            
+            attrs={
+                'placeholder':'Ingrese email',
+                'autocomplete': 'off',
+                'class':'form-control ',
+                "id": "email"
+            }
+        )
+        
+    }
+    
+    def clean_tipe(self):
+        tipe = str(self.cleaned_data.get("tipe"))
+        if tipe == "Estudiante" or tipe == "Docente":
+            raise forms.ValidationError("En este formulario no se pueden crear perfiles para estudiantes ni docentes.")
+        return self.cleaned_data.get("tipe")
+
 
 class PeriodoForm(forms.Form):
 
@@ -569,7 +687,10 @@ class StudentRegisterForm(forms.ModelForm):
         
         model = Estudiante
         fields = ('__all__')
-        exclude =['is_estudiante','is_active', 'fecha_reg', 'is_matriculado','codigo', 'is_graduado', 'costo_cierre', "masivo", "updated_at"]
+        exclude =['is_estudiante','is_active', 'fecha_reg', 
+                  'is_matriculado','codigo', 'is_graduado', 
+                  'costo_cierre', "masivo", "updated_at"
+                ]
         
         widgets={
 
@@ -736,8 +857,77 @@ class StudentRegisterForm(forms.ModelForm):
                         'id': 'sede'
 
                     }
-                ),
+            ),
+            'document': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'document'
 
+                    }
+            ),
+            'fotos': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'fotos'
+
+                    }
+            ),
+            'siet': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'siet'
+
+                    }
+            ),
+            'actaBachillerato': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'actaBachillerato'
+
+                    }
+            ),
+            'serviciosPublicos': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'serviciosPublicos'
+
+                    }
+            ),
+            'carneSalud': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'carneSalud'
+
+                    }
+            ),
+            'cedulaAcudiente': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'cedulaAcudiente'
+
+                    }
+            ),
+            'certificados': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'certificados'
+
+                    }
+            ),
+            'homologacion': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'homologacion'
+
+                    }
+            ),
+            'observaciones': Textarea(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control ',
+                    'id': 'observaciones'
+                }
+            ),
         }
     
     def clean_nombre(self):

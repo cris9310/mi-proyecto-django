@@ -1,5 +1,6 @@
-{% extends "Base2.html" %} {% load static %} {% block extracontent %} {% if
-messages %}
+{% extends "Base2.html" %} {% load static %} 
+{% block extracontent %} 
+{% if messages %}
 <ul class="messages">
   {% for message in messages %}
   <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
@@ -119,7 +120,9 @@ messages %}
   </div>
 </div>
 
-{% endif %} {% endblock extracontent %} {% block js %}
+{% endif %} 
+{% endblock extracontent %} 
+{% block js %}
 <script type="text/javascript">
   $(document).ready(function () {
     var selected = "";

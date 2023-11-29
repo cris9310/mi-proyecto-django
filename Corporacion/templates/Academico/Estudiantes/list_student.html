@@ -128,43 +128,60 @@
                         <td >{{estudiante.codigo}}</td>
                         <td>{{estudiante.apellidos}} {{estudiante.nombres}}</td>
                         <td>{{estudiante.carrera}}</td>
-                        {% if estudiante.is_active %}
+
+                        {% if estudiante.is_graduado %}
+                        <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
+                        <td>
+                          <a href="{% url 'academico_app:notes' estudiante.pk %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
+                          <a  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
+                        </td>
+
+                        {% elif estudiante.is_active == True and estudiante.estado == True  %}
                         <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
+                        <td>
+                        <a href="{% url 'academico_app:notes' estudiante.pk %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
+                        <a  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'academico_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                        <a href="{% url 'academico_app:agre-more' estudiante.pk %}" title="agregar materias" ><i class="fa-solid fa-plus iconos"></i></a>
+                        <a onclick="actulizar_eliminar('{% url 'academico_app:delete-student' estudiante.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+
+                        </td>
+
+                        {% elif estudiante.is_active == False and estudiante.estado == True  %}
                         
+                        <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
                         <td>
-
-                          {% if teach.estado == False and teach.is_active == True %}
-                          <a href="{% url 'academico_app:topic-list' teach.pk %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
-                          <a  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
-                          <a onclick="abrir_modal_general('{% url 'academico_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
-                          <a onclick="actulizar_eliminar('{% url 'academico_app:delete-student' estudiante.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
-                          {% else %}
-                          <a href="#" title="Consultar" ><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a>
-                          <a  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
-                          <a onclick="abrir_modal_general('{% url 'academico_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
-                          {% endif %}
-                          {% if estudiante.is_matriculado  %}
-                          <a href="{% url 'academico_app:agre-more' estudiante.pk %}" title="agregar materias" ><i class="fa-solid fa-plus iconos"></i></a>
-                          {% else %}
-                          <a href="{% url 'academico_app:list-periodos-asignar' estudiante.pk  %}" title="periodos" ><i class="fa-solid fa-plus iconos"></i></a>
-                          {% endif %}
-                          
+                        <a href="{% url 'academico_app:notes' estudiante.pk %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass iconos" ></i></a>
+                        <a  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'academico_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                        <a href="{% url 'academico_app:agre-more' estudiante.pk %}" title="agregar materias" ><i class="fa-solid fa-plus iconos"></i></a>
+                        <a onclick="actulizar_eliminar('{% url 'academico_app:delete-student' estudiante.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
 
                         </td>
-                        {% else %}
-                        <td><span class="nonEstado"><i class="fa-solid fa-circle-xmark"></i>&nbsp;Inactivo</span></td>
+
+                        {% elif estudiante.is_active == True and estudiante.estado == False %}
+                        <td><span class="estado"><i class="fa-regular fa-circle-check"></i>&nbsp;Activo</span></td>
                         <td>
-                          
-                          <a  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
-                          {% if estudiante.is_graduado %}
-                          <a class="" href="#"><i class="fas fa-graduation-cap iconos"></i></a>
-                          {% else %}
-                          <a class="" href="#" ><i class="fa-solid fa-check iconos"></i></a>
-                          {% endif %}
-                          
-                          
+                        <a href="#" title="Consultar" ><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a>
+                        <a  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'academico_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                        <a onclick="actulizar_eliminar('{% url 'academico_app:delete-student' estudiante.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                        <a href="{% url 'academico_app:agre-more' estudiante.pk %}" title="agregar materias" ><i class="fa-solid fa-plus iconos"></i></a>
                         </td>
-                        {% endif %} 
+
+                        {% else   %}
+                        <td><span class="nonEstado"><i class="fa-regular fa-circle-check"></i>&nbsp;Inactivo</span></td>
+                        <td>
+                        <a href="#" title="Consultar" ><i class="fa-solid fa-magnifying-glass nonEstado" ></i></a>
+                        <a  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
+                        <a onclick="abrir_modal_general('{% url 'academico_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
+                        <a onclick="actulizar_eliminar('{% url 'academico_app:delete-student' estudiante.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
+                        <a href="{% url 'academico_app:agre-more' estudiante.pk %}" title="agregar materias" ><i class="fa-solid fa-plus iconos"></i></a>
+
+                        
+                        </td>
+                        
+                        {% endif %}
                           
                     </tr>
                       
@@ -218,5 +235,31 @@
         $(this).modal('show');
     });
   }
+  function actulizar_eliminar(url, accion) {
+
+    if (accion == "habilitar") {
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+        document.getElementById("tittle").innerHTML  = "Desea habilitar a:";
+        $('#accion').val(accion);
+    
+      });
+    } else if (accion == "eliminar"){
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+      });
+    }else {
+      $("#edicion").load(url, function () {
+        $(this).modal("show");
+        document.getElementById("tittle").innerHTML  = "Desea inhabilitar a:";
+        $('#accion').val(accion);
+
+    
+      });
+        
+  
+    }
+  }
+
 </script>
 {% endblock js %}

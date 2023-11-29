@@ -5,13 +5,13 @@
 <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel"><i class="fa-regular fa-user"></i> Nuevo usuario</h5>
+      <h5 class="modal-title" id="exampleModalLabel"><i class="fa-regular fa-user"></i> Actualizacion de usuario</h5>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
           <span aria-hidden="true">&times;</span>
       </button>
       </div>
       <div class="modal-body">
-        <form  method="post" id="dataGeneralForm" action="{% url 'academico_app:create-user' %}" >{% csrf_token %}
+        <form  method="post" id="dataGeneralForm" action="{% url 'academico_app:update-user' object.pk%}" >{% csrf_token %}
             <div id="errores" ></div>
             <div class="container-fluid" style="margin-top: 15px;"> 
                 <div class="row">
@@ -55,22 +55,9 @@
                     </div>
                 </div>
             </div>
-            <div class="container-fluid" style="margin-top: 15px;"> 
-                <div class="row">
-                    <div class="col-md-6">
-                    <div class="{{ form.password1.id_for_label }}" ></div>
-                    <label for="{{ form.password1.id_for_label }}">Ingrese la contraseña del usuario:</label>
-                    {{ form.password1 }}
-                    </div>
-                    <div class="col-md-6 ms-auto"">
-                    <div class="{{ form.password2.id_for_label }}" ></div>
-                    <label for="{{ form.password2.id_for_label }}">Repita la contraseña:</label>
-                    {{ form.password2 }}
-                    </div>
-                </div>
-            </div>
+            
             <div class="modal-footer" style="margin-top: 15px;">
-            <button type="button" id="button2" class="btn btn-primary" onclick="sendUser()"  >Registrar usuario</button>
+            <button type="button" id="button2" class="btn btn-primary" onclick="sendUser()"  >Actualizar usuario</button>
             <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
             </div>
         </form>
@@ -82,14 +69,16 @@
   
 {% block js %}
 <script type="text/javascript">
+  $("#codigo").prop("readonly", true);
 
   function sendUser() {
+    $("#codigo").prop("readonly", false);
     var serializedData = $("#dataGeneralForm").serialize();
     if (serializedData) {
 
       var request = $.ajax({
         type: "POST",
-        url: "{% url 'academico_app:create-user' %}",
+        url: "{% url 'academico_app:update-user' object.pk %}",
         data: serializedData,
         success: function (response) {
           $("#edicion").modal("hide");
@@ -99,6 +88,7 @@
           
         },
         error: function (error) {
+          $("#codigo").prop("readonly", true);
           mostrarErroresCreacionEditar(error);
           mostrarError();
         }

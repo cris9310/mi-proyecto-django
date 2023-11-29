@@ -48,10 +48,10 @@ class CatalogsSede(models.Model):
 #Modelo de los usuarios, se reescribió todo el modelo inicial e hicimos uno desde cero, logueamos con user y contraseña
 class User(AbstractBaseUser):
     codigo=models.CharField(primary_key=True, max_length=20, unique=True, verbose_name='Código')
-    nombres = models.CharField(max_length=50, blank=True, null=True)
-    apellidos = models.CharField(max_length=50, blank=True, null=True)
+    nombres = models.CharField(max_length=50, blank=False, null=True)
+    apellidos = models.CharField(max_length=50, blank=False, null=True)
     username=models.CharField(max_length=50, unique=True, blank=False, null=False, verbose_name='Usuario')
-    email=models.EmailField( verbose_name='Em@il', blank=True)
+    email=models.EmailField( verbose_name='Em@il', blank=False)
     created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(auto_now=True)
     tipe = models.ForeignKey(CatalogsTypesRol, on_delete=models.CASCADE)
@@ -174,7 +174,7 @@ class Materias(models.Model):
         return self.materia
 
 class Estudiante(models.Model):
-    codigo = models.CharField(unique=True, max_length=6, verbose_name='código')
+    codigo = models.CharField(unique=True, max_length=50, verbose_name='código')
     tDocument = models.ForeignKey(CatalogsTypesDocuement, on_delete=models.CASCADE, verbose_name='Tipo de documento')
     cedula = models.CharField(unique=False, max_length=20, verbose_name='Identificación del Estudiante', validators=[validate_cero])
     nombre = models.CharField(max_length=100, blank=False, null=False, verbose_name='Nombres')
@@ -197,6 +197,17 @@ class Estudiante(models.Model):
     apellidos_acudiente =models.CharField( verbose_name='Apellidos del acudiente', max_length=100, blank=False, null=False)
     telefono_acudiente =models.CharField( verbose_name='Teléfono del acudiente', max_length=10, blank=False, null=False, validators=[validate_telefono])
     cedula_acudiente =models.CharField(unique=False, max_length=20, verbose_name='Cédula del acudiente', validators=[validate_cero])
+    document=models.BooleanField(default=False)
+    simat=models.BooleanField(default=False)
+    siet=models.BooleanField(default=False)
+    actaBachillerato=models.BooleanField(default=False)
+    fotos=models.BooleanField(default=False)
+    serviciosPublicos=models.BooleanField(default=False)
+    carneSalud=models.BooleanField(default=False)
+    cedulaAcudiente=models.BooleanField(default=False)
+    certificados=models.BooleanField(default=False)
+    homologacion=models.BooleanField(default=False)
+    observaciones=models.CharField(max_length=100, blank=True, null=True, verbose_name='Observacion')
     is_active=models.BooleanField(default=True)
     is_estudiante=models.BooleanField(default=True)
     is_matriculado=models.BooleanField(default=False)
@@ -214,6 +225,7 @@ class Estudiante(models.Model):
             self.fecha_reg = datetime.now()
         self.updated_at = datetime.now()
         return super(Estudiante, self).save(*args, **kwargs)
+    
 
 class Banner(models.Model):
     cod_student = models.ForeignKey(Estudiante, verbose_name='Estudiante', on_delete=models.CASCADE)

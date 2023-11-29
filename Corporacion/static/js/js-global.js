@@ -3,8 +3,6 @@ $(document).ready(function () {
   window.onload = codeAddress;
 });
 
-
-
 function codeAddress() {
   var URLactual = (window.location.pathname).toString().split("/")[2];
   const urlParams = new URLSearchParams(window.location.search);
@@ -41,6 +39,9 @@ function codeAddress() {
 
   }
 }
+
+
+
 
 function abrir_modal_general(url) {
 
@@ -240,8 +241,10 @@ function mostrarErroresCreacion(errores) {
   let error = "";
 
   let datos = errores.responseJSON;
+
   for (let index = 0; index < datos.length; index++) {
     const element = datos[index];
+    console.log(errores.responseJSON[0].error)
     $("#errores").append(`<div class ="alert alert-danger" <strong>'${element.error}</strong></div>`);
   }
 
@@ -251,7 +254,9 @@ function mostrarErroresCreacionEditar(errores) {
 
   const array1 = ['tDocument', 'cedula', 'codigo', 'nombre', 'nombres', 'apellidos', 'nacionalidad', 'telefono', 'sexo',
     'direccion', 'nacimiento', 'carrera', 'pensum_asig', 'email', 'sede', 'periodo_matriculado',
-    'username', 'nombre_acudiente', 'apellidos_acudiente', 'telefono_acudiente', 'cedula_acudiente'];
+    'username', 'nombre_acudiente', 'apellidos_acudiente', 'telefono_acudiente', 'cedula_acudiente', "password1", "password2",
+    "tipe"
+  ];
 
   for (const i in array1) {
     const lista = array1[i]
