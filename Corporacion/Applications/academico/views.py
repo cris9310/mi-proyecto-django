@@ -777,6 +777,18 @@ class StudentCreateView(CreateView):
                 periodo_matriculado=Periodos.objects.get(
                     periodo=form.cleaned_data.get('periodo_matriculado')),
                 pensum_asig=Pensum.objects.get(id=form['pensum_asig'].value()),
+                document=form.cleaned_data.get('document'),
+                simat=form.cleaned_data.get('simat'),
+                siet=form.cleaned_data.get('siet'),
+                actaBachillerato=form.cleaned_data.get('actaBachillerato'),
+                fotos=form.cleaned_data.get('fotos'),
+                serviciosPublicos=form.cleaned_data.get('serviciosPublicos'),
+                carneSalud=form.cleaned_data.get('carneSalud'),
+                cedulaAcudiente=form.cleaned_data.get('cedulaAcudiente'),
+                certificados=form.cleaned_data.get('certificados'),
+                homologacion=form.cleaned_data.get('homologacion'),
+                observaciones=form.cleaned_data.get('observaciones')
+                                               
             )
             # Creamos usuario en la BD
             crea_user = User.objects.create_user(
@@ -978,6 +990,12 @@ class StudentMasiveUpdateView(UpdateView):
     template_name = 'Academico/Estudiantes/update_student.html'
     form_class = StudentUpdateForm
     success_url = reverse_lazy('academico_app:list-student')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        existe = Estudiante.objects.get(pk=self.kwargs['pk']).masivo
+        context['existe'] = existe
+        return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

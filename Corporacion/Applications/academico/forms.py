@@ -1040,8 +1040,9 @@ class StudentUpdateForm(forms.ModelForm):
         
         model = Estudiante
         fields = ('__all__')
-        exclude =['is_estudiante','is_active', 'fecha_reg', 'is_matriculado','codigo', 
-                  'is_graduado', 'costo_cierre', "updated_at"
+        exclude =['is_estudiante','is_active', 'fecha_reg', 
+                  'is_matriculado','codigo', 'is_graduado', 
+                  'costo_cierre', "masivo", "updated_at"
                 ]
         
         widgets={
@@ -1210,6 +1211,76 @@ class StudentUpdateForm(forms.ModelForm):
 
                     }
                 ),
+            'document': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'document'
+
+                    }
+            ),
+            'fotos': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'fotos'
+
+                    }
+            ),
+            'siet': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'siet'
+
+                    }
+            ),
+            'actaBachillerato': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'actaBachillerato'
+
+                    }
+            ),
+            'serviciosPublicos': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'serviciosPublicos'
+
+                    }
+            ),
+            'carneSalud': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'carneSalud'
+
+                    }
+            ),
+            'cedulaAcudiente': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'cedulaAcudiente'
+
+                    }
+            ),
+            'certificados': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'certificados'
+
+                    }
+            ),
+            'homologacion': CheckboxInput(
+                    attrs={
+                        'class':'form-check-input',
+                        'id': 'homologacion'
+
+                    }
+            ),
+            'observaciones': Textarea(
+                attrs={
+                    'autocomplete': 'off',
+                    'class':'form-control ',
+                    'id': 'observaciones'
+                }
+            ),
 
         }
     

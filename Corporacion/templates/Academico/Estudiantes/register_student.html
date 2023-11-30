@@ -19,8 +19,9 @@
       </nav>
       
       <form  method="POST" id="dataGeneralForm" action="{% url 'academico_app:create-student' %}" >{% csrf_token %}
-        <div id="errores" ></div>
+        
         <div class="tab-content" id="nav-tabContent">
+          
           <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
   
             <div class="container-fluid" style="margin-top:20px">
@@ -169,6 +170,7 @@
           </div>
           <div class="tab-pane fade" id="nav-document" role="tabpanel" aria-labelledby="nav-document-tab">
             <div class="container-fluid" style="margin-top: 15px; ">
+              <p class="text-start">Seleccione el documento que entrega el estudiante:</p>
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-check">
@@ -176,12 +178,14 @@
                     <label class="form-check-label" for="flexCheckDefault">
                       Fotocopia documento de identidad
                     </label>
+                    <div class="{{ form.document.id_for_label }}" ></div>
                   </div>
                   <div class="form-check">
                     {{ form.fotos }}
                     <label class="form-check-label" for="flexCheckDefault">
                       Fotos
                     </label>
+                    <div class="{{ form.fotos.id_for_label }}" ></div>
                   </div>
                   <div class="form-check">
                     {{ form.siet }}
@@ -212,6 +216,7 @@
                     <label class="form-check-label" for="flexCheckDefault">
                       Documento del acudiente
                     </label>
+                    <div class="{{ form.cedulaAcudiente.id_for_label }}" ></div>
                   </div>
                   <div class="form-check">
                     {{ form.certificados }}
@@ -239,7 +244,10 @@
         </div>
         
         <div class="modal-footer" style="margin-top: 15px;">
-        <button type="button"  class="btn btn-primary" onclick="sendUser()" >Registrar estudiante</button>
+        <button type="button"  class="btn btn-primary" onclick="sendUser()" >
+          <div id="spinner-div" class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+          </div> Registrar estudiante</button>
         <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
         </div>
       </form>
@@ -286,7 +294,7 @@
   function sendUser() {
     var serializedData = $("#dataGeneralForm").serialize();
     if (serializedData) {
-
+      $('#spinner-div').show();
       var request = $.ajax({
         type: "POST",
         url: "{% url 'academico_app:create-student' %}",
@@ -297,6 +305,7 @@
           mostrarOk();  
         },
         error: function (error) {
+          $('#spinner-div').hide()
           mostrarErroresDetalle(error);
           mostrarError();
         }
