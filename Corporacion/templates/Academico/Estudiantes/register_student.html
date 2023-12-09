@@ -244,11 +244,18 @@
         </div>
         
         <div class="modal-footer" style="margin-top: 15px;">
-        <button type="button"  class="btn btn-primary" onclick="sendUser()" >
-          <div id="spinner-div" class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading...</span>
-          </div> Registrar estudiante</button>
-        <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
+
+          <button class="btn btn-primary" type="button" id="spinner-div" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Cargando...
+          </button>
+
+          <button type="button" class="btn btn-primary" id="spinner-div-real" onclick="sendUser()">
+            Registrar estudiante
+          </button>
+          <button type="button" class="btn btn-danger"  data-dismiss="modal">
+            Cerrar
+          </button>
         </div>
       </form>
     </div> 
@@ -295,6 +302,7 @@
     var serializedData = $("#dataGeneralForm").serialize();
     if (serializedData) {
       $('#spinner-div').show();
+      $('#spinner-div-real').hide();
       var request = $.ajax({
         type: "POST",
         url: "{% url 'academico_app:create-student' %}",
@@ -305,6 +313,7 @@
           mostrarOk();  
         },
         error: function (error) {
+          $('#spinner-div-real').show();
           $('#spinner-div').hide()
           mostrarErroresDetalle(error);
           mostrarError();

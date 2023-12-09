@@ -1,37 +1,89 @@
-{% extends "Base2.html" %} 
-{% load static %} 
+{% extends "Base2.html" %}
+{% load  static %}
 
-{% block extracontent %} 
-  {% if graduados %}
-    <div class="col-10" style="margin-top: 2em">
-      <table class="table table-striped">
-        <thead>
-          <th>Código</th>
-          <th>Estudiante</th>
-          <th>Programa</th>
-          <th>Promedio</th>
-          <th>Acciones</th>
-        </thead>
-        <tbody>
-          {% for i in graduados %}
-          <tr>
-            <td>
-              <a href="{% url 'academico_app:notes' i.student_id %}"
-                >{{i.student.codigo}}</a
-              >
-            </td>
-            <td>{{i.student.apellidos}} {{i.student.nombre}}</td>
-            <td>{{i.carrera.programa_name}}</td>
-            <td></td>
-            <td></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
 
-      <button><a href="javascript: history.go(-1)"> Volver</a></button>
+
+{% block title %}Graduados | Portal CNE{% endblock title %}
+
+{% block extracontent %}
+
+
+<div class="container-fluid ">
+  <div class="row encabezado">
+      <div class="titulo">
+        <span class=""><h2><i class="fa-solid fa-graduation-cap"></i> Estudiantes graduados </h2></span>
+      </div>
+      
+  </div>
+
+  <div class="card">
+    
+    <div class="card-body">
+      <div class="container-fluid" style="">
+        <div  class="row">
+          <div class="conte">
+            <div class ="conteTabla">
+              {% if graduados %}
+              <table id="table_id2"  class="hover" style="width:100%; ">
+                <thead>
+                  <th>Código</th>
+                  <th>Estudiante</th>
+                  <th>Programa</th>
+                  <th>Promedio</th>
+                  <th>Acciones</th>
+                </thead>
+                <tbody>
+                  {% for i in graduados %}
+                  <tr>
+                    <td>
+                      {{i.codigo}}
+                    </td>
+                    <td>{{i.estudiante}}</td>
+                    <td>{{i.programa}}</td>
+                    <td>{{i.promedio}}</td>
+                    <td><a href="{% url 'academico_app:notes' i.estudiante_id %}" title="Consultar" ><i class="fa-solid fa-magnifying-glass iconos" ></i></a></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              
+              {% else %}
+                <table id="table_id2"  class="hover" style="width:100%; ">
+                  <thead >
+                    <th>Código</th>
+                    <th>Estudiante</th>
+                    <th>Programa</th>
+                    <th>Promedio</th>
+                    <th>Acciones</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                      <td > - </td >
+                    </tr>
+                  </tbody>
+                </table>
+            {% endif %}
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      
     </div>
-  {% else %}
-   <h5>No hay estudiantes graduados</h5>
-  {% endif %} 
+  </div>
+
+</div>
+
+
+
+<div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
 {% endblock extracontent %}
+
+
+
+

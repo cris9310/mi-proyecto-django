@@ -51,7 +51,7 @@
       <div class="row">
         
         <div class="col filtro">
-          <span class="text nav-text">Filtrar por:</span>
+          <span class="text nav-text ">Filtrar por:</span>
           <div class="form-check">
             <input class="form-check-input" type="checkbox" value="" id="todos" onchange="window.location.href='?order=todos'">
             <label class="form-check-label" for="todos">
@@ -85,6 +85,10 @@
           <button type="button" title="Graduar estudiantes"  class="btn btn-sm"  onclick="location.href='{% url 'academico_app:list-top-graduado'%}'">
             <a  >
               <i class="fa-solid fa-user-graduate fa-lg" ></i></a>
+          </button>
+          <button type="button" title="Estudiantes graduados"  class="btn btn-sm"  onclick="location.href='{% url 'academico_app:list-graduated'%}'">
+            <a  >
+              <i class="fa-solid fa-graduation-cap" ></i></a>
           </button>
           
           {% if masivo > 0 %}
@@ -143,7 +147,6 @@
                         <a  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
                         <a onclick="abrir_modal_general('{% url 'academico_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
                         <a href="{% url 'academico_app:agre-more' estudiante.pk %}" title="agregar materias" ><i class="fa-solid fa-plus iconos"></i></a>
-                        <a onclick="actulizar_eliminar('{% url 'academico_app:delete-student' estudiante.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
 
                         </td>
 
@@ -155,7 +158,6 @@
                         <a  onclick="abrir_modal_edicion('{% url 'academico_app:detail-student' estudiante.pk  %}')" title="Ver estudiante"><i  class="fa-regular fa-eye iconos"></i></a>
                         <a onclick="abrir_modal_general('{% url 'academico_app:update-student' estudiante.pk %}')" title="Editar"><i  class="fa-regular fa-pen-to-square iconos"></i></a>
                         <a href="{% url 'academico_app:agre-more' estudiante.pk %}" title="agregar materias" ><i class="fa-solid fa-plus iconos"></i></a>
-                        <a onclick="actulizar_eliminar('{% url 'academico_app:delete-student' estudiante.pk %}', 'eliminar')" title="Eliminar"><i   class="fa-regular fa-trash-can iconos"></i></a>
 
                         </td>
 

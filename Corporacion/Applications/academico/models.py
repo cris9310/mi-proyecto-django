@@ -10,7 +10,7 @@ from .funciones import *
 from .manager import *
 from .validators import *
 
-#Con estos primeros 4 modelos lo que hacemos es crear catálogos para los choices y hacer la app más escalables
+#Con estos primeros 4 modelos lo que hacemos es crear catálogos para los choices y hacer la app más escalable
 class CatalogsTypesProg(models.Model):
     tipo = models.CharField(max_length=200, null=False, blank=False)
 
@@ -250,6 +250,10 @@ class Graduated(models.Model):
     fecha_reg=models.DateField(default=datetime.now(), verbose_name='Fecha')
 
     objects = BuscadorManager()
+
+    def __str__(self): 
+        
+        return "{0}, {1}".format(self.student.nombre, self.student.apellidos)
 
    
 class Habilitaciones(models.Model):

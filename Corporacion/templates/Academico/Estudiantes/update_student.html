@@ -245,10 +245,15 @@
         </div>
         
         <div class="modal-footer" style="margin-top: 15px;">
-        <button type="button"  class="btn btn-primary" onclick="sendStudent()" >
-          <div id="spinner-div" class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading...</span>
-          </div> Actualizar estudiante</button>
+          <button class="btn btn-primary" type="button" id="spinner-div" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Cargando...
+          </button>
+
+          <button type="button" class="btn btn-primary" id="spinner-div-real" onclick="sendStudent()">
+            Actualizar estudiante
+          </button>
+        
         <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
         </div>
       </form>
@@ -308,7 +313,8 @@
     $('#periodo_matriculado').prop('disabled', false);
     var serializedData = $("#dataGeneralForm").serialize() ;
     if (serializedData) {
-  
+      $('#spinner-div').show();
+      $('#spinner-div-real').hide();
       var request = $.ajax({
         type: "POST",
         url: "{% url 'academico_app:update-student' object.pk %}",
@@ -321,6 +327,8 @@
   
         },
         error: function (error) {
+          $('#spinner-div-real').show();
+          $('#spinner-div').hide()
           $('#pensum_asig').prop('disabled', true);
           $('#periodo_matriculado').prop('disabled', true);
           $('#carrera').prop('disabled', true);

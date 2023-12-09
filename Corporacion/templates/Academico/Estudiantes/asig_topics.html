@@ -13,9 +13,7 @@
     </div>
     <div class="modal-body">
       <div class="d-flex justify-content-center">
-      <div id="spinner-div" class="spinner-border text-primary" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
+      
       </div>
       <form action="{% url 'academico_app:list-top-asignar' %}" method="post" enctype="multipart/form-data" id="data" > 
       {% csrf_token %}
@@ -23,7 +21,15 @@
       {{form.as_p}}
       <div class="modal-footer">
         <button type="button"  class="btn btn-primary"><a href="{% url 'academico_app:export-plant-student' %}"><i class="fa-solid fa-cloud-arrow-down"></i>&nbsp; Exportar plantilla</a></button>
-        <button type="button" class="btn btn-danger" onclick="sendStudents()"  ><i class="fa-solid fa-upload"></i> &nbsp;Cargar estudiantes</button>
+        
+        <button class="btn btn-danger" type="button" id="spinner-div" disabled>
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Cargando...
+        </button>
+
+        <button type="button" class="btn btn-danger" id="spinner-div-real" onclick="sendStudents()">
+          <i class="fa-solid fa-upload"></i> &nbsp;Cargar estudiantes
+        </button>
       </div>
     </form>
     </div> 
@@ -38,7 +44,8 @@
     var serializedData = document.getElementById('carga');
     
     if (serializedData.files.length != 0) {
-      
+      $('#spinner-div').show();
+      $('#spinner-div-real').hide();
       formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
       formData.append('carga',  $('input[type=file]')[0].files[0])
       var request = $.ajax({
@@ -57,6 +64,8 @@
   
         },
         error: function (error) {
+          $('#spinner-div-real').show();
+          $('#spinner-div').hide()
           mostrarErroresCreacion(error)
           mostrarError()
         }

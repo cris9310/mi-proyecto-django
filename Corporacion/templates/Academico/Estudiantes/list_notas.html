@@ -15,7 +15,7 @@
   {% for j in student %}
   <div class="datos">
     
-    <div class="card bg-light mb-3 information" style="">
+    <div class="card bg-light mb-3 informationExtra" style="">
         <div class="container-fluid" style="">
           <div class="" style="">
             <div style="display: flex"  >
@@ -34,6 +34,13 @@
             
               <strong><p  class="card-title">Programa:</strong>
               <p class="card-text">&nbsp; {{j.carrera}}</p>
+            
+            </div>
+
+            <div style="display: flex" >
+            
+              <strong><p  class="card-title">Promedio general:</strong>
+              <p class="card-text">&nbsp; {{promedio}}</p>
             
             </div>
             

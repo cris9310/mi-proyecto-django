@@ -498,6 +498,17 @@ th.sorting {
     font-size: 14px !important;
 }
 
+.informationExtra {
+    background: var(--sidebar-color) !important;
+    width: 100%;
+    height: 150px !important;
+    display: flex;
+    border-left-color: var(--primary-color) !important;
+    border-left-width: 8px !important;
+    font-size: 14px !important;
+}
+
+
 .grid-margin-x h5 {
     color: var(--text-color-activos);
     font-size: 16px !important;
@@ -554,6 +565,12 @@ th.sorting {
 .personal-text-text-origin {
     margin-top: 3px;
     color: var(--text-color);
+}
+
+.filtro .nav-text,
+.filtro .form-check-label {
+    font-size: 14px !important;
+    color: var(--primary-color-dark);
 }
 
 

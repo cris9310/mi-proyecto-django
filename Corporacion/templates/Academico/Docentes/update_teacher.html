@@ -84,7 +84,14 @@
           </div>
           
         <div class="modal-footer">
-        <button type="button" id="button2" class="btn btn-primary" onclick="sendUser()" >Actualizar docente</button>
+          <button class="btn btn-primary" type="button" id="spinner-div" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Cargando...
+          </button>
+
+          <button type="button" class="btn btn-primary" id="spinner-div-real" onclick="sendUser()">
+            Actualizar docente
+          </button>
         <button type="button" class="btn btn-danger"   data-dismiss="modal">Cerrar</button>
         </div>
        </form>
@@ -103,7 +110,8 @@
   function sendUser() {
     var serializedData = $("#dataGeneralForm").serialize();
     if (serializedData) {
-
+      $('#spinner-div').show();
+      $('#spinner-div-real').hide();
       var request = $.ajax({
         type: "POST",
         url: "{% url 'academico_app:update-teacher' object.pk %}",
@@ -114,6 +122,8 @@
           mostrarOk();          
         },
         error: function (error) {
+          $('#spinner-div-real').show();
+          $('#spinner-div').hide()
           mostrarErroresCreacionEditar(error);
           mostrarError();
         }

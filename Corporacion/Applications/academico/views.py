@@ -12,7 +12,7 @@ from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.db.models.functions import Coalesce
-from django.db.models import F
+from django.db.models import F, Sum, Avg, Count
 
 from .funciones import generador
 # Create your views here.
@@ -27,7 +27,6 @@ from django.views.generic import (TemplateView,
 
 from .forms import *
 from django.urls import reverse_lazy, reverse
-from django.db.models import Q, Count
 from .choices import EST_STUDENT
 import pandas as pd
 import re
@@ -858,6 +857,10 @@ class Vernotas(ListView):
         context['progreso'] = int(int(Banner.objects.filter(cod_student=cod, promedio__gt=2.99).count())/int(Programas.objects.get(
             id=Estudiante.objects.get(pk=cod).carrera_id
         ).aceptado)*100)
+
+        TotalpromedioSum = Banner.objects.filter(cod_student=cod).aggregate(Avg('promedio'))
+        Totalpromedio = round(TotalpromedioSum['promedio__avg'],2)
+        context['promedio'] = Totalpromedio
         return context
 
     def get_queryset(self):
@@ -1576,8 +1579,22 @@ class AddMateriasList(ListView):
 class GraduatedListView(ListView):
     model = Graduated
     template_name = 'Academico/Estudiantes/GraduadoList.html'
-    paginate_by = 15
     context_object_name = 'graduados'
+
+    def get_queryset(self):
+        graduatedList=[]
+        dataGraduated = Graduated.objects.all()
+        for i in dataGraduated:
+            TotalpromedioSum = Banner.objects.filter(cod_student_id=i.student_id).aggregate(Avg('promedio'))
+            Totalpromedio = round( TotalpromedioSum['promedio__avg'],2)
+            data = {'estudiante_id': i.student_id, 'codigo': i.student.codigo, 
+                    'estudiante': i.student.apellidos + ' ' + i.student.nombre, 
+                    'programa': i.carrera.programa_name,
+                      'promedio': Totalpromedio}
+
+            graduatedList.append(data)
+        return graduatedList
+
 
 
 class HabiliteTemplateView(ListView):

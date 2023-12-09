@@ -24,10 +24,48 @@
                 </div>
             </div>
           <div class="modal-footer">
-          <button type="submit" id="button2" class="btn btn-primary" >Eliminar docente</button>
+            <button class="btn btn-primary" type="button" id="spinner-div" disabled>
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              Eliminando...
+            </button>
+  
+            <button type="button" class="btn btn-primary" id="spinner-div-real" onclick="sendUser()">
+              Eliminar docente
+            </button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
           </div>
          </form>
       </div> 
     </div>
   </div>
+
+
+  {% block js %}
+  <script type="text/javascript">
+  
+    function sendUser() {
+      var serializedData = $("#dataGeneralForm").serialize();
+      if (serializedData) {
+        $('#spinner-div').show();
+        $('#spinner-div-real').hide();
+        var request = $.ajax({
+          type: "POST",
+          url: "{% url 'academico_app:delete-teacher' object.pk %}",
+          data: serializedData,
+          success: function (response) {
+            $("#edicion").modal("hide");
+            window.location = "{% url 'academico_app:list-teacher' %}";
+            mostrarOk();  
+          },
+          error: function (error) {
+            $('#spinner-div-real').show();
+            $('#spinner-div').hide();
+          }
+        });
+      } 
+    }
+  
+  </script>
+  
+  {% endblock js %}
+  

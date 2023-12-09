@@ -8,4 +8,6 @@ admin.site.register(Inventario)
 admin.site.register(Docente)
 admin.site.register(CatalogsTypesDocuement)
 admin.site.register(Periodos)
+admin.site.register(Graduated)
+
 
