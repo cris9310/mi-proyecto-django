@@ -45,15 +45,7 @@ class UserManager(BaseUserManager, models.Manager):
         usuario.save(using = self.db)
         return usuario
 
-### Manager para los periodos
-class periodoManager(models.Manager):
 
-    def create_periodo(self, periodo):
-        periodo= self.model(
-            periodo = periodo,
-        )
-        periodo.save(using = self.db)
-        return periodo
 
 ### Manager para los buscadores
 class BuscadorManager(models.Manager):
